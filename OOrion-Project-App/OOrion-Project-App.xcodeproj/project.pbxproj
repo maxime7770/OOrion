@@ -22,7 +22,7 @@
 
 /* Begin PBXFileReference section */
 		8A243AE920D99188005947D6 /* ModelDescriptionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelDescriptionViewController.swift; sourceTree = "<group>"; };
-		8A413B8D20D2205F00A761EC /* MLModelCamera.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MLModelCamera.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		8A413B8D20D2205F00A761EC /* OOrion-Project-App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "OOrion-Project-App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8A413B9020D2205F00A761EC /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8A413B9220D2205F00A761EC /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		8A413B9520D2205F00A761EC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -52,7 +52,7 @@
 			children = (
 				8A8DE5C820D6DEA200914B67 /* models */,
 				8A413BA220D221D500A761EC /* VideoCapture */,
-				8A413B8F20D2205F00A761EC /* MLModelCamera */,
+				8A413B8F20D2205F00A761EC /* OOrion-Project-App */,
 				8A413B8E20D2205F00A761EC /* Products */,
 			);
 			sourceTree = "<group>";
@@ -60,12 +60,12 @@
 		8A413B8E20D2205F00A761EC /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				8A413B8D20D2205F00A761EC /* MLModelCamera.app */,
+				8A413B8D20D2205F00A761EC /* OOrion-Project-App.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		8A413B8F20D2205F00A761EC /* MLModelCamera */ = {
+		8A413B8F20D2205F00A761EC /* OOrion-Project-App */ = {
 			isa = PBXGroup;
 			children = (
 				8A413B9C20D2206100A761EC /* Info.plist */,
@@ -77,7 +77,7 @@
 				8A243AE920D99188005947D6 /* ModelDescriptionViewController.swift */,
 				8AEC912B24273FD70014E67B /* BoundingBoxView.swift */,
 			);
-			path = MLModelCamera;
+			path = "OOrion-Project-App";
 			sourceTree = "<group>";
 		};
 		8A413BA220D221D500A761EC /* VideoCapture */ = {
@@ -93,9 +93,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		8A413B8C20D2205F00A761EC /* MLModelCamera */ = {
+		8A413B8C20D2205F00A761EC /* OOrion-Project-App */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 8A413B9F20D2206100A761EC /* Build configuration list for PBXNativeTarget "MLModelCamera" */;
+			buildConfigurationList = 8A413B9F20D2206100A761EC /* Build configuration list for PBXNativeTarget "OOrion-Project-App" */;
 			buildPhases = (
 				8A413B8920D2205F00A761EC /* Sources */,
 				8A413B8A20D2205F00A761EC /* Frameworks */,
@@ -105,9 +105,9 @@
 			);
 			dependencies = (
 			);
-			name = MLModelCamera;
+			name = "OOrion-Project-App";
 			productName = MLModelCamera;
-			productReference = 8A413B8D20D2205F00A761EC /* MLModelCamera.app */;
+			productReference = 8A413B8D20D2205F00A761EC /* OOrion-Project-App.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -126,7 +126,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 8A413B8820D2205F00A761EC /* Build configuration list for PBXProject "MLModelCamera" */;
+			buildConfigurationList = 8A413B8820D2205F00A761EC /* Build configuration list for PBXProject "OOrion-Project-App" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -139,7 +139,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				8A413B8C20D2205F00A761EC /* MLModelCamera */,
+				8A413B8C20D2205F00A761EC /* OOrion-Project-App */,
 			);
 		};
 /* End PBXProject section */
@@ -317,12 +317,12 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 82YUQWRVWD;
-				INFOPLIST_FILE = MLModelCamera/Info.plist;
+				INFOPLIST_FILE = "OOrion-Project-App/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "zapytest-MLModelCamera";
+				PRODUCT_BUNDLE_IDENTIFIER = "zapytest-OOrion-Project-App";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -335,12 +335,12 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 82YUQWRVWD;
-				INFOPLIST_FILE = MLModelCamera/Info.plist;
+				INFOPLIST_FILE = "OOrion-Project-App/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "zapytest-MLModelCamera";
+				PRODUCT_BUNDLE_IDENTIFIER = "zapytest-OOrion-Project-App";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -350,7 +350,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		8A413B8820D2205F00A761EC /* Build configuration list for PBXProject "MLModelCamera" */ = {
+		8A413B8820D2205F00A761EC /* Build configuration list for PBXProject "OOrion-Project-App" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				8A413B9D20D2206100A761EC /* Debug */,
@@ -359,7 +359,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		8A413B9F20D2206100A761EC /* Build configuration list for PBXNativeTarget "MLModelCamera" */ = {
+		8A413B9F20D2206100A761EC /* Build configuration list for PBXNativeTarget "OOrion-Project-App" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				8A413BA020D2206100A761EC /* Debug */,
