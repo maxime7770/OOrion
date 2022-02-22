@@ -82,14 +82,14 @@ class ViewController: UIViewController {
         // TODO: Should be dynamically determined
         self.bbView.updateSize(for: CGSize(width: videoSize.height, height: videoSize.width))
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(4), execute: {
-            print("coucou")
+        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1), execute: {
             let brightnessLevel = videoCapture.brightcheck()
-            print("let's go")
-            let alertBr = UIAlertController(title: "Brightness?", message: "The brightness slevel is \(brightnessLevel)", preferredStyle: .alert)
-            alertBr.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
+            let alertBr = UIAlertController(title: "Luminosité", message: "La luminosité est de \(brightnessLevel). Voulez vous activer la lampe torche.", preferredStyle: .alert)
+            alertBr.addAction(UIAlertAction(title: "Oui", style: .default, handler: {action in
+                videoCapture.toggleFlash()
+            }))
+            alertBr.addAction(UIAlertAction(title: "Non", style: .cancel, handler: nil))
             self.present(alertBr, animated: true)
-            print("done")
         })
         
     }

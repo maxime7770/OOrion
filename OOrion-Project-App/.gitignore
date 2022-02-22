@@ -6,13 +6,6 @@
 build/
 DerivedData/
 
-models/*
-!.gitkeep
-!MobileNetV2Int8LUT.mlmodel
-!YOLOv3TinyInt8LUT.mlmodel
-!SqueezeNet.mlmodel
-!GoogLeNetPlaces.mlmodel
-
 
 ## Various settings
 *.pbxuser
@@ -74,3 +67,6 @@ fastlane/report.xml
 fastlane/Preview.html
 fastlane/screenshots/**/*.png
 fastlane/test_output
+
+
+OOrion-Project-App/Assets.xcassets/AppIcon.appiconset

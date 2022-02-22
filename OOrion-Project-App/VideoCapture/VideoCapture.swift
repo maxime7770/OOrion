@@ -155,4 +155,24 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
         let brightnessLevel = videoDevice.iso
         return brightnessLevel
     }
+    
+    func toggleFlash() {
+        if (videoDevice.hasTorch) {
+            do {
+                try videoDevice.lockForConfiguration()
+                if (videoDevice.torchMode == AVCaptureDevice.TorchMode.on) {
+                    videoDevice.torchMode = AVCaptureDevice.TorchMode.off
+                } else {
+                    do {
+                        try videoDevice.setTorchModeOn(level: 1.0)
+                    } catch {
+                        print(error)
+                    }
+                }
+                videoDevice.unlockForConfiguration()
+            } catch {
+                print(error)
+            }
+        }
+    }
 }
