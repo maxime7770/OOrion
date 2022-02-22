@@ -149,4 +149,10 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
             imageBufferHandler(imageBuffer, timestamp, nil)
         }
     }
+    
+    
+    func brightcheck() -> Float {
+        let brightnessLevel = videoDevice.iso
+        return brightnessLevel
+    }
 }

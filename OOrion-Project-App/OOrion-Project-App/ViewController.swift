@@ -66,6 +66,7 @@ class ViewController: UIViewController {
         // scaleFill
         cropAndScaleOptionSelector.selectedSegmentIndex = 2
         updateCropAndScaleOption()
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -80,6 +81,17 @@ class ViewController: UIViewController {
         videoCapture.resizePreview()
         // TODO: Should be dynamically determined
         self.bbView.updateSize(for: CGSize(width: videoSize.height, height: videoSize.width))
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(4), execute: {
+            print("coucou")
+            let brightnessLevel = videoCapture.brightcheck()
+            print("let's go")
+            let alertBr = UIAlertController(title: "Brightness?", message: "The brightness slevel is \(brightnessLevel)", preferredStyle: .alert)
+            alertBr.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
+            self.present(alertBr, animated: true)
+            print("done")
+        })
+        
     }
     
     override func viewWillDisappear(_ animated: Bool) {
