@@ -9,6 +9,21 @@
 import UIKit
 import CoreML
 import Vision
+import VideoToolbox
+import ColorKit
+
+extension UIImage {
+    public convenience init?(pixelBuffer: CVPixelBuffer) {
+        var cgImage: CGImage?
+        VTCreateCGImageFromCVPixelBuffer(pixelBuffer, options: nil, imageOut: &cgImage)
+
+        guard let cgImage = cgImage else {
+            return nil
+        }
+
+        self.init(cgImage: cgImage)
+    }
+}
 
 class ViewController: UIViewController {
 
@@ -41,14 +56,14 @@ class ViewController: UIViewController {
         videoCapture = VideoCapture(cameraType: .back,
                                     preferredSpec: spec,
                                     previewContainer: previewView.layer)
-        videoCapture.imageBufferHandler = {[unowned self] (imageBuffer, timestamp, outputBuffer) in
+        videoCapture.imageBufferHandler = {[unowned self] (imageBuffer, timestamp, outputBuffer,sampleBuffer) in
             let delay = CACurrentMediaTime() - timestamp.seconds
             if delay > frameInterval {
                 return
             }
 
             self.serialQueue.async {
-                self.runModel(imageBuffer: imageBuffer)
+                self.runModel(imageBuffer: imageBuffer,sampleBuffer: sampleBuffer)
             }
         }
         
@@ -119,10 +134,88 @@ class ViewController: UIViewController {
         }
     }
     
-    private func runModel(imageBuffer: CVPixelBuffer) {
+    private func runModel(imageBuffer: CVPixelBuffer,sampleBuffer: CMSampleBuffer) {
         guard let model = selectedVNModel else { return }
         let handler = VNImageRequestHandler(cvPixelBuffer: imageBuffer)
+        print(imageBuffer)
+        func pixelFrom(x: Int, y: Int, movieFrame: CVPixelBuffer) -> (UInt8, UInt8, UInt8) {
+            CVPixelBufferLockBaseAddress(movieFrame,CVPixelBufferLockFlags(rawValue:0))
+            let baseAddress = CVPixelBufferGetBaseAddress(movieFrame)
+            let bytesPerRow = CVPixelBufferGetBytesPerRow(movieFrame)
+            let buffer = baseAddress!.assumingMemoryBound(to: UInt8.self)
+            CVPixelBufferUnlockBaseAddress(movieFrame,CVPixelBufferLockFlags(rawValue:0))
+
+            let index = x*4 + y*bytesPerRow
+            let b = buffer[index]
+            let g = buffer[index+1]
+            let r = buffer[index+2]
+            
+            return (r, g, b)
+        }
+//        let start=DispatchTime.now().uptimeNanoseconds
+//        let x=pixelFrom(x: 3, y:3, movieFrame: imageBuffer)
+//        let end=DispatchTime.now().uptimeNanoseconds
+//        print(end-start)
+//
+//        var arr = [[Double]]()
+//        let start2=DispatchTime.now().uptimeNanoseconds
+//        for i in 0...150 {
+//            for j in 0...150 {
+//                let pixel=pixelFrom(x:i, y: j, movieFrame: imageBuffer)
+//                arr.append([Double(pixel.0),Double(pixel.1),Double(pixel.2)])
+//            }
+//
+//        }
+//        let end2=DispatchTime.now().uptimeNanoseconds
+//        print(end2-start2)
         
+        func getPixels(movieFrame: CVPixelBuffer) -> [Vector] {
+            CVPixelBufferLockBaseAddress(movieFrame,CVPixelBufferLockFlags(rawValue:0))
+            let baseAddress = CVPixelBufferGetBaseAddress(movieFrame)
+            let bytesPerRow = CVPixelBufferGetBytesPerRow(movieFrame)
+            let buffer = baseAddress!.assumingMemoryBound(to: UInt8.self)
+            CVPixelBufferUnlockBaseAddress(movieFrame,CVPixelBufferLockFlags(rawValue:0))
+            var arr = [Vector]()
+            for x in 0...30 {
+                for y in 0...30 {
+                    let index = x*4 + y*bytesPerRow
+                    let b = buffer[index]
+                    let g = buffer[index+1]
+                    let r = buffer[index+2]
+                    arr.append(Vector([Double(r),Double(g),Double(b)]))
+                }
+            }
+            return arr
+        }
+        
+        let start=DispatchTime.now().uptimeNanoseconds
+        let im=getPixels(movieFrame: imageBuffer)
+        let end=DispatchTime.now().uptimeNanoseconds
+        print(end-start)
+        //print(kMeans(numCenters: 5, convergeDistance: 0.0, points: im))
+        var cgImage: CGImage?
+        let ima=VTCreateCGImageFromCVPixelBuffer(imageBuffer, options: nil, imageOut: &cgImage)
+        let colors = try ima.dominantColors()
+        print(colors)
+        
+//        let pixelBuffer: CVPixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)!
+//        CVPixelBufferLockBaseAddress(pixelBuffer, CVPixelBufferLockFlags(rawValue: 0));
+//        let int32Buffer = unsafeBitCast(CVPixelBufferGetBaseAddress(pixelBuffer), to: UnsafeMutablePointer<UInt32>.self)
+//        let int32PerRow = CVPixelBufferGetBytesPerRow(pixelBuffer)
+//        var arr = [[Double]]()
+//        for x in 0...719 {
+//            for y in 0...1279 {
+//                let index = x * int32PerRow + y
+//                let luma = int32Buffer[index]
+//                let byteArray = withUnsafeBytes(of: luma.bigEndian) {
+//                    Array($0)
+//                }
+//                arr.append([Double(byteArray[0]),Double(byteArray[1]),Double(byteArray[2])])
+//                }
+//            }
+//        CVPixelBufferUnlockBaseAddress(pixelBuffer, CVPixelBufferLockFlags(rawValue: 0))
+
+    
         let request = VNCoreMLRequest(model: model, completionHandler: { (request, error) in
             if let results = request.results as? [VNClassificationObservation] {
                 self.processClassificationObservations(results)
