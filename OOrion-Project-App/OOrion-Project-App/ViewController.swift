@@ -71,6 +71,8 @@ class ViewController: UIViewController {
     @IBOutlet private weak var bbView: BoundingBoxView!
     @IBOutlet weak var cropAndScaleOptionSelector: UISegmentedControl!
     
+    private var myView: UIView?
+    
     public let xPos = 80
     
     override func viewDidLoad() {
@@ -98,14 +100,14 @@ class ViewController: UIViewController {
         let rectFrame: CGRect = CGRect(x:CGFloat(xPos), y:CGFloat(yPos), width:CGFloat(rectWidth), height:CGFloat(rectHeight))
                 
         // Create a UIView object which use above CGRect object.
-        let myView = UIView(frame: rectFrame)
+        myView = UIView(frame: rectFrame)
                 
         // Set UIView background color.
-        myView.layer.borderWidth = 2
-        myView.layer.borderColor = UIColor.white.cgColor
+        myView!.layer.borderWidth = 2
+        myView!.layer.borderColor = UIColor.white.cgColor
             
         // Add above UIView object as the main view's subview.
-        self.view.addSubview(myView)
+        self.view.addSubview(myView!)
         
         
         
@@ -122,7 +124,9 @@ class ViewController: UIViewController {
             if delay > frameInterval {
                 return
             }
-        
+            myView!.isHidden = true
+            ColorLabel.isHidden = true
+            bbView.isHidden = false
             self.serialQueue.async {
                 self.runModel(imageBuffer: imageBuffer,sampleBuffer: sampleBuffer)
             }
@@ -357,13 +361,15 @@ class ViewController: UIViewController {
         alert.addAction(cancelAction)
         
         let actionYolo = UIAlertAction(title: "Yolov5", style: .default) { (action) in
+            self.myView!.isHidden = true
+            self.ColorLabel.isHidden = true
+            self.bbView.isHidden = false
             let frameInterval = 1.0 / Double(self.preferredFps)
             self.videoCapture.imageBufferHandler = {[unowned self] (imageBuffer, timestamp, outputBuffer,sampleBuffer) in
                 let delay = CACurrentMediaTime() - timestamp.seconds
                 if delay > frameInterval {
                     return
                 }
-            
                 self.serialQueue.async {
                     self.runModel(imageBuffer: imageBuffer,sampleBuffer: sampleBuffer)
                 }
@@ -372,13 +378,16 @@ class ViewController: UIViewController {
         alert.addAction(actionYolo)
     
         let actionColor = UIAlertAction(title: "Color", style: .default) { (action) in
+            self.myView!.isHidden = false
+            self.ColorLabel.isHidden = false
+            self.bbView.isHidden = true
             let frameInterval = 1.0 / Double(self.preferredFps)
             self.videoCapture.imageBufferHandler = {[unowned self] (imageBuffer, timestamp, outputBuffer,sampleBuffer) in
                 let delay = CACurrentMediaTime() - timestamp.seconds
                 if delay > frameInterval {
                     return
                 }
-            
+                
                 self.serialQueue.async {
                     self.getColorCenter(imageBuffer: imageBuffer,sampleBuffer: sampleBuffer)
                 }
