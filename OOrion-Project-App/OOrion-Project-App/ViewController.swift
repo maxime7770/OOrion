@@ -59,10 +59,47 @@ class ViewController: UIViewController {
     @IBOutlet private weak var othersLabel: UILabel!
     @IBOutlet private weak var bbView: BoundingBoxView!
     @IBOutlet weak var cropAndScaleOptionSelector: UISegmentedControl!
-
+    
+    public let xPos = 80
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
+        // get screen size object.
+        let screenSize: CGRect = UIScreen.main.bounds
+                
+        // get screen width.
+        let screenWidth = screenSize.width
+                
+        // get screen height.
+        let screenHeight = screenSize.height
+            
+        // the rectangle width.
+        let rectWidth = Int(screenWidth) - 2 * xPos
+                
+        // the rectangle height.
+        let rectHeight = rectWidth
+        
+        // the rectangle top left point y axis position.
+        let yPos = (Int(screenHeight) - rectWidth)/2
+            
+        // Create a CGRect object which is used to render a rectangle.
+        let rectFrame: CGRect = CGRect(x:CGFloat(xPos), y:CGFloat(yPos), width:CGFloat(rectWidth), height:CGFloat(rectHeight))
+                
+        // Create a UIView object which use above CGRect object.
+        let myView = UIView(frame: rectFrame)
+                
+        // Set UIView background color.
+        myView.layer.borderWidth = 2
+        myView.layer.borderColor = UIColor.white.cgColor
+            
+        // Add above UIView object as the main view's subview.
+        self.view.addSubview(myView)
+        
+        
+        
+        
+        
         let spec = VideoSpec(fps: preferredFps, size: videoSize)
         let frameInterval = 1.0 / Double(preferredFps)
         
@@ -201,15 +238,22 @@ class ViewController: UIViewController {
             return arr
         }
         
-        let start=DispatchTime.now().uptimeNanoseconds
-        let im=getPixels(movieFrame: imageBuffer)
-        let end=DispatchTime.now().uptimeNanoseconds
-        print(end-start)
         //print(kMeans(numCenters: 5, convergeDistance: 0.0, points: im))
-        var cgImage: CGImage?
-        let ima=VTCreateCGImageFromCVPixelBuffer(imageBuffer, options: nil, imageOut: &cgImage)
-        let ima2=UIImage(pixelBuffer: imageBuffer)
-        let colors = try? ima2!.dominantColors(algorithm: .iterative)
+     
+        let screenSize: CGRect = UIScreen.main.bounds
+        let screenWidth = screenSize.width
+        
+        let rectWidth = Int(screenWidth) - 2 * xPos
+        // the rectangle height.
+        let rectHeight = rectWidth
+        let rectH_CG = CGFloat(rectHeight)
+        let rectW_CG = CGFloat(rectWidth)
+        
+        
+        let ima=UIImage(pixelBuffer: imageBuffer)
+        let cropIma = Crop(sourceImage : ima! , length : rectH_CG, width : rectW_CG)
+        let cropImaUI = UIImage(cgImage: cropIma)
+        let colors = try? cropImaUI.dominantColors(algorithm: .iterative)
         
         print(colors)
         
@@ -330,4 +374,32 @@ extension URL {
     var modelName: String {
         return lastPathComponent.replacingOccurrences(of: ".mlmodelc", with: "")
     }
+}
+
+
+func Crop(sourceImage : UIImage, length : CGFloat, width : CGFloat) -> CGImage {
+    // The shortest side
+
+    // Determines the x,y coordinate of a centered
+    // sideLength by sideLength square
+    let sourceSize = sourceImage.size
+    let xOffset = (sourceSize.width - width) / 2.0
+    let yOffset = (sourceSize.height - length) / 2.0
+
+    // The cropRect is the rect of the image to keep,
+    // in this case centered
+    let cropRect = CGRect(
+        x: xOffset,
+        y: yOffset,
+        width: width,
+        height: length
+    ).integral
+
+    // Center crop the image
+    let sourceCGImage = sourceImage.cgImage!
+    let croppedCGImage = sourceCGImage.cropping(
+        to: cropRect
+    )!
+    
+    return croppedCGImage
 }
