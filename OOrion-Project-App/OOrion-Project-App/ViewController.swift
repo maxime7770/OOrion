@@ -12,6 +12,18 @@ import Vision
 import VideoToolbox
 import ColorKit
 
+extension UIColor {
+    var rgba: (red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat) {
+        var red: CGFloat = 0
+        var green: CGFloat = 0
+        var blue: CGFloat = 0
+        var alpha: CGFloat = 0
+        getRed(&red, green: &green, blue: &blue, alpha: &alpha)
+
+        return (red, green, blue, alpha)
+    }
+}
+
 extension UIImage {
     public convenience init?(pixelBuffer: CVPixelBuffer) {
         var cgImage: CGImage?
@@ -40,6 +52,7 @@ class ViewController: UIViewController {
     private var cropAndScaleOption: VNImageCropAndScaleOption = .scaleFit
     
     @IBOutlet private weak var previewView: UIView!
+    @IBOutlet weak var ColorLabel: UILabel!
     @IBOutlet private weak var modelLabel: UILabel!
     @IBOutlet private weak var resultView: UIView!
     @IBOutlet private weak var resultLabel: UILabel!
@@ -61,7 +74,7 @@ class ViewController: UIViewController {
             if delay > frameInterval {
                 return
             }
-
+        
             self.serialQueue.async {
                 self.runModel(imageBuffer: imageBuffer,sampleBuffer: sampleBuffer)
             }
@@ -195,8 +208,21 @@ class ViewController: UIViewController {
         //print(kMeans(numCenters: 5, convergeDistance: 0.0, points: im))
         var cgImage: CGImage?
         let ima=VTCreateCGImageFromCVPixelBuffer(imageBuffer, options: nil, imageOut: &cgImage)
-        let colors = try ima.dominantColors()
+        let ima2=UIImage(pixelBuffer: imageBuffer)
+        let colors = try? ima2!.dominantColors(algorithm: .iterative)
+        
         print(colors)
+        
+        let dominant=colors?[0].rgba
+        let r=dominant!.red * 255
+        let g=dominant!.green * 255
+        let b=dominant!.blue * 255
+        let hsv=rgbToHsv(red: r, green: g, blue:b)
+        let color=color_conversion(hsv: [hsv.h,hsv.s,hsv.v])
+        print(color)
+        DispatchQueue.main.async {
+            self.ColorLabel.text=color}
+        
         
 //        let pixelBuffer: CVPixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)!
 //        CVPixelBufferLockBaseAddress(pixelBuffer, CVPixelBufferLockFlags(rawValue: 0));
