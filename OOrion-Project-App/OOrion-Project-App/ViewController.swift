@@ -37,6 +37,19 @@ extension UIImage {
     }
 }
 
+extension UIImage {
+    func resizeImage(newWidth: CGFloat) -> UIImage {
+
+        let scale = newWidth / self.size.width
+        let newHeight = self.size.height * scale
+        UIGraphicsBeginImageContext(CGSize(width: newWidth, height: newHeight))
+        self.draw(in: CGRect(x: 0, y: 0, width: newWidth, height: newHeight))
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+
+        return newImage!
+    } }
+
 class ViewController: UIViewController {
 
     private var videoCapture: VideoCapture!
@@ -201,17 +214,11 @@ class ViewController: UIViewController {
             return arr
         }
         
-        let start=DispatchTime.now().uptimeNanoseconds
-        let im=getPixels(movieFrame: imageBuffer)
-        let end=DispatchTime.now().uptimeNanoseconds
-        print(end-start)
         //print(kMeans(numCenters: 5, convergeDistance: 0.0, points: im))
-        var cgImage: CGImage?
-        let ima=VTCreateCGImageFromCVPixelBuffer(imageBuffer, options: nil, imageOut: &cgImage)
-        let ima2=UIImage(pixelBuffer: imageBuffer)
-        let colors = try? ima2!.dominantColors(algorithm: .iterative)
-        
-        print(colors)
+        let ima=UIImage(pixelBuffer: imageBuffer)
+        let ima_res=ima?.resizeImage(newWidth:150)
+        let colors = try? ima_res!.dominantColors(with: .best, algorithm: .kMeansClustering)
+        print(colors as Any)
         
         let dominant=colors?[0].rgba
         let r=dominant!.red * 255

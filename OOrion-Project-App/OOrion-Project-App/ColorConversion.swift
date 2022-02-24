@@ -10,7 +10,7 @@ func color_conversion (hsv : Array<CGFloat>) -> String {
         if v <= 30 {
             return "black"
             }
-        else if v <= 90 {
+        else if v <= 80 {
             return "gray"
             }
         else {
@@ -125,5 +125,5 @@ func color_conversion (hsv : Array<CGFloat>) -> String {
             return res
             }
         }
-    return " "
+    return ""
     }
