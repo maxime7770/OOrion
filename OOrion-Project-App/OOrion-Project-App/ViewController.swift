@@ -68,8 +68,6 @@ class ViewController: UIViewController {
     @IBOutlet weak var ColorLabel: UILabel!
     @IBOutlet private weak var modelLabel: UILabel!
     @IBOutlet private weak var resultView: UIView!
-    @IBOutlet private weak var resultLabel: UILabel!
-    @IBOutlet private weak var othersLabel: UILabel!
     @IBOutlet private weak var bbView: BoundingBoxView!
     @IBOutlet weak var cropAndScaleOptionSelector: UISegmentedControl!
 
@@ -163,7 +161,25 @@ class ViewController: UIViewController {
     private func runModel(imageBuffer: CVPixelBuffer,sampleBuffer: CMSampleBuffer) {
         guard let model = selectedVNModel else { return }
         let handler = VNImageRequestHandler(cvPixelBuffer: imageBuffer)
-        print(imageBuffer)
+        let request = VNCoreMLRequest(model: model, completionHandler: { (request, error) in
+            if let results = request.results as? [VNClassificationObservation] {
+                self.processClassificationObservations(results)
+            } else if #available(iOS 12.0, *), let results = request.results as? [VNRecognizedObjectObservation] {
+                self.processObjectDetectionObservations(results)
+            }
+        })
+        
+        request.preferBackgroundProcessing = true
+        request.imageCropAndScaleOption = cropAndScaleOption
+        
+        do {
+            try handler.perform([request])
+        } catch {
+            print("failed to perform")
+        }
+    }
+    
+    private func getColorCenter(imageBuffer: CVPixelBuffer,sampleBuffer: CMSampleBuffer) {
         func pixelFrom(x: Int, y: Int, movieFrame: CVPixelBuffer) -> (UInt8, UInt8, UInt8) {
             CVPixelBufferLockBaseAddress(movieFrame,CVPixelBufferLockFlags(rawValue:0))
             let baseAddress = CVPixelBufferGetBaseAddress(movieFrame)
@@ -217,7 +233,7 @@ class ViewController: UIViewController {
         //print(kMeans(numCenters: 5, convergeDistance: 0.0, points: im))
         let ima=UIImage(pixelBuffer: imageBuffer)
         let ima_res=ima?.resizeImage(newWidth:150)
-        let colors = try? ima_res!.dominantColors(with: .best, algorithm: .kMeansClustering)
+        let colors = try? ima_res!.dominantColors(algorithm: .iterative)
         print(colors as Any)
         
         let dominant=colors?[0].rgba
@@ -248,25 +264,9 @@ class ViewController: UIViewController {
 //            }
 //        CVPixelBufferUnlockBaseAddress(pixelBuffer, CVPixelBufferLockFlags(rawValue: 0))
 
-    
-        let request = VNCoreMLRequest(model: model, completionHandler: { (request, error) in
-            if let results = request.results as? [VNClassificationObservation] {
-                self.processClassificationObservations(results)
-            } else if #available(iOS 12.0, *), let results = request.results as? [VNRecognizedObjectObservation] {
-                self.processObjectDetectionObservations(results)
-            }
-        })
-        
-        request.preferBackgroundProcessing = true
-        request.imageCropAndScaleOption = cropAndScaleOption
-        
-        do {
-            try handler.perform([request])
-        } catch {
-            print("failed to perform")
-        }
     }
-
+    
+    
     @available(iOS 12.0, *)
     private func processObjectDetectionObservations(_ results: [VNRecognizedObjectObservation]) {
         bbView.observations = results
@@ -294,8 +294,6 @@ class ViewController: UIViewController {
         DispatchQueue.main.async(execute: {
             self.bbView.isHidden = true
             self.resultView.isHidden = false
-            self.resultLabel.text = firstResult
-            self.othersLabel.text = others
         })
     }
 
@@ -305,6 +303,44 @@ class ViewController: UIViewController {
     }
     
     // MARK: - Actions
+    
+    @IBAction func Mode(_ sender: UIButton) {
+        let alert = UIAlertController(title: "Mode", message: "Choose a mode", preferredStyle: .actionSheet)
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        alert.addAction(cancelAction)
+        
+        let actionYolo = UIAlertAction(title: "Yolov5", style: .default) { (action) in
+            let frameInterval = 1.0 / Double(self.preferredFps)
+            self.videoCapture.imageBufferHandler = {[unowned self] (imageBuffer, timestamp, outputBuffer,sampleBuffer) in
+                let delay = CACurrentMediaTime() - timestamp.seconds
+                if delay > frameInterval {
+                    return
+                }
+            
+                self.serialQueue.async {
+                    self.runModel(imageBuffer: imageBuffer,sampleBuffer: sampleBuffer)
+                }
+            }
+        }
+        alert.addAction(actionYolo)
+    
+        let actionColor = UIAlertAction(title: "Color", style: .default) { (action) in
+            let frameInterval = 1.0 / Double(self.preferredFps)
+            self.videoCapture.imageBufferHandler = {[unowned self] (imageBuffer, timestamp, outputBuffer,sampleBuffer) in
+                let delay = CACurrentMediaTime() - timestamp.seconds
+                if delay > frameInterval {
+                    return
+                }
+            
+                self.serialQueue.async {
+                    self.getColorCenter(imageBuffer: imageBuffer,sampleBuffer: sampleBuffer)
+                }
+            }
+        }
+        alert.addAction(actionColor)
+        
+        present(alert, animated: true, completion: nil)
+    }
     
     @IBAction func modelBtnTapped(_ sender: UIButton) {
         showActionSheet()
