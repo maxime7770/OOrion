@@ -2,10 +2,6 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
-<<<<<<< HEAD
-        <deployment identifier="iOS"/>
-=======
->>>>>>> mode-button
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -36,13 +32,6 @@
                                     <constraint firstItem="Fg1-tb-RXL" firstAttribute="centerY" secondItem="kgo-Kf-x2U" secondAttribute="centerY" id="sjM-tf-jYS"/>
                                 </constraints>
                             </view>
-<<<<<<< HEAD
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Fg1-tb-RXL" customClass="BoundingBoxView" customModule="OOrion_Project_App" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            </view>
-=======
->>>>>>> mode-button
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JHJ-sK-nsg">
                                 <rect key="frame" x="8" y="0.0" width="359" height="30"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.80000000000000004" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -206,3 +195,4 @@
         </systemColor>
     </resources>
 </document>
+
