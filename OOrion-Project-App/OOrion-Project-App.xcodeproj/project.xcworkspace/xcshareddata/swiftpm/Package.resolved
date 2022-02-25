@@ -1,0 +1,34 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "ColorKit",
+        "repositoryURL": "https://github.com/Boris-Em/ColorKit.git",
+        "state": {
+          "branch": "master",
+          "revision": "c0d4e579cef1777975ba5bd9d46e50c40e377c8f",
+          "version": null
+        }
+      },
+      {
+        "package": "SimpleMatrixKit",
+        "repositoryURL": "https://github.com/eheitfield/SimpleMatrixKit.git",
+        "state": {
+          "branch": null,
+          "revision": "04b37bd04e97d9137647795d75c4716514b5eae6",
+          "version": "1.0.0"
+        }
+      },
+      {
+        "package": "SwiftCluster",
+        "repositoryURL": "https://github.com/eheitfield/SwiftCluster.git",
+        "state": {
+          "branch": null,
+          "revision": "21b9bdfbd75862cc4a54473b1d6f745dd3a2c5d6",
+          "version": "1.1.1"
+        }
+      }
+    ]
+  },
+  "version": 1
+}
