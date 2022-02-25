@@ -91,8 +91,10 @@ class BoundingBoxView: UIView {
             
             let im_crop=UIImage(cgImage: croppedCGImage)
             //UIImageWriteToSavedPhotosAlbum(im_crop, nil, nil, nil)
+
             let colors_detected = try? im_crop.dominantColors(with: .fair, algorithm: .iterative)
             let dominant=colors_detected![0].rgba
+            print(colors_detected!)
             print(dominant)
             let r=dominant.red * 255
             let g=dominant.green * 255
