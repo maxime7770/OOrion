@@ -124,13 +124,14 @@ class ViewController: UIViewController {
             if delay > frameInterval {
                 return
             }
-            myView!.isHidden = true
-            ColorLabel.isHidden = true
-            bbView.isHidden = false
             self.serialQueue.async {
                 self.runModel(imageBuffer: imageBuffer,sampleBuffer: sampleBuffer)
             }
         }
+        
+        ColorLabel.text = ""
+        myView!.isHidden = true
+        bbView.isHidden = false
         
         let modelPaths = Bundle.main.paths(forResourcesOfType: "mlmodel", inDirectory: "models")
         
@@ -295,6 +296,8 @@ class ViewController: UIViewController {
         let color=color_conversion(hsv: [hsv.h,hsv.s,hsv.v])
         print(color)
         DispatchQueue.main.async {
+            self.bbView.isHidden = true
+            self.ColorLabel.isHidden = false
             self.ColorLabel.text=color}
         
         
@@ -326,6 +329,7 @@ class ViewController: UIViewController {
             self.resultView.isHidden = true
             self.bbView.isHidden = false
             self.bbView.setNeedsDisplay()
+            self.ColorLabel.text = ""
         }
     }
 
@@ -362,8 +366,8 @@ class ViewController: UIViewController {
         
         let actionYolo = UIAlertAction(title: "Yolov5", style: .default) { (action) in
             self.myView!.isHidden = true
-            self.ColorLabel.isHidden = true
             self.bbView.isHidden = false
+            self.ColorLabel.text = ""
             let frameInterval = 1.0 / Double(self.preferredFps)
             self.videoCapture.imageBufferHandler = {[unowned self] (imageBuffer, timestamp, outputBuffer,sampleBuffer) in
                 let delay = CACurrentMediaTime() - timestamp.seconds
@@ -379,7 +383,6 @@ class ViewController: UIViewController {
     
         let actionColor = UIAlertAction(title: "Color", style: .default) { (action) in
             self.myView!.isHidden = false
-            self.ColorLabel.isHidden = false
             self.bbView.isHidden = true
             let frameInterval = 1.0 / Double(self.preferredFps)
             self.videoCapture.imageBufferHandler = {[unowned self] (imageBuffer, timestamp, outputBuffer,sampleBuffer) in
