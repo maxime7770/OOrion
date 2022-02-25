@@ -23,6 +23,7 @@
 		C2EE09D527C673E400E2C0F9 /* ColorKit in Frameworks */ = {isa = PBXBuildFile; productRef = C2EE09D427C673E400E2C0F9 /* ColorKit */; };
 		C2EE09D727C6879C00E2C0F9 /* RgbToHsv.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2EE09D627C6879C00E2C0F9 /* RgbToHsv.swift */; };
 		C2EE09D927C68E0700E2C0F9 /* ColorConversion.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2EE09D827C68E0700E2C0F9 /* ColorConversion.swift */; };
+		C2EE09DD27C7BB3200E2C0F9 /* UIIMageColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2EE09DC27C7BB3200E2C0F9 /* UIIMageColors.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -42,6 +43,7 @@
 		C2EE09CE27C6622800E2C0F9 /* KMeans.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KMeans.swift; sourceTree = "<group>"; };
 		C2EE09D627C6879C00E2C0F9 /* RgbToHsv.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RgbToHsv.swift; sourceTree = "<group>"; };
 		C2EE09D827C68E0700E2C0F9 /* ColorConversion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorConversion.swift; sourceTree = "<group>"; };
+		C2EE09DC27C7BB3200E2C0F9 /* UIIMageColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIIMageColors.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -85,10 +87,11 @@
 				8A413B9020D2205F00A761EC /* AppDelegate.swift */,
 				8A413B9220D2205F00A761EC /* ViewController.swift */,
 				8A243AE920D99188005947D6 /* ModelDescriptionViewController.swift */,
-				C2EE09CE27C6622800E2C0F9 /* KMeans.swift */,
 				8AEC912B24273FD70014E67B /* BoundingBoxView.swift */,
+				C2EE09CE27C6622800E2C0F9 /* KMeans.swift */,
 				C2EE09D627C6879C00E2C0F9 /* RgbToHsv.swift */,
 				C2EE09D827C68E0700E2C0F9 /* ColorConversion.swift */,
+				C2EE09DC27C7BB3200E2C0F9 /* UIIMageColors.swift */,
 			);
 			path = "OOrion-Project-App";
 			sourceTree = "<group>";
@@ -187,6 +190,7 @@
 				8A413BA720D221D500A761EC /* VideoCapture.swift in Sources */,
 				8AEC912C24273FD70014E67B /* BoundingBoxView.swift in Sources */,
 				8A413B9320D2205F00A761EC /* ViewController.swift in Sources */,
+				C2EE09DD27C7BB3200E2C0F9 /* UIIMageColors.swift in Sources */,
 				8A413B9120D2205F00A761EC /* AppDelegate.swift in Sources */,
 				8A413BA820D221D500A761EC /* AVCaptureDevice+Extension.swift in Sources */,
 				8A413BA620D221D500A761EC /* VideoCameraType.swift in Sources */,

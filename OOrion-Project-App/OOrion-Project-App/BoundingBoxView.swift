@@ -26,10 +26,31 @@ class BoundingBoxView: UIView {
 
         let context = UIGraphicsGetCurrentContext()!
         
+        UIGraphicsBeginImageContext(CGSize(width: 720, height: 1280))
+        let im = UIGraphicsGetImageFromCurrentImageContext()!
+        UIGraphicsEndImageContext()
+
+        
         for i in 0..<observations.count {
             let observation = observations[i]
+            
             let color = UIColor(hue: CGFloat(i) / CGFloat(observations.count), saturation: 1, brightness: 1, alpha: 1)
             let rect = drawBoundingBox(context: context, observation: observation, color: color)
+            
+            let CGsubImage = im.cgImage!
+            let croppedCGImage = CGsubImage.cropping(
+                    to: rect
+                )!
+            let im=UIImage(cgImage: croppedCGImage)
+            //let im=im_in.resizeImage(newWidth:150)
+            let colors = try? im.dominantColors(with: .low, algorithm: .kMeansClustering)
+            let dominant=colors?[0].rgba
+            let r=dominant!.red * 255
+            let g=dominant!.green * 255
+            let b=dominant!.blue * 255
+            let hsv=rgbToHsv(red: r, green: g, blue:b)
+            let color_detected=color_conversion(hsv: [hsv.h,hsv.s,hsv.v])
+            print(color_detected)
             
             if #available(iOS 12.0, *), let recognizedObjectObservation = observation as? VNRecognizedObjectObservation {
                 addLabel(on: rect, observation: recognizedObjectObservation, color: color)
@@ -67,4 +88,6 @@ class BoundingBoxView: UIView {
                              height: label.frame.height)
         addSubview(label)
     }
+    
+    
 }

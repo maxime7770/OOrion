@@ -163,7 +163,6 @@ class ViewController: UIViewController {
     private func runModel(imageBuffer: CVPixelBuffer,sampleBuffer: CMSampleBuffer) {
         guard let model = selectedVNModel else { return }
         let handler = VNImageRequestHandler(cvPixelBuffer: imageBuffer)
-        print(imageBuffer)
         func pixelFrom(x: Int, y: Int, movieFrame: CVPixelBuffer) -> (UInt8, UInt8, UInt8) {
             CVPixelBufferLockBaseAddress(movieFrame,CVPixelBufferLockFlags(rawValue:0))
             let baseAddress = CVPixelBufferGetBaseAddress(movieFrame)
@@ -214,21 +213,32 @@ class ViewController: UIViewController {
             return arr
         }
         
-        //print(kMeans(numCenters: 5, convergeDistance: 0.0, points: im))
-        let ima=UIImage(pixelBuffer: imageBuffer)
-        let ima_res=ima?.resizeImage(newWidth:150)
-        let colors = try? ima_res!.dominantColors(with: .best, algorithm: .kMeansClustering)
-        print(colors as Any)
+//          let ima=UIImage(pixelBuffer: imageBuffer)
+//          let ima_res=ima?.resizeImage(newWidth:150)
+//        
+//            let colors = try? ima_res!.dominantColors(with: .best, algorithm: .iterative)
+//            //print(colors as Any)
+//
+//            let dominant=colors?[0].rgba
+//            let r=dominant!.red * 255
+//            let g=dominant!.green * 255
+//            let b=dominant!.blue * 255
+//            let hsv=rgbToHsv(red: r, green: g, blue:b)
+//            let color=color_conversion(hsv: [hsv.h,hsv.s,hsv.v])
+            //print(color)
         
-        let dominant=colors?[0].rgba
-        let r=dominant!.red * 255
-        let g=dominant!.green * 255
-        let b=dominant!.blue * 255
-        let hsv=rgbToHsv(red: r, green: g, blue:b)
-        let color=color_conversion(hsv: [hsv.h,hsv.s,hsv.v])
-        print(color)
-        DispatchQueue.main.async {
-            self.ColorLabel.text=color}
+//        let colors_image=ima_res?.getColors()
+//        let dominant=colors_image?.background
+//        let r=dominant!.red * 255
+//        let g=dominant!.green * 255
+//        let b=dominant!.blue * 255
+//        print((r,g,b))
+//        let hsv=rgbToHsv(red: r, green: g, blue:b)
+//        let color=color_conversion(hsv: [hsv.h,hsv.s,hsv.v])
+//        print(color)
+        
+//        DispatchQueue.main.async {
+//            self.ColorLabel.text=color}
         
         
 //        let pixelBuffer: CVPixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)!
