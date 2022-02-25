@@ -160,104 +160,31 @@ class ViewController: UIViewController {
         }
     }
     
+    
     private func runModel(imageBuffer: CVPixelBuffer,sampleBuffer: CMSampleBuffer) {
         guard let model = selectedVNModel else { return }
+        bbView.imageBuffer=imageBuffer
         let handler = VNImageRequestHandler(cvPixelBuffer: imageBuffer)
-        func pixelFrom(x: Int, y: Int, movieFrame: CVPixelBuffer) -> (UInt8, UInt8, UInt8) {
-            CVPixelBufferLockBaseAddress(movieFrame,CVPixelBufferLockFlags(rawValue:0))
-            let baseAddress = CVPixelBufferGetBaseAddress(movieFrame)
-            let bytesPerRow = CVPixelBufferGetBytesPerRow(movieFrame)
-            let buffer = baseAddress!.assumingMemoryBound(to: UInt8.self)
-            CVPixelBufferUnlockBaseAddress(movieFrame,CVPixelBufferLockFlags(rawValue:0))
+        
+          let ima=UIImage(pixelBuffer: imageBuffer)
+          let ima_res=ima?.resizeImage(newWidth:150)
+      
+            let colors = try? ima_res!.dominantColors(with: .best, algorithm: .iterative)
 
-            let index = x*4 + y*bytesPerRow
-            let b = buffer[index]
-            let g = buffer[index+1]
-            let r = buffer[index+2]
-            
-            return (r, g, b)
-        }
-//        let start=DispatchTime.now().uptimeNanoseconds
-//        let x=pixelFrom(x: 3, y:3, movieFrame: imageBuffer)
-//        let end=DispatchTime.now().uptimeNanoseconds
-//        print(end-start)
-//
-//        var arr = [[Double]]()
-//        let start2=DispatchTime.now().uptimeNanoseconds
-//        for i in 0...150 {
-//            for j in 0...150 {
-//                let pixel=pixelFrom(x:i, y: j, movieFrame: imageBuffer)
-//                arr.append([Double(pixel.0),Double(pixel.1),Double(pixel.2)])
-//            }
-//
-//        }
-//        let end2=DispatchTime.now().uptimeNanoseconds
-//        print(end2-start2)
+            let dominant=colors?[0].rgba
+            let r=dominant!.red * 255
+            let g=dominant!.green * 255
+            let b=dominant!.blue * 255
+            let hsv=rgbToHsv(red: r, green: g, blue:b)
+            let color=color_conversion(hsv: [hsv.h,hsv.s,hsv.v])
         
-        func getPixels(movieFrame: CVPixelBuffer) -> [Vector] {
-            CVPixelBufferLockBaseAddress(movieFrame,CVPixelBufferLockFlags(rawValue:0))
-            let baseAddress = CVPixelBufferGetBaseAddress(movieFrame)
-            let bytesPerRow = CVPixelBufferGetBytesPerRow(movieFrame)
-            let buffer = baseAddress!.assumingMemoryBound(to: UInt8.self)
-            CVPixelBufferUnlockBaseAddress(movieFrame,CVPixelBufferLockFlags(rawValue:0))
-            var arr = [Vector]()
-            for x in 0...30 {
-                for y in 0...30 {
-                    let index = x*4 + y*bytesPerRow
-                    let b = buffer[index]
-                    let g = buffer[index+1]
-                    let r = buffer[index+2]
-                    arr.append(Vector([Double(r),Double(g),Double(b)]))
-                }
-            }
-            return arr
-        }
-        
-//          let ima=UIImage(pixelBuffer: imageBuffer)
-//          let ima_res=ima?.resizeImage(newWidth:150)
-//        
-//            let colors = try? ima_res!.dominantColors(with: .best, algorithm: .iterative)
-//            //print(colors as Any)
-//
-//            let dominant=colors?[0].rgba
-//            let r=dominant!.red * 255
-//            let g=dominant!.green * 255
-//            let b=dominant!.blue * 255
-//            let hsv=rgbToHsv(red: r, green: g, blue:b)
-//            let color=color_conversion(hsv: [hsv.h,hsv.s,hsv.v])
-            //print(color)
-        
-//        let colors_image=ima_res?.getColors()
-//        let dominant=colors_image?.background
-//        let r=dominant!.red * 255
-//        let g=dominant!.green * 255
-//        let b=dominant!.blue * 255
-//        print((r,g,b))
-//        let hsv=rgbToHsv(red: r, green: g, blue:b)
-//        let color=color_conversion(hsv: [hsv.h,hsv.s,hsv.v])
-//        print(color)
-        
-//        DispatchQueue.main.async {
-//            self.ColorLabel.text=color}
-        
-        
-//        let pixelBuffer: CVPixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)!
-//        CVPixelBufferLockBaseAddress(pixelBuffer, CVPixelBufferLockFlags(rawValue: 0));
-//        let int32Buffer = unsafeBitCast(CVPixelBufferGetBaseAddress(pixelBuffer), to: UnsafeMutablePointer<UInt32>.self)
-//        let int32PerRow = CVPixelBufferGetBytesPerRow(pixelBuffer)
-//        var arr = [[Double]]()
-//        for x in 0...719 {
-//            for y in 0...1279 {
-//                let index = x * int32PerRow + y
-//                let luma = int32Buffer[index]
-//                let byteArray = withUnsafeBytes(of: luma.bigEndian) {
-//                    Array($0)
-//                }
-//                arr.append([Double(byteArray[0]),Double(byteArray[1]),Double(byteArray[2])])
-//                }
-//            }
-//        CVPixelBufferUnlockBaseAddress(pixelBuffer, CVPixelBufferLockFlags(rawValue: 0))
 
+        DispatchQueue.main.async {
+            self.ColorLabel.text=color}
+        
+        
+
+        
     
         let request = VNCoreMLRequest(model: model, completionHandler: { (request, error) in
             if let results = request.results as? [VNClassificationObservation] {
