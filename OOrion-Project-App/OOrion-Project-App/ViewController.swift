@@ -156,12 +156,14 @@ class ViewController: UIViewController {
         videoCapture.startCapture()
         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1), execute: {
             let brightnessLevel = videoCapture.brightcheck()
-            let alertBr = UIAlertController(title: "Luminosité", message: "La luminosité est de \(brightnessLevel). Voulez vous activer la lampe torche.", preferredStyle: .alert)
-            alertBr.addAction(UIAlertAction(title: "Oui", style: .default, handler: {action in
-                videoCapture.toggleFlash()
-            }))
-            alertBr.addAction(UIAlertAction(title: "Non", style: .cancel, handler: nil))
-            self.present(alertBr, animated: true)
+            if brightnessLevel > 1000 {
+                let alertBr = UIAlertController(title: "Luminosité", message: "La luminosité est faible. Voulez vous activer la lampe torche.", preferredStyle: .alert)
+                alertBr.addAction(UIAlertAction(title: "Oui", style: .default, handler: {action in
+                    videoCapture.toggleFlash()
+                }))
+                alertBr.addAction(UIAlertAction(title: "Non", style: .cancel, handler: nil))
+                self.present(alertBr, animated: true)
+            }
         })
     }
     
