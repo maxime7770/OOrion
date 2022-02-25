@@ -9,6 +9,46 @@
 import UIKit
 import CoreML
 import Vision
+import VideoToolbox
+import ColorKit
+
+extension UIColor {
+    var rgba: (red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat) {
+        var red: CGFloat = 0
+        var green: CGFloat = 0
+        var blue: CGFloat = 0
+        var alpha: CGFloat = 0
+        getRed(&red, green: &green, blue: &blue, alpha: &alpha)
+
+        return (red, green, blue, alpha)
+    }
+}
+
+extension UIImage {
+    public convenience init?(pixelBuffer: CVPixelBuffer) {
+        var cgImage: CGImage?
+        VTCreateCGImageFromCVPixelBuffer(pixelBuffer, options: nil, imageOut: &cgImage)
+
+        guard let cgImage = cgImage else {
+            return nil
+        }
+
+        self.init(cgImage: cgImage)
+    }
+}
+
+extension UIImage {
+    func resizeImage(newWidth: CGFloat) -> UIImage {
+
+        let scale = newWidth / self.size.width
+        let newHeight = self.size.height * scale
+        UIGraphicsBeginImageContext(CGSize(width: newWidth, height: newHeight))
+        self.draw(in: CGRect(x: 0, y: 0, width: newWidth, height: newHeight))
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+
+        return newImage!
+    } }
 
 class ViewController: UIViewController {
 
@@ -25,32 +65,73 @@ class ViewController: UIViewController {
     private var cropAndScaleOption: VNImageCropAndScaleOption = .scaleFit
     
     @IBOutlet private weak var previewView: UIView!
+    @IBOutlet weak var ColorLabel: UILabel!
     @IBOutlet private weak var modelLabel: UILabel!
     @IBOutlet private weak var resultView: UIView!
-    @IBOutlet private weak var resultLabel: UILabel!
-    @IBOutlet private weak var othersLabel: UILabel!
     @IBOutlet private weak var bbView: BoundingBoxView!
     @IBOutlet weak var cropAndScaleOptionSelector: UISegmentedControl!
-
+    
+    private var myView: UIView?
+    
+    public let xPos = 80
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
+        // get screen size object.
+        let screenSize: CGRect = UIScreen.main.bounds
+                
+        // get screen width.
+        let screenWidth = screenSize.width
+                
+        // get screen height.
+        let screenHeight = screenSize.height
+            
+        // the rectangle width.
+        let rectWidth = Int(screenWidth) - 2 * xPos
+                
+        // the rectangle height.
+        let rectHeight = rectWidth
+        
+        // the rectangle top left point y axis position.
+        let yPos = (Int(screenHeight) - rectWidth)/2
+            
+        // Create a CGRect object which is used to render a rectangle.
+        let rectFrame: CGRect = CGRect(x:CGFloat(xPos), y:CGFloat(yPos), width:CGFloat(rectWidth), height:CGFloat(rectHeight))
+                
+        // Create a UIView object which use above CGRect object.
+        myView = UIView(frame: rectFrame)
+                
+        // Set UIView background color.
+        myView!.layer.borderWidth = 2
+        myView!.layer.borderColor = UIColor.white.cgColor
+            
+        // Add above UIView object as the main view's subview.
+        self.view.addSubview(myView!)
+        
+        
+        
+        
+        
         let spec = VideoSpec(fps: preferredFps, size: videoSize)
         let frameInterval = 1.0 / Double(preferredFps)
         
         videoCapture = VideoCapture(cameraType: .back,
                                     preferredSpec: spec,
                                     previewContainer: previewView.layer)
-        videoCapture.imageBufferHandler = {[unowned self] (imageBuffer, timestamp, outputBuffer) in
+        videoCapture.imageBufferHandler = {[unowned self] (imageBuffer, timestamp, outputBuffer,sampleBuffer) in
             let delay = CACurrentMediaTime() - timestamp.seconds
             if delay > frameInterval {
                 return
             }
-
             self.serialQueue.async {
-                self.runModel(imageBuffer: imageBuffer)
+                self.runModel(imageBuffer: imageBuffer,sampleBuffer: sampleBuffer)
             }
         }
+        
+        ColorLabel.text = ""
+        myView!.isHidden = true
+        bbView.isHidden = false
         
         let modelPaths = Bundle.main.paths(forResourcesOfType: "mlmodel", inDirectory: "models")
         
@@ -131,10 +212,9 @@ class ViewController: UIViewController {
         }
     }
     
-    private func runModel(imageBuffer: CVPixelBuffer) {
+    private func runModel(imageBuffer: CVPixelBuffer,sampleBuffer: CMSampleBuffer) {
         guard let model = selectedVNModel else { return }
         let handler = VNImageRequestHandler(cvPixelBuffer: imageBuffer)
-        
         let request = VNCoreMLRequest(model: model, completionHandler: { (request, error) in
             if let results = request.results as? [VNClassificationObservation] {
                 self.processClassificationObservations(results)
@@ -152,7 +232,107 @@ class ViewController: UIViewController {
             print("failed to perform")
         }
     }
+    
+    private func getColorCenter(imageBuffer: CVPixelBuffer,sampleBuffer: CMSampleBuffer) {
+        func pixelFrom(x: Int, y: Int, movieFrame: CVPixelBuffer) -> (UInt8, UInt8, UInt8) {
+            CVPixelBufferLockBaseAddress(movieFrame,CVPixelBufferLockFlags(rawValue:0))
+            let baseAddress = CVPixelBufferGetBaseAddress(movieFrame)
+            let bytesPerRow = CVPixelBufferGetBytesPerRow(movieFrame)
+            let buffer = baseAddress!.assumingMemoryBound(to: UInt8.self)
+            CVPixelBufferUnlockBaseAddress(movieFrame,CVPixelBufferLockFlags(rawValue:0))
 
+            let index = x*4 + y*bytesPerRow
+            let b = buffer[index]
+            let g = buffer[index+1]
+            let r = buffer[index+2]
+            
+            return (r, g, b)
+        }
+//        let start=DispatchTime.now().uptimeNanoseconds
+//        let x=pixelFrom(x: 3, y:3, movieFrame: imageBuffer)
+//        let end=DispatchTime.now().uptimeNanoseconds
+//        print(end-start)
+//
+//        var arr = [[Double]]()
+//        let start2=DispatchTime.now().uptimeNanoseconds
+//        for i in 0...150 {
+//            for j in 0...150 {
+//                let pixel=pixelFrom(x:i, y: j, movieFrame: imageBuffer)
+//                arr.append([Double(pixel.0),Double(pixel.1),Double(pixel.2)])
+//            }
+//
+//        }
+//        let end2=DispatchTime.now().uptimeNanoseconds
+//        print(end2-start2)
+        
+        func getPixels(movieFrame: CVPixelBuffer) -> [Vector] {
+            CVPixelBufferLockBaseAddress(movieFrame,CVPixelBufferLockFlags(rawValue:0))
+            let baseAddress = CVPixelBufferGetBaseAddress(movieFrame)
+            let bytesPerRow = CVPixelBufferGetBytesPerRow(movieFrame)
+            let buffer = baseAddress!.assumingMemoryBound(to: UInt8.self)
+            CVPixelBufferUnlockBaseAddress(movieFrame,CVPixelBufferLockFlags(rawValue:0))
+            var arr = [Vector]()
+            for x in 0...30 {
+                for y in 0...30 {
+                    let index = x*4 + y*bytesPerRow
+                    let b = buffer[index]
+                    let g = buffer[index+1]
+                    let r = buffer[index+2]
+                    arr.append(Vector([Double(r),Double(g),Double(b)]))
+                }
+            }
+            return arr
+        }
+        
+     
+        let screenSize: CGRect = UIScreen.main.bounds
+        let screenWidth = screenSize.width
+        
+        let rectWidth = Int(screenWidth) - 2 * xPos
+        // the rectangle height.
+        let rectHeight = rectWidth
+        let rectH_CG = CGFloat(rectHeight)
+        let rectW_CG = CGFloat(rectWidth)
+        
+        
+        let ima=UIImage(pixelBuffer: imageBuffer)
+        let cropIma = Crop(sourceImage : ima! , length : rectH_CG, width : rectW_CG)
+        let cropImaUI = UIImage(cgImage: cropIma)
+        let colors = try? cropImaUI.dominantColors(algorithm: .iterative)
+        
+        let dominant=colors?[0].rgba
+        let r=dominant!.red * 255
+        let g=dominant!.green * 255
+        let b=dominant!.blue * 255
+        let hsv=rgbToHsv(red: r, green: g, blue:b)
+        let color=color_conversion(hsv: [hsv.h,hsv.s,hsv.v])
+        print(color)
+        DispatchQueue.main.async {
+            self.bbView.isHidden = true
+            self.ColorLabel.isHidden = false
+            self.ColorLabel.text=color}
+        
+        
+//        let pixelBuffer: CVPixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)!
+//        CVPixelBufferLockBaseAddress(pixelBuffer, CVPixelBufferLockFlags(rawValue: 0));
+//        let int32Buffer = unsafeBitCast(CVPixelBufferGetBaseAddress(pixelBuffer), to: UnsafeMutablePointer<UInt32>.self)
+//        let int32PerRow = CVPixelBufferGetBytesPerRow(pixelBuffer)
+//        var arr = [[Double]]()
+//        for x in 0...719 {
+//            for y in 0...1279 {
+//                let index = x * int32PerRow + y
+//                let luma = int32Buffer[index]
+//                let byteArray = withUnsafeBytes(of: luma.bigEndian) {
+//                    Array($0)
+//                }
+//                arr.append([Double(byteArray[0]),Double(byteArray[1]),Double(byteArray[2])])
+//                }
+//            }
+//        CVPixelBufferUnlockBaseAddress(pixelBuffer, CVPixelBufferLockFlags(rawValue: 0))
+
+    }
+    
+    
     @available(iOS 12.0, *)
     private func processObjectDetectionObservations(_ results: [VNRecognizedObjectObservation]) {
         bbView.observations = results
@@ -161,6 +341,7 @@ class ViewController: UIViewController {
             self.resultView.isHidden = true
             self.bbView.isHidden = false
             self.bbView.setNeedsDisplay()
+            self.ColorLabel.text = ""
         }
     }
 
@@ -180,8 +361,6 @@ class ViewController: UIViewController {
         DispatchQueue.main.async(execute: {
             self.bbView.isHidden = true
             self.resultView.isHidden = false
-            self.resultLabel.text = firstResult
-            self.othersLabel.text = others
         })
     }
 
@@ -191,6 +370,48 @@ class ViewController: UIViewController {
     }
     
     // MARK: - Actions
+    
+    @IBAction func Mode(_ sender: UIButton) {
+        let alert = UIAlertController(title: "Mode", message: "Choose a mode", preferredStyle: .actionSheet)
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        alert.addAction(cancelAction)
+        
+        let actionYolo = UIAlertAction(title: "Yolov5", style: .default) { (action) in
+            self.myView!.isHidden = true
+            self.bbView.isHidden = false
+            self.ColorLabel.text = ""
+            let frameInterval = 1.0 / Double(self.preferredFps)
+            self.videoCapture.imageBufferHandler = {[unowned self] (imageBuffer, timestamp, outputBuffer,sampleBuffer) in
+                let delay = CACurrentMediaTime() - timestamp.seconds
+                if delay > frameInterval {
+                    return
+                }
+                self.serialQueue.async {
+                    self.runModel(imageBuffer: imageBuffer,sampleBuffer: sampleBuffer)
+                }
+            }
+        }
+        alert.addAction(actionYolo)
+    
+        let actionColor = UIAlertAction(title: "Color", style: .default) { (action) in
+            self.myView!.isHidden = false
+            self.bbView.isHidden = true
+            let frameInterval = 1.0 / Double(self.preferredFps)
+            self.videoCapture.imageBufferHandler = {[unowned self] (imageBuffer, timestamp, outputBuffer,sampleBuffer) in
+                let delay = CACurrentMediaTime() - timestamp.seconds
+                if delay > frameInterval {
+                    return
+                }
+                
+                self.serialQueue.async {
+                    self.getColorCenter(imageBuffer: imageBuffer,sampleBuffer: sampleBuffer)
+                }
+            }
+        }
+        alert.addAction(actionColor)
+        
+        present(alert, animated: true, completion: nil)
+    }
     
     @IBAction func modelBtnTapped(_ sender: UIButton) {
         showActionSheet()
@@ -223,4 +444,32 @@ extension URL {
     var modelName: String {
         return lastPathComponent.replacingOccurrences(of: ".mlmodelc", with: "")
     }
+}
+
+
+func Crop(sourceImage : UIImage, length : CGFloat, width : CGFloat) -> CGImage {
+    // The shortest side
+
+    // Determines the x,y coordinate of a centered
+    // sideLength by sideLength square
+    let sourceSize = sourceImage.size
+    let xOffset = (sourceSize.width - width) / 2.0
+    let yOffset = (sourceSize.height - length) / 2.0
+
+    // The cropRect is the rect of the image to keep,
+    // in this case centered
+    let cropRect = CGRect(
+        x: xOffset,
+        y: yOffset,
+        width: width,
+        height: length
+    ).integral
+
+    // Center crop the image
+    let sourceCGImage = sourceImage.cgImage!
+    let croppedCGImage = sourceCGImage.cropping(
+        to: cropRect
+    )!
+    
+    return croppedCGImage
 }

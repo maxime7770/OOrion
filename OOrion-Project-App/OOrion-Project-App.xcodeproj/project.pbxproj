@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -18,6 +18,11 @@
 		8A413BA820D221D500A761EC /* AVCaptureDevice+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A413BA520D221D500A761EC /* AVCaptureDevice+Extension.swift */; };
 		8A8DE5C920D6DEA200914B67 /* models in Resources */ = {isa = PBXBuildFile; fileRef = 8A8DE5C820D6DEA200914B67 /* models */; };
 		8AEC912C24273FD70014E67B /* BoundingBoxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AEC912B24273FD70014E67B /* BoundingBoxView.swift */; };
+		C2EE09CF27C6622800E2C0F9 /* KMeans.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2EE09CE27C6622800E2C0F9 /* KMeans.swift */; };
+		C2EE09D227C66D1E00E2C0F9 /* SwiftCluster in Frameworks */ = {isa = PBXBuildFile; productRef = C2EE09D127C66D1E00E2C0F9 /* SwiftCluster */; };
+		C2EE09D527C673E400E2C0F9 /* ColorKit in Frameworks */ = {isa = PBXBuildFile; productRef = C2EE09D427C673E400E2C0F9 /* ColorKit */; };
+		C2EE09D727C6879C00E2C0F9 /* RgbToHsv.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2EE09D627C6879C00E2C0F9 /* RgbToHsv.swift */; };
+		C2EE09D927C68E0700E2C0F9 /* ColorConversion.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2EE09D827C68E0700E2C0F9 /* ColorConversion.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +39,9 @@
 		8A413BA520D221D500A761EC /* AVCaptureDevice+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AVCaptureDevice+Extension.swift"; sourceTree = "<group>"; };
 		8A8DE5C820D6DEA200914B67 /* models */ = {isa = PBXFileReference; lastKnownFileType = folder; path = models; sourceTree = "<group>"; };
 		8AEC912B24273FD70014E67B /* BoundingBoxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoundingBoxView.swift; sourceTree = "<group>"; };
+		C2EE09CE27C6622800E2C0F9 /* KMeans.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KMeans.swift; sourceTree = "<group>"; };
+		C2EE09D627C6879C00E2C0F9 /* RgbToHsv.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RgbToHsv.swift; sourceTree = "<group>"; };
+		C2EE09D827C68E0700E2C0F9 /* ColorConversion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorConversion.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -41,6 +49,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C2EE09D227C66D1E00E2C0F9 /* SwiftCluster in Frameworks */,
+				C2EE09D527C673E400E2C0F9 /* ColorKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -75,7 +85,10 @@
 				8A413B9020D2205F00A761EC /* AppDelegate.swift */,
 				8A413B9220D2205F00A761EC /* ViewController.swift */,
 				8A243AE920D99188005947D6 /* ModelDescriptionViewController.swift */,
+				C2EE09CE27C6622800E2C0F9 /* KMeans.swift */,
 				8AEC912B24273FD70014E67B /* BoundingBoxView.swift */,
+				C2EE09D627C6879C00E2C0F9 /* RgbToHsv.swift */,
+				C2EE09D827C68E0700E2C0F9 /* ColorConversion.swift */,
 			);
 			path = "OOrion-Project-App";
 			sourceTree = "<group>";
@@ -106,6 +119,10 @@
 			dependencies = (
 			);
 			name = "OOrion-Project-App";
+			packageProductDependencies = (
+				C2EE09D127C66D1E00E2C0F9 /* SwiftCluster */,
+				C2EE09D427C673E400E2C0F9 /* ColorKit */,
+			);
 			productName = MLModelCamera;
 			productReference = 8A413B8D20D2205F00A761EC /* OOrion-Project-App.app */;
 			productType = "com.apple.product-type.application";
@@ -135,6 +152,10 @@
 				Base,
 			);
 			mainGroup = 8A413B8420D2205F00A761EC;
+			packageReferences = (
+				C2EE09D027C66D1E00E2C0F9 /* XCRemoteSwiftPackageReference "SwiftCluster" */,
+				C2EE09D327C673E400E2C0F9 /* XCRemoteSwiftPackageReference "ColorKit" */,
+			);
 			productRefGroup = 8A413B8E20D2205F00A761EC /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -169,7 +190,10 @@
 				8A413B9120D2205F00A761EC /* AppDelegate.swift in Sources */,
 				8A413BA820D221D500A761EC /* AVCaptureDevice+Extension.swift in Sources */,
 				8A413BA620D221D500A761EC /* VideoCameraType.swift in Sources */,
+				C2EE09CF27C6622800E2C0F9 /* KMeans.swift in Sources */,
+				C2EE09D727C6879C00E2C0F9 /* RgbToHsv.swift in Sources */,
 				8A243AEA20D99188005947D6 /* ModelDescriptionViewController.swift in Sources */,
+				C2EE09D927C68E0700E2C0F9 /* ColorConversion.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -231,6 +255,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 82YUQWRVWD;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -247,7 +272,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.2;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -292,6 +317,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 82YUQWRVWD;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -302,7 +328,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.2;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
@@ -322,7 +348,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "zapytest-OOrion-Project-App";
+				PRODUCT_BUNDLE_IDENTIFIER = "zapy-OOrion-Project-App";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -340,7 +366,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "zapytest-OOrion-Project-App";
+				PRODUCT_BUNDLE_IDENTIFIER = "zapy-OOrion-Project-App";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -369,6 +395,38 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		C2EE09D027C66D1E00E2C0F9 /* XCRemoteSwiftPackageReference "SwiftCluster" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/eheitfield/SwiftCluster.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+		C2EE09D327C673E400E2C0F9 /* XCRemoteSwiftPackageReference "ColorKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Boris-Em/ColorKit.git";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		C2EE09D127C66D1E00E2C0F9 /* SwiftCluster */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C2EE09D027C66D1E00E2C0F9 /* XCRemoteSwiftPackageReference "SwiftCluster" */;
+			productName = SwiftCluster;
+		};
+		C2EE09D427C673E400E2C0F9 /* ColorKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C2EE09D327C673E400E2C0F9 /* XCRemoteSwiftPackageReference "ColorKit" */;
+			productName = ColorKit;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 8A413B8520D2205F00A761EC /* Project object */;
 }

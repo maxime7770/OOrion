@@ -36,7 +36,7 @@ class BoundingBoxView: UIView {
             }
         }
     }
-    
+            
     private func drawBoundingBox(context: CGContext, observation: VNDetectedObjectObservation, color: UIColor) -> CGRect {
         let convertedRect = VNImageRectForNormalizedRect(observation.boundingBox, Int(imageRect.width), Int(imageRect.height))
         let x = convertedRect.minX + imageRect.minX
