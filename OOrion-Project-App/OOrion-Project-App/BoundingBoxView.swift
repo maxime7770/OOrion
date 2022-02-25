@@ -10,6 +10,34 @@ import UIKit
 import Vision
 import AVFoundation.AVUtilities
 
+func saveImage(imageName: String, image: UIImage) {
+
+
+ guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
+
+    let fileName = imageName
+    let fileURL = documentsDirectory.appendingPathComponent(fileName)
+    guard let data = image.jpegData(compressionQuality: 1) else { return }
+
+    //Checks if file exists, removes it if so.
+//    if FileManager.default.fileExists(atPath: fileURL.path) {
+//        do {
+//            try FileManager.default.removeItem(atPath: fileURL.path)
+//            print("Removed old image")
+//        } catch let removeError {
+//            print("couldn't remove file at path", removeError)
+//        }
+//
+//    }
+
+    do {
+        try data.write(to: fileURL)
+    } catch let error {
+        print("error saving file with error", error)
+    }
+
+}
+
 class BoundingBoxView: UIView {
     private let strokeWidth: CGFloat = 2
     
@@ -21,6 +49,8 @@ class BoundingBoxView: UIView {
         imageRect = AVMakeRect(aspectRatio: imageSize, insideRect: self.bounds)
     }
     
+    
+    
     override func draw(_ rect: CGRect) {
         guard observations != nil && observations.count > 0 else { return }
         subviews.forEach({ $0.removeFromSuperview() })
@@ -29,16 +59,39 @@ class BoundingBoxView: UIView {
         let im=UIImage(pixelBuffer: imageBuffer!)?.cgImage
 
         let observations_copy=observations
+        var color_detected = ""
         for i in 0..<observations_copy!.count {
             let observation = observations_copy![i]
             
             let color = UIColor(hue: CGFloat(i) / CGFloat(observations.count), saturation: 1, brightness: 1, alpha: 1)
             let rect = drawBoundingBox(context: context, observation: observation, color: color)
+            
+            let convertedRect = VNImageRectForNormalizedRect(observation.boundingBox, 720, 1280)
+            print(convertedRect)
+           let x = convertedRect.minX + imageRect.minX
+              let y = (imageRect.height - convertedRect.maxY) + imageRect.minY
+           let rect1 = CGRect(origin: CGPoint(x: x, y: y), size: convertedRect.size)
+            
+            let rect_complete=CGRect(origin: CGPoint(x: 0, y: 0), size: CGSize(width: 720, height: 1280))
+                                     
+                                     
+            let new_width = rect.width * 2.25
+            let new_height=rect.height * 2.25
+            let new_x=rect.origin.x * 2.25
+            let new_y=rect.origin.y * 2.25
+            let new_rect=CGRect(origin: CGPoint(x: new_x, y: new_y), size: CGSize(width: new_width, height: new_height))
+            print(new_rect)
+            
+            if new_rect.intersects(rect_complete)==true {
+            let inter_rect = new_rect.intersection(rect_complete)
             let croppedCGImage = im!.cropping(
-                    to: rect
-                )!
+                to: inter_rect)!
+            
+                                     
+            
             let im_crop=UIImage(cgImage: croppedCGImage)
-            let colors_detected = try? im_crop.dominantColors(with: .high, algorithm: .iterative)
+            //UIImageWriteToSavedPhotosAlbum(im_crop, nil, nil, nil)
+            let colors_detected = try? im_crop.dominantColors(with: .fair, algorithm: .iterative)
             let dominant=colors_detected![0].rgba
             print(dominant)
             let r=dominant.red * 255
@@ -46,8 +99,9 @@ class BoundingBoxView: UIView {
             let b=dominant.blue * 255
             print((r,g,b))
             let hsv=rgbToHsv(red: r, green: g, blue:b)
-            let color_detected=color_conversion(hsv: [hsv.h,hsv.s,hsv.v])
-            print(color_detected)
+            color_detected=color_conversion(hsv: [hsv.h,hsv.s,hsv.v])
+                print(color_detected)
+            }
             
             if #available(iOS 12.0, *), let recognizedObjectObservation = observation as? VNRecognizedObjectObservation {
                 addLabel(on: rect, observation: recognizedObjectObservation, color: color, color_detected: color_detected)
@@ -60,7 +114,6 @@ class BoundingBoxView: UIView {
         let x = convertedRect.minX + imageRect.minX
         let y = (imageRect.height - convertedRect.maxY) + imageRect.minY
         let rect = CGRect(origin: CGPoint(x: x, y: y), size: convertedRect.size)
-        
         context.setStrokeColor(color.cgColor)
         
         context.setLineWidth(strokeWidth)
