@@ -210,9 +210,12 @@ class ViewController: UIViewController {
         }
     }
     
+    
     private func runModel(imageBuffer: CVPixelBuffer,sampleBuffer: CMSampleBuffer) {
         guard let model = selectedVNModel else { return }
+        bbView.imageBuffer=imageBuffer
         let handler = VNImageRequestHandler(cvPixelBuffer: imageBuffer)
+<<<<<<< HEAD
         let request = VNCoreMLRequest(model: model, completionHandler: { (request, error) in
             if let results = request.results as? [VNClassificationObservation] {
                 self.processClassificationObservations(results)
@@ -297,37 +300,50 @@ class ViewController: UIViewController {
         let cropIma = Crop(sourceImage : ima! , length : rectH_CG, width : rectW_CG)
         let cropImaUI = UIImage(cgImage: cropIma)
         let colors = try? cropImaUI.dominantColors(algorithm: .iterative)
+=======
         
-        let dominant=colors?[0].rgba
-        let r=dominant!.red * 255
-        let g=dominant!.green * 255
-        let b=dominant!.blue * 255
-        let hsv=rgbToHsv(red: r, green: g, blue:b)
-        let color=color_conversion(hsv: [hsv.h,hsv.s,hsv.v])
-        print(color)
+          let ima=UIImage(pixelBuffer: imageBuffer)
+          let ima_res=ima?.resizeImage(newWidth:150)
+      
+            let colors = try? ima_res!.dominantColors(with: .best, algorithm: .iterative)
+
+            let dominant=colors?[0].rgba
+            let r=dominant!.red * 255
+            let g=dominant!.green * 255
+            let b=dominant!.blue * 255
+            let hsv=rgbToHsv(red: r, green: g, blue:b)
+            let color=color_conversion(hsv: [hsv.h,hsv.s,hsv.v])
+>>>>>>> maxime
+        
+
         DispatchQueue.main.async {
             self.bbView.isHidden = true
             self.ColorLabel.isHidden = false
             self.ColorLabel.text=color}
         
         
-//        let pixelBuffer: CVPixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)!
-//        CVPixelBufferLockBaseAddress(pixelBuffer, CVPixelBufferLockFlags(rawValue: 0));
-//        let int32Buffer = unsafeBitCast(CVPixelBufferGetBaseAddress(pixelBuffer), to: UnsafeMutablePointer<UInt32>.self)
-//        let int32PerRow = CVPixelBufferGetBytesPerRow(pixelBuffer)
-//        var arr = [[Double]]()
-//        for x in 0...719 {
-//            for y in 0...1279 {
-//                let index = x * int32PerRow + y
-//                let luma = int32Buffer[index]
-//                let byteArray = withUnsafeBytes(of: luma.bigEndian) {
-//                    Array($0)
-//                }
-//                arr.append([Double(byteArray[0]),Double(byteArray[1]),Double(byteArray[2])])
-//                }
-//            }
-//        CVPixelBufferUnlockBaseAddress(pixelBuffer, CVPixelBufferLockFlags(rawValue: 0))
 
+<<<<<<< HEAD
+=======
+        
+    
+        let request = VNCoreMLRequest(model: model, completionHandler: { (request, error) in
+            if let results = request.results as? [VNClassificationObservation] {
+                self.processClassificationObservations(results)
+            } else if #available(iOS 12.0, *), let results = request.results as? [VNRecognizedObjectObservation] {
+                self.processObjectDetectionObservations(results)
+            }
+        })
+        
+        request.preferBackgroundProcessing = true
+        request.imageCropAndScaleOption = cropAndScaleOption
+        
+        do {
+            try handler.perform([request])
+        } catch {
+            print("failed to perform")
+        }
+>>>>>>> maxime
     }
     
     

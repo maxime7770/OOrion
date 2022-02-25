@@ -18,7 +18,6 @@
 		8A413BA820D221D500A761EC /* AVCaptureDevice+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A413BA520D221D500A761EC /* AVCaptureDevice+Extension.swift */; };
 		8A8DE5C920D6DEA200914B67 /* models in Resources */ = {isa = PBXBuildFile; fileRef = 8A8DE5C820D6DEA200914B67 /* models */; };
 		8AEC912C24273FD70014E67B /* BoundingBoxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AEC912B24273FD70014E67B /* BoundingBoxView.swift */; };
-		C2EE09CF27C6622800E2C0F9 /* KMeans.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2EE09CE27C6622800E2C0F9 /* KMeans.swift */; };
 		C2EE09D227C66D1E00E2C0F9 /* SwiftCluster in Frameworks */ = {isa = PBXBuildFile; productRef = C2EE09D127C66D1E00E2C0F9 /* SwiftCluster */; };
 		C2EE09D527C673E400E2C0F9 /* ColorKit in Frameworks */ = {isa = PBXBuildFile; productRef = C2EE09D427C673E400E2C0F9 /* ColorKit */; };
 		C2EE09D727C6879C00E2C0F9 /* RgbToHsv.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2EE09D627C6879C00E2C0F9 /* RgbToHsv.swift */; };
@@ -39,7 +38,6 @@
 		8A413BA520D221D500A761EC /* AVCaptureDevice+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AVCaptureDevice+Extension.swift"; sourceTree = "<group>"; };
 		8A8DE5C820D6DEA200914B67 /* models */ = {isa = PBXFileReference; lastKnownFileType = folder; path = models; sourceTree = "<group>"; };
 		8AEC912B24273FD70014E67B /* BoundingBoxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoundingBoxView.swift; sourceTree = "<group>"; };
-		C2EE09CE27C6622800E2C0F9 /* KMeans.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KMeans.swift; sourceTree = "<group>"; };
 		C2EE09D627C6879C00E2C0F9 /* RgbToHsv.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RgbToHsv.swift; sourceTree = "<group>"; };
 		C2EE09D827C68E0700E2C0F9 /* ColorConversion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorConversion.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -85,7 +83,6 @@
 				8A413B9020D2205F00A761EC /* AppDelegate.swift */,
 				8A413B9220D2205F00A761EC /* ViewController.swift */,
 				8A243AE920D99188005947D6 /* ModelDescriptionViewController.swift */,
-				C2EE09CE27C6622800E2C0F9 /* KMeans.swift */,
 				8AEC912B24273FD70014E67B /* BoundingBoxView.swift */,
 				C2EE09D627C6879C00E2C0F9 /* RgbToHsv.swift */,
 				C2EE09D827C68E0700E2C0F9 /* ColorConversion.swift */,
@@ -190,7 +187,6 @@
 				8A413B9120D2205F00A761EC /* AppDelegate.swift in Sources */,
 				8A413BA820D221D500A761EC /* AVCaptureDevice+Extension.swift in Sources */,
 				8A413BA620D221D500A761EC /* VideoCameraType.swift in Sources */,
-				C2EE09CF27C6622800E2C0F9 /* KMeans.swift in Sources */,
 				C2EE09D727C6879C00E2C0F9 /* RgbToHsv.swift in Sources */,
 				8A243AEA20D99188005947D6 /* ModelDescriptionViewController.swift in Sources */,
 				C2EE09D927C68E0700E2C0F9 /* ColorConversion.swift in Sources */,

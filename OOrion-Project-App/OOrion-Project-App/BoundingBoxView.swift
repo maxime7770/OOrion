@@ -15,6 +15,7 @@ class BoundingBoxView: UIView {
     
     private var imageRect: CGRect = CGRect.zero
     var observations: [VNDetectedObjectObservation]!
+    var imageBuffer: CVPixelBuffer?
     
     func updateSize(for imageSize: CGSize) {
         imageRect = AVMakeRect(aspectRatio: imageSize, insideRect: self.bounds)
@@ -25,14 +26,31 @@ class BoundingBoxView: UIView {
         subviews.forEach({ $0.removeFromSuperview() })
 
         let context = UIGraphicsGetCurrentContext()!
-        
-        for i in 0..<observations.count {
-            let observation = observations[i]
+        let im=UIImage(pixelBuffer: imageBuffer!)?.cgImage
+
+        let observations_copy=observations
+        for i in 0..<observations_copy!.count {
+            let observation = observations_copy![i]
+            
             let color = UIColor(hue: CGFloat(i) / CGFloat(observations.count), saturation: 1, brightness: 1, alpha: 1)
             let rect = drawBoundingBox(context: context, observation: observation, color: color)
+            let croppedCGImage = im!.cropping(
+                    to: rect
+                )!
+            let im_crop=UIImage(cgImage: croppedCGImage)
+            let colors_detected = try? im_crop.dominantColors(with: .high, algorithm: .iterative)
+            let dominant=colors_detected![0].rgba
+            print(dominant)
+            let r=dominant.red * 255
+            let g=dominant.green * 255
+            let b=dominant.blue * 255
+            print((r,g,b))
+            let hsv=rgbToHsv(red: r, green: g, blue:b)
+            let color_detected=color_conversion(hsv: [hsv.h,hsv.s,hsv.v])
+            print(color_detected)
             
             if #available(iOS 12.0, *), let recognizedObjectObservation = observation as? VNRecognizedObjectObservation {
-                addLabel(on: rect, observation: recognizedObjectObservation, color: color)
+                addLabel(on: rect, observation: recognizedObjectObservation, color: color, color_detected: color_detected)
             }
         }
     }
@@ -52,11 +70,11 @@ class BoundingBoxView: UIView {
     }
 
     @available(iOS 12.0, *)
-    private func addLabel(on rect: CGRect, observation: VNRecognizedObjectObservation, color: UIColor) {
+    private func addLabel(on rect: CGRect, observation: VNRecognizedObjectObservation, color: UIColor, color_detected: String) {
         guard let firstLabel = observation.labels.first?.identifier else { return }
                 
         let label = UILabel(frame: .zero)
-        label.text = firstLabel
+        label.text = color_detected + " " + firstLabel
         label.font = UIFont.boldSystemFont(ofSize: 13)
         label.textColor = UIColor.black
         label.backgroundColor = color
@@ -67,4 +85,6 @@ class BoundingBoxView: UIView {
                              height: label.frame.height)
         addSubview(label)
     }
+    
+    
 }
