@@ -154,15 +154,6 @@ class ViewController: UIViewController {
         super.viewWillAppear(animated)
         guard let videoCapture = videoCapture else {return}
         videoCapture.startCapture()
-    }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        guard let videoCapture = videoCapture else {return}
-        videoCapture.resizePreview()
-        // TODO: Should be dynamically determined
-        self.bbView.updateSize(for: CGSize(width: videoSize.height, height: videoSize.width))
-        
         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1), execute: {
             let brightnessLevel = videoCapture.brightcheck()
             let alertBr = UIAlertController(title: "Luminosité", message: "La luminosité est de \(brightnessLevel). Voulez vous activer la lampe torche.", preferredStyle: .alert)
@@ -172,7 +163,14 @@ class ViewController: UIViewController {
             alertBr.addAction(UIAlertAction(title: "Non", style: .cancel, handler: nil))
             self.present(alertBr, animated: true)
         })
-        
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        guard let videoCapture = videoCapture else {return}
+        videoCapture.resizePreview()
+        // TODO: Should be dynamically determined
+        self.bbView.updateSize(for: CGSize(width: videoSize.height, height: videoSize.width))
     }
     
     override func viewWillDisappear(_ animated: Bool) {
