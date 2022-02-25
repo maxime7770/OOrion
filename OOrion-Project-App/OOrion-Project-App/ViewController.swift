@@ -215,7 +215,6 @@ class ViewController: UIViewController {
         guard let model = selectedVNModel else { return }
         bbView.imageBuffer=imageBuffer
         let handler = VNImageRequestHandler(cvPixelBuffer: imageBuffer)
-<<<<<<< HEAD
         let request = VNCoreMLRequest(model: model, completionHandler: { (request, error) in
             if let results = request.results as? [VNClassificationObservation] {
                 self.processClassificationObservations(results)
@@ -232,118 +231,6 @@ class ViewController: UIViewController {
         } catch {
             print("failed to perform")
         }
-    }
-    
-    private func getColorCenter(imageBuffer: CVPixelBuffer,sampleBuffer: CMSampleBuffer) {
-        func pixelFrom(x: Int, y: Int, movieFrame: CVPixelBuffer) -> (UInt8, UInt8, UInt8) {
-            CVPixelBufferLockBaseAddress(movieFrame,CVPixelBufferLockFlags(rawValue:0))
-            let baseAddress = CVPixelBufferGetBaseAddress(movieFrame)
-            let bytesPerRow = CVPixelBufferGetBytesPerRow(movieFrame)
-            let buffer = baseAddress!.assumingMemoryBound(to: UInt8.self)
-            CVPixelBufferUnlockBaseAddress(movieFrame,CVPixelBufferLockFlags(rawValue:0))
-
-            let index = x*4 + y*bytesPerRow
-            let b = buffer[index]
-            let g = buffer[index+1]
-            let r = buffer[index+2]
-            
-            return (r, g, b)
-        }
-//        let start=DispatchTime.now().uptimeNanoseconds
-//        let x=pixelFrom(x: 3, y:3, movieFrame: imageBuffer)
-//        let end=DispatchTime.now().uptimeNanoseconds
-//        print(end-start)
-//
-//        var arr = [[Double]]()
-//        let start2=DispatchTime.now().uptimeNanoseconds
-//        for i in 0...150 {
-//            for j in 0...150 {
-//                let pixel=pixelFrom(x:i, y: j, movieFrame: imageBuffer)
-//                arr.append([Double(pixel.0),Double(pixel.1),Double(pixel.2)])
-//            }
-//
-//        }
-//        let end2=DispatchTime.now().uptimeNanoseconds
-//        print(end2-start2)
-        
-        func getPixels(movieFrame: CVPixelBuffer) -> [Vector] {
-            CVPixelBufferLockBaseAddress(movieFrame,CVPixelBufferLockFlags(rawValue:0))
-            let baseAddress = CVPixelBufferGetBaseAddress(movieFrame)
-            let bytesPerRow = CVPixelBufferGetBytesPerRow(movieFrame)
-            let buffer = baseAddress!.assumingMemoryBound(to: UInt8.self)
-            CVPixelBufferUnlockBaseAddress(movieFrame,CVPixelBufferLockFlags(rawValue:0))
-            var arr = [Vector]()
-            for x in 0...30 {
-                for y in 0...30 {
-                    let index = x*4 + y*bytesPerRow
-                    let b = buffer[index]
-                    let g = buffer[index+1]
-                    let r = buffer[index+2]
-                    arr.append(Vector([Double(r),Double(g),Double(b)]))
-                }
-            }
-            return arr
-        }
-        
-     
-        let screenSize: CGRect = UIScreen.main.bounds
-        let screenWidth = screenSize.width
-        
-        let rectWidth = Int(screenWidth) - 2 * xPos
-        // the rectangle height.
-        let rectHeight = rectWidth
-        let rectH_CG = CGFloat(rectHeight)
-        let rectW_CG = CGFloat(rectWidth)
-        
-        
-        let ima=UIImage(pixelBuffer: imageBuffer)
-        let cropIma = Crop(sourceImage : ima! , length : rectH_CG, width : rectW_CG)
-        let cropImaUI = UIImage(cgImage: cropIma)
-        let colors = try? cropImaUI.dominantColors(algorithm: .iterative)
-=======
-        
-          let ima=UIImage(pixelBuffer: imageBuffer)
-          let ima_res=ima?.resizeImage(newWidth:150)
-      
-            let colors = try? ima_res!.dominantColors(with: .best, algorithm: .iterative)
-
-            let dominant=colors?[0].rgba
-            let r=dominant!.red * 255
-            let g=dominant!.green * 255
-            let b=dominant!.blue * 255
-            let hsv=rgbToHsv(red: r, green: g, blue:b)
-            let color=color_conversion(hsv: [hsv.h,hsv.s,hsv.v])
->>>>>>> maxime
-        
-
-        DispatchQueue.main.async {
-            self.bbView.isHidden = true
-            self.ColorLabel.isHidden = false
-            self.ColorLabel.text=color}
-        
-        
-
-<<<<<<< HEAD
-=======
-        
-    
-        let request = VNCoreMLRequest(model: model, completionHandler: { (request, error) in
-            if let results = request.results as? [VNClassificationObservation] {
-                self.processClassificationObservations(results)
-            } else if #available(iOS 12.0, *), let results = request.results as? [VNRecognizedObjectObservation] {
-                self.processObjectDetectionObservations(results)
-            }
-        })
-        
-        request.preferBackgroundProcessing = true
-        request.imageCropAndScaleOption = cropAndScaleOption
-        
-        do {
-            try handler.perform([request])
-        } catch {
-            print("failed to perform")
-        }
->>>>>>> maxime
     }
     
     
@@ -382,7 +269,37 @@ class ViewController: UIViewController {
         let selectedIndex = cropAndScaleOptionSelector.selectedSegmentIndex
         cropAndScaleOption = VNImageCropAndScaleOption(rawValue: UInt(selectedIndex))!
     }
+
+    private func getColorCenter(imageBuffer: CVPixelBuffer,sampleBuffer: CMSampleBuffer) {
+        let screenSize: CGRect = UIScreen.main.bounds
+        let screenWidth = screenSize.width
     
+        let rectWidth = Int(screenWidth) - 2 * xPos
+        // the rectangle height.
+        let rectHeight = rectWidth
+        let rectH_CG = CGFloat(rectHeight)
+        let rectW_CG = CGFloat(rectWidth)
+    
+    
+        let ima=UIImage(pixelBuffer: imageBuffer)
+        let cropIma = Crop(sourceImage : ima! , length : rectH_CG, width : rectW_CG)
+        let cropImaUI = UIImage(cgImage: cropIma)
+        let colors = try? cropImaUI.dominantColors(algorithm: .iterative)
+        
+        let dominant=colors?[0].rgba
+        let r=dominant!.red * 255
+        let g=dominant!.green * 255
+        let b=dominant!.blue * 255
+        let hsv=rgbToHsv(red: r, green: g, blue:b)
+        let color=color_conversion(hsv: [hsv.h,hsv.s,hsv.v])
+    
+        
+        DispatchQueue.main.async {
+            self.bbView.isHidden = true
+            self.ColorLabel.isHidden = false
+            self.ColorLabel.text=color
+        }
+    }
     // MARK: - Actions
     
     @IBAction func Mode(_ sender: UIButton) {
