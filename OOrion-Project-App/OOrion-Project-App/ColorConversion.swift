@@ -108,7 +108,7 @@ func color_conversion (hsv : Array<CGFloat>) -> String {
             return res
             }
         }
-    if h <= 175 && h >= 205 {
+    if h <= 205 && h >= 175 {
         let res = "Bleu"
         if v <= 10 {
             return "Noir"
@@ -177,5 +177,6 @@ func color_conversion (hsv : Array<CGFloat>) -> String {
             return res
             }
         }
+//    print("\(h) \(s) \(v)")
     return ""
     }
