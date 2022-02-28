@@ -8,118 +8,170 @@ func color_conversion (hsv : Array<CGFloat>) -> String {
     
     if s <= 10  {
         if v <= 30 {
-            return "black"
+            return "Noir"
             }
-        else if v <= 80 {
-            return "gray"
+        else if v <= 75 {
+            return "Gris"
             }
         else {
-            return "white"
+            return "Blanc"
             }
         }
     if h <= 18 && h >= 0 {
-        let res = "red"
+        let res = "Rouge"
         if v <= 10 {
-            return "black"
+            return "Noir"
             }
-        else if  v <= 30 {
-           return "dark" + res
+        else if v <= 30 {
+            return "Marron"
+        }
+        else if  v <= 60 {
+           return res + " foncé"
             }
         else {
             return res
             }
         }
     if h <= 40 && h >= 18 {
-        let res = "orange"
-        if v <= 10 {
-            return "black"
+        let res = "Orange"
+        if s < 20 {
+            if v <= 30 {
+                return "Noir"
+                }
+            else if v <= 80 {
+                return "Gris"
+                }
+            else {
+                return "Blanc"
+                }
             }
-        else if v <= 30 {
-           return "dark" + res
+        else if v <= 10 {
+                return "Noir"
+                }
+            else if v <= 30 {
+                return "Marron foncé"
+                }
+            else if v <= 60 {
+                return "Marron"
             }
-        else {
-            return res
+            else {
+                return res
+                }
             }
-        }
     if h <= 65 && h >= 40 {
-        let res = "yellow"
-        if v <= 10 {
-            return "black"
+        let res = "Jaune"
+        if s < 20 {
+            if v <= 30 {
+                return "Noir"
+                }
+            else if v <= 80 {
+                return "Gris"
+                }
+            else {
+                return "Blanc"
+                }
             }
-        else if v <= 30 {
-           return "dark" + res
-            }
-        else {
-            return res
-            }
+        else if v <= 10 {
+                return "Noir"
+                }
+            else if v <= 30 {
+                return res + " foncé"
+                }
+            else {
+                return res
+                }
         }
     if h <= 142 && h >= 65 {
-        let res = "green"
+        let res = "Vert"
         if v <= 10 {
-            return "black"
+            return "Noir"
+            }
+        else if v <= 50 {
+           return res + " foncé"
+            }
+        else if v <= 80 {
+            return res
+        }
+        else {
+            return res + " clair"
+            }
+        }
+    if h <= 175 && h >= 142 {
+        let res = "Turquoise"
+        if v <= 10 {
+            return "Noir"
             }
         else if v <= 30 {
-           return "dark" + res
+           return res + " foncé"
             }
         else {
             return res
             }
         }
-    if h <= 185 && h >= 142 {
-        let res = "cyan"
+    if h <= 175 && h >= 205 {
+        let res = "Bleu"
         if v <= 10 {
-            return "black"
-            }
-        else if v <= 30 {
-           return "dark" + res
-            }
-        else {
-            return res
-            }
+            return "Noir"
         }
-    if h <= 265 && h >= 185 {
-        let res = "blue"
+        else if v <= 50 {
+            return res + " marine"
+        }
+        else if v <= 80 {
+            return res
+        }
+        else {
+            return res + " clair"
+        }
+    }
+    if h <= 265 && h >= 205 {
+        let res = "Bleu"
         if v <= 10 {
-            return "black"
+            return "Noir"
             }
-        else if v <= 30 {
-           return "dark" + res
+        else if v <= 50 {
+           return res + " marine"
             }
+        else if v <= 70 {
+            return res + " foncé"
+        }
         else {
             return res
             }
         }
     if h <= 295 && h >= 265 {
-        let res = "purple"
+        let res = "Violet"
         if v <= 10 {
-            return "black"
+            return "Noir"
             }
-        else if v <= 30 {
-           return "dark" + res
+        else if v <= 50 {
+           return res + " foncé"
             }
         else {
             return res
             }
         }
     if h <= 335 && h >= 295 {
-        let res = "pink"
+        let res = "Rose"
         if v <= 10 {
-            return "black"
+            return "Noir"
             }
-        else if v <= 30 {
-           return "dark" + res
+        else if v <= 50 {
+           return res + " foncé"
             }
         else {
             return res
             }
         }
     if h <= 360 && h >= 335 {
-        let res = "red"
+        let res = "Rouge"
         if v <= 10 {
-            return "black"
+            return "Noir"
             }
         else if v <= 30 {
-           return "dark" + res
+            return "Marron"
+        }
+        else if  v <= 60 {
+           return res + " foncé"
             }
         else {
             return res
