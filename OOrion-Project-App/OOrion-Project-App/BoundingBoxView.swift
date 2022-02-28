@@ -78,7 +78,7 @@ class BoundingBoxView: UIView {
             let new_width = rect.width * 2.25
             let new_height=rect.height * 2.25
             let new_x=rect.origin.x * 2.25
-            let new_y=rect.origin.y * 2.25
+            let new_y=rect.origin.y * 2.25 - 140
             let new_rect=CGRect(origin: CGPoint(x: new_x, y: new_y), size: CGSize(width: new_width, height: new_height))
             print(new_rect)
             
