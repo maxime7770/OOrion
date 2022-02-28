@@ -288,7 +288,7 @@ class ViewController: UIViewController {
         let cropImaUI = UIImage(cgImage: cropIma)
         let colors = try? cropImaUI.dominantColors(algorithm: .iterative)
         
-        let dominant=colors?[0].rgba
+        let dominant=colors?    [0].rgba
         let r=dominant!.red * 255
         let g=dominant!.green * 255
         let b=dominant!.blue * 255
