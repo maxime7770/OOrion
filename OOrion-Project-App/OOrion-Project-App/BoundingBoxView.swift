@@ -67,7 +67,7 @@ class BoundingBoxView: UIView {
             let rect = drawBoundingBox(context: context, observation: observation, color: color)
             
             let convertedRect = VNImageRectForNormalizedRect(observation.boundingBox, 720, 1280)
-            print(convertedRect)
+            //print(convertedRect)
            let x = convertedRect.minX + imageRect.minX
               let y = (imageRect.height - convertedRect.maxY) + imageRect.minY
            let rect1 = CGRect(origin: CGPoint(x: x, y: y), size: convertedRect.size)
@@ -80,7 +80,7 @@ class BoundingBoxView: UIView {
             let new_x=rect.origin.x * 2.25
             let new_y=rect.origin.y * 2.25 - 140
             let new_rect=CGRect(origin: CGPoint(x: new_x, y: new_y), size: CGSize(width: new_width, height: new_height))
-            print(new_rect)
+            //print(new_rect)
             
             if new_rect.intersects(rect_complete)==true {
             let inter_rect = new_rect.intersection(rect_complete)
@@ -94,15 +94,16 @@ class BoundingBoxView: UIView {
 
             let colors_detected = try? im_crop.dominantColors(with: .fair, algorithm: .iterative)
             let dominant=colors_detected![0].rgba
-            print(colors_detected!)
-            print(dominant)
+            
+            //print(colors_detected!)
+            //print(dominant)
             let r=dominant.red * 255
             let g=dominant.green * 255
             let b=dominant.blue * 255
-            print((r,g,b))
+            //print((r,g,b))
             let hsv=rgbToHsv(red: r, green: g, blue:b)
             color_detected=color_conversion(hsv: [hsv.h,hsv.s,hsv.v])
-                print(color_detected)
+                //print(color_detected)
             }
             
             if #available(iOS 12.0, *), let recognizedObjectObservation = observation as? VNRecognizedObjectObservation {

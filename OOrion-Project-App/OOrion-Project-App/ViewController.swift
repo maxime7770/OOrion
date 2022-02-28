@@ -286,20 +286,47 @@ class ViewController: UIViewController {
         let ima=UIImage(pixelBuffer: imageBuffer)
         let cropIma = Crop(sourceImage : ima! , length : rectH_CG, width : rectW_CG)
         let cropImaUI = UIImage(cgImage: cropIma)
-        let colors = try? cropImaUI.dominantColors(algorithm: .iterative)
+        let colors = try? cropImaUI.dominantColorFrequencies()
+        //print(colors as Any)
         
-        let dominant=colors?[0].rgba
-        let r=dominant!.red * 255
-        let g=dominant!.green * 255
-        let b=dominant!.blue * 255
-        let hsv=rgbToHsv(red: r, green: g, blue:b)
-        let color=color_conversion(hsv: [hsv.h,hsv.s,hsv.v])
-    
+        let dominant1=colors?[0].color.rgba
+        let r1=dominant1!.red * 255
+        let g1=dominant1!.green * 255
+        let b1=dominant1!.blue * 255
+        let hsv1=rgbToHsv(red: r1, green: g1, blue:b1)
+        let color1=color_conversion(hsv: [hsv1.h,hsv1.s,hsv1.v])
         
-        DispatchQueue.main.async {
-            self.bbView.isHidden = true
-            self.ColorLabel.isHidden = false
-            self.ColorLabel.text=color
+        
+        
+        if ((colors?.count)! > 1) {
+            if (colors?[1].frequency)! >= 0.3 {
+                
+            
+            let dominant2=colors?[1].color.rgba
+            let r2=dominant2!.red * 255
+            let g2=dominant2!.green * 255
+            let b2=dominant2!.blue * 255
+            let hsv2=rgbToHsv(red: r2, green: g2, blue: b2)
+            let color2=color_conversion(hsv: [hsv2.h,hsv2.s,hsv2.v])
+        
+            if color1 != color2 {
+                DispatchQueue.main.async {
+                    self.bbView.isHidden = true
+                    self.ColorLabel.isHidden = false
+                    self.ColorLabel.text=color1 + "&" + color2
+                }
+            }
+        }
+        }
+        else {
+            
+            DispatchQueue.main.async {
+                self.bbView.isHidden = true
+                self.ColorLabel.isHidden = false
+                self.ColorLabel.text=color1
+            }
+         
+        
         }
     }
     // MARK: - Actions
