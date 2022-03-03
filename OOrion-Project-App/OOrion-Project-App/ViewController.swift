@@ -296,7 +296,7 @@ class ViewController: UIViewController {
         let hsv1=rgbToHsv(red: r1, green: g1, blue:b1)
         let color1=color_conversion(hsv: [hsv1.h,hsv1.s,hsv1.v])
         
-        
+        let PatternLabel = RunPatternModel (ImageBuffer: cropImaUI)
         
         if ((colors?.count)! > 1) {
             if (colors?[1].frequency)! >= 0.3 {
@@ -313,7 +313,7 @@ class ViewController: UIViewController {
                 DispatchQueue.main.async {
                     self.bbView.isHidden = true
                     self.ColorLabel.isHidden = false
-                    self.ColorLabel.text=color1 + " & " + color2
+                    self.ColorLabel.text=color1 + " & " + color2 + PatternLabel
                 }
             }
         }
@@ -323,7 +323,7 @@ class ViewController: UIViewController {
             DispatchQueue.main.async {
                 self.bbView.isHidden = true
                 self.ColorLabel.isHidden = false
-                self.ColorLabel.text=color1
+                self.ColorLabel.text=color1 + PatternLabel
             }
          
         
