@@ -2,18 +2,16 @@
 #
 # gitignore contributors: remember to update Global/Xcode.gitignore, Objective-C.gitignore & Swift.gitignore
 
-*.DS_Store*
+
+PyTorch-model/dataset/*
+!PyTorch-model/dataset/.gitkeep
+
+.DS_Store
+.DS_Store
 
 ## Build generated
-build/
-DerivedData/
-
-models/*
-!.gitkeep
-!MobileNetV2Int8LUT.mlmodel
-!YOLOv3TinyInt8LUT.mlmodel
-!SqueezeNet.mlmodel
-!GoogLeNetPlaces.mlmodel
+OOrion-Project-App/build/
+OOrion-Project-App/DerivedData/
 
 
 ## Various settings
@@ -25,7 +23,7 @@ models/*
 !default.mode2v3
 *.perspectivev3
 !default.perspectivev3
-xcuserdata/
+OOrion-Project-App/xcuserdata/
 
 ## Other
 *.moved-aside
@@ -39,8 +37,8 @@ xcuserdata/
 *.dSYM
 
 ## Playgrounds
-timeline.xctimeline
-playground.xcworkspace
+OOrion-Project-App/timeline.xctimeline
+OOrion-Project-App/playground.xcworkspace
 
 # Swift Package Manager
 #
@@ -63,7 +61,7 @@ playground.xcworkspace
 # Add this line if you want to avoid checking in source code from Carthage dependencies.
 # Carthage/Checkouts
 
-Carthage/Build
+OOrion-Project-App/Carthage/Build
 
 # fastlane
 #
@@ -72,7 +70,11 @@ Carthage/Build
 # For more information about the recommended setup visit:
 # https://docs.fastlane.tools/best-practices/source-control/#source-control
 
-fastlane/report.xml
-fastlane/Preview.html
-fastlane/screenshots/**/*.png
-fastlane/test_output
+OOrion-Project-App/fastlane/report.xml
+OOrion-Project-App/fastlane/Preview.html
+OOrion-Project-App/fastlane/screenshots/**/*.png
+OOrion-Project-App/fastlane/test_output
+
+OOrion-Project-App/Assets.xcassets/AppIcon.appiconset
+
+
