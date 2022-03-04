@@ -313,7 +313,7 @@ class ViewController: UIViewController {
                 DispatchQueue.main.async {
                     self.bbView.isHidden = true
                     self.ColorLabel.isHidden = false
-                    self.ColorLabel.text=color1 + " & " + color2 + PatternLabel
+                    self.ColorLabel.text=color1 + " & " + color2 + "  " + PatternLabel
                 }
             }
         }
@@ -323,7 +323,7 @@ class ViewController: UIViewController {
             DispatchQueue.main.async {
                 self.bbView.isHidden = true
                 self.ColorLabel.isHidden = false
-                self.ColorLabel.text=color1 + PatternLabel
+                self.ColorLabel.text=color1 + "  " + PatternLabel
             }
          
         

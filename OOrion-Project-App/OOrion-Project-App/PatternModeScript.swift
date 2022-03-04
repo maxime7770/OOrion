@@ -13,13 +13,15 @@ import UIKit
 func RunPatternModel (ImageBuffer : UIImage) -> String {
     let model = PatternModel()
     
-    let GrayImage = ImageBuffer.noir
-    let RszdImage = resizeImage(image: GrayImage!, newWidth: 150)
+//    let GrayImage = ImageBuffer.noir
+    let RszdImage = resizeImage(image: ImageBuffer, newWidth: 64)
     let RszdImageCVPB = RszdImage?.toCVPixelBuffer()
     
     
-    
-    guard let PatternModelOutput = try? model.prediction(input_3: RszdImageCVPB!) else {
+    let test = PatternModelInput(input_22: RszdImageCVPB!)
+    guard let PatternModelOutput = try? model.prediction(input: test) else {
+        print(CVPixelBufferGetWidth(RszdImageCVPB!))
+        print(CVPixelBufferGetHeight(RszdImageCVPB!))
         fatalError ("Unexpected runtime error.")
     }
     
@@ -27,7 +29,7 @@ func RunPatternModel (ImageBuffer : UIImage) -> String {
     
     var label = ""
     var maxKey = -1
-    var maxConf = 0.0
+    var maxConf = 0.5
     
     for key in dict.keys {
         if dict[key] ?? 0 > maxConf {
@@ -37,16 +39,16 @@ func RunPatternModel (ImageBuffer : UIImage) -> String {
     }
     
     switch  maxKey {
-    case 0:
-      label = "striped"
-    case 1:
-     label = "dotted"
     case 2:
-     label = "checkered"
+      label = "Rayé"
+    case 1:
+     label = "A pois"
+    case 0:
+     label = "A carreaux"
     case 3:
      label = "solid"
     default:
-     label = "coucou"
+     label = " "
     }
     print(maxKey)
     
