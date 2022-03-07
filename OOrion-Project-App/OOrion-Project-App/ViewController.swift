@@ -308,14 +308,32 @@ class ViewController: UIViewController {
             let b2=dominant2!.blue * 255
             let hsv2=rgbToHsv(red: r2, green: g2, blue: b2)
             let color2=color_conversion(hsv: [hsv2.h,hsv2.s,hsv2.v])
-        
-            if color1 != color2 {
-                DispatchQueue.main.async {
+            
+            let mainColor1 = color1.components(separatedBy: " ")[0]
+            let mainColor2 = color2.components(separatedBy: " ")[0]
+            if mainColor1 == mainColor2 && color1 != color2 {
+                if (colors?.count)! > 2 && (colors?[2].frequency)! >= 0.2 {
+                        let dominant3=colors?[2].color.rgba
+                        let r3=dominant3!.red * 255
+                        let g3=dominant3!.green * 255
+                        let b3=dominant3!.blue * 255
+                        let hsv3=rgbToHsv(red: r3, green: g3, blue: b3)
+                        let color3=color_conversion(hsv: [hsv3.h, hsv3.s, hsv3.v])
+                        
+                        DispatchQueue.main.async {
+                            self.bbView.isHidden = true
+                            self.ColorLabel.isHidden = false
+                            self.ColorLabel.text = color1 + " & " + color3 + "  " + PatternLabel }
+                    
+                }
+            }
+            else {
+                    DispatchQueue.main.async {
                     self.bbView.isHidden = true
                     self.ColorLabel.isHidden = false
                     self.ColorLabel.text=color1 + " & " + color2 + "  " + PatternLabel
+                    }
                 }
-            }
         }
         }
         else {
