@@ -33,13 +33,13 @@ func RunPatternModel (ImageBuffer : UIImage) -> String {
     
     for key in dict.keys {
         if dict[key] ?? 0 > maxConf {
-      maxConf = 0
-            maxKey = Int(key);Int()
+            maxConf = dict[key]!
+            maxKey = Int(key)
      }
     }
     
     switch  maxKey {
-    case 2:
+    case 2  :
       label = "Rayé"
     case 1:
      label = "A pois"
@@ -50,8 +50,6 @@ func RunPatternModel (ImageBuffer : UIImage) -> String {
     default:
      label = " "
     }
-    print(maxKey)
-    
 
     return label
 }

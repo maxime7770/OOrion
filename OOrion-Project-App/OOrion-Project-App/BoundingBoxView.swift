@@ -66,12 +66,8 @@ class BoundingBoxView: UIView {
             let color = UIColor(hue: CGFloat(i) / CGFloat(observations.count), saturation: 1, brightness: 1, alpha: 1)
             let rect = drawBoundingBox(context: context, observation: observation, color: color)
             
-            let convertedRect = VNImageRectForNormalizedRect(observation.boundingBox, 720, 1280)
             //print(convertedRect)
-           let x = convertedRect.minX + imageRect.minX
-              let y = (imageRect.height - convertedRect.maxY) + imageRect.minY
-           let rect1 = CGRect(origin: CGPoint(x: x, y: y), size: convertedRect.size)
-            
+           
             let rect_complete=CGRect(origin: CGPoint(x: 0, y: 0), size: CGSize(width: 720, height: 1280))
                                      
                                      
