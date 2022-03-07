@@ -66,13 +66,14 @@ class ViewController: UIViewController {
     
     @IBOutlet private weak var previewView: UIView!
     @IBOutlet weak var ColorLabel: UILabel!
+    @IBOutlet weak var PatternLabel: UILabel!
     @IBOutlet private weak var modelLabel: UILabel!
     @IBOutlet private weak var resultView: UIView!
     @IBOutlet private weak var bbView: BoundingBoxView!
     @IBOutlet weak var cropAndScaleOptionSelector: UISegmentedControl!
     
     private var myView: UIView?
-    
+    private var listPattern: [String] = []
     public let xPos = 80
     
     override func viewDidLoad() {
@@ -245,18 +246,17 @@ class ViewController: UIViewController {
             self.bbView.isHidden = false
             self.bbView.setNeedsDisplay()
             self.ColorLabel.text = ""
+            self.PatternLabel.text = ""
         }
     }
 
     private func processClassificationObservations(_ results: [VNClassificationObservation]) {
-        var firstResult = ""
         var others = ""
         for i in 0...10 {
             guard i < results.count else { break }
             let result = results[i]
             let confidence = String(format: "%.2f", result.confidence * 100)
             if i==0 {
-                firstResult = "\(result.identifier) \(confidence)"
             } else {
                 others += "\(result.identifier) \(confidence)\n"
             }
@@ -297,6 +297,39 @@ class ViewController: UIViewController {
         let color1=color_conversion(hsv: [hsv1.h,hsv1.s,hsv1.v])
         
         let PatternLabel = RunPatternModel (ImageBuffer: cropImaUI)
+        listPattern.append(PatternLabel)
+        if listPattern.count >= 10 {
+            var scores = [0, 0, 0, 0, 0]
+            let PatternNames = ["A carreaux", "A pois", "solid", "Rayé", "nothing"]
+            for patternName in listPattern {
+                switch patternName {
+                case "A carreaux":
+                    scores[0] = scores[0] + 1
+                case "A pois":
+                    scores[1] = scores[1] + 1
+                case "solid":
+                    scores[2] = scores[2] + 1
+                case "Rayé":
+                    scores[3] = scores[3] + 1
+                default:
+                    scores[4] = scores[4] + 1
+                }
+            }
+            let highScore = scores.max()
+            if scores.firstIndex(of:highScore!) == scores.lastIndex(of:highScore!) {
+                let winningPatternIndex = scores.firstIndex(of:highScore!)
+                let winningPattern = PatternNames[winningPatternIndex!]
+                DispatchQueue.main.async {
+                    self.PatternLabel.text = winningPattern
+                }
+            }
+            else {
+                DispatchQueue.main.async {
+                    self.PatternLabel.text = "nothing"
+                }
+            }
+            listPattern = []
+        }
         
         if ((colors?.count)! > 1) {
             if (colors?[1].frequency)! >= 0.3 {
@@ -331,8 +364,7 @@ class ViewController: UIViewController {
                     DispatchQueue.main.async {
                     self.bbView.isHidden = true
                     self.ColorLabel.isHidden = false
-                    self.ColorLabel.text=color1 + " & " + color2 + "  " + PatternLabel
-                    }
+                    self.ColorLabel.text=color1 + " & " + color2
                 }
         }
         }
@@ -341,7 +373,8 @@ class ViewController: UIViewController {
             DispatchQueue.main.async {
                 self.bbView.isHidden = true
                 self.ColorLabel.isHidden = false
-                self.ColorLabel.text=color1 + "  " + PatternLabel
+                self.PatternLabel.isHidden = false
+                self.ColorLabel.text=color1
             }
          
         
@@ -358,6 +391,7 @@ class ViewController: UIViewController {
             self.myView!.isHidden = true
             self.bbView.isHidden = false
             self.ColorLabel.text = ""
+            self.PatternLabel.text = ""
             let frameInterval = 1.0 / Double(self.preferredFps)
             self.videoCapture.imageBufferHandler = {[unowned self] (imageBuffer, timestamp, outputBuffer,sampleBuffer) in
                 let delay = CACurrentMediaTime() - timestamp.seconds

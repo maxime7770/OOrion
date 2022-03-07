@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		2872A2DA27D1062400938C0A /* PatternModeScript.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2872A2D927D1062400938C0A /* PatternModeScript.swift */; };
-		2872A2E527D10B4900938C0A /* PatternModel.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 2872A2E427D10B4900938C0A /* PatternModel.mlmodel */; };
 		8A243AEA20D99188005947D6 /* ModelDescriptionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A243AE920D99188005947D6 /* ModelDescriptionViewController.swift */; };
 		8A413B9120D2205F00A761EC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A413B9020D2205F00A761EC /* AppDelegate.swift */; };
 		8A413B9320D2205F00A761EC /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A413B9220D2205F00A761EC /* ViewController.swift */; };
@@ -20,40 +19,15 @@
 		8A413BA820D221D500A761EC /* AVCaptureDevice+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A413BA520D221D500A761EC /* AVCaptureDevice+Extension.swift */; };
 		8A8DE5C920D6DEA200914B67 /* models in Resources */ = {isa = PBXBuildFile; fileRef = 8A8DE5C820D6DEA200914B67 /* models */; };
 		8AEC912C24273FD70014E67B /* BoundingBoxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AEC912B24273FD70014E67B /* BoundingBoxView.swift */; };
+		8D8B174327D6031A005789FD /* PatternModel.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 8D8B174227D6031A005789FD /* PatternModel.mlmodel */; };
 		C2EE09D227C66D1E00E2C0F9 /* SwiftCluster in Frameworks */ = {isa = PBXBuildFile; productRef = C2EE09D127C66D1E00E2C0F9 /* SwiftCluster */; };
 		C2EE09D527C673E400E2C0F9 /* ColorKit in Frameworks */ = {isa = PBXBuildFile; productRef = C2EE09D427C673E400E2C0F9 /* ColorKit */; };
 		C2EE09D727C6879C00E2C0F9 /* RgbToHsv.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2EE09D627C6879C00E2C0F9 /* RgbToHsv.swift */; };
 		C2EE09D927C68E0700E2C0F9 /* ColorConversion.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2EE09D827C68E0700E2C0F9 /* ColorConversion.swift */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		2872A2D027CD0DEB00938C0A /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 2872A2CA27CD0DEB00938C0A /* ColorKit copie.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = A181C8582404728F0008D4B7;
-			remoteInfo = ColorKit;
-		};
-		2872A2D227CD0DEB00938C0A /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 2872A2CA27CD0DEB00938C0A /* ColorKit copie.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = A181C8612404728F0008D4B7;
-			remoteInfo = ColorKitTests;
-		};
-		2872A2D427CD0DEB00938C0A /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 2872A2CA27CD0DEB00938C0A /* ColorKit copie.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = A192B22624839A2D005BC955;
-			remoteInfo = ColorKitSampleApp;
-		};
-/* End PBXContainerItemProxy section */
-
 /* Begin PBXFileReference section */
-		2872A2CA27CD0DEB00938C0A /* ColorKit copie.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "ColorKit copie.xcodeproj"; path = "../../../../Library/Developer/Xcode/DerivedData/OOrion-Project-App-fauwjizgvagzxzamktkgzhlfsiez/SourcePackages/checkouts/ColorKit/ColorKit/ColorKit copie.xcodeproj"; sourceTree = "<group>"; };
 		2872A2D927D1062400938C0A /* PatternModeScript.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PatternModeScript.swift; sourceTree = "<group>"; };
-		2872A2E427D10B4900938C0A /* PatternModel.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = PatternModel.mlmodel; sourceTree = "<group>"; };
 		8A243AE920D99188005947D6 /* ModelDescriptionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelDescriptionViewController.swift; sourceTree = "<group>"; };
 		8A413B8D20D2205F00A761EC /* OOrion-Project-App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "OOrion-Project-App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8A413B9020D2205F00A761EC /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -67,6 +41,7 @@
 		8A413BA520D221D500A761EC /* AVCaptureDevice+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AVCaptureDevice+Extension.swift"; sourceTree = "<group>"; };
 		8A8DE5C820D6DEA200914B67 /* models */ = {isa = PBXFileReference; lastKnownFileType = folder; path = models; sourceTree = "<group>"; };
 		8AEC912B24273FD70014E67B /* BoundingBoxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoundingBoxView.swift; sourceTree = "<group>"; };
+		8D8B174227D6031A005789FD /* PatternModel.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = PatternModel.mlmodel; sourceTree = "<group>"; };
 		C2EE09D627C6879C00E2C0F9 /* RgbToHsv.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RgbToHsv.swift; sourceTree = "<group>"; };
 		C2EE09D827C68E0700E2C0F9 /* ColorConversion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorConversion.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -84,21 +59,10 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		2872A2CB27CD0DEB00938C0A /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				2872A2D127CD0DEB00938C0A /* ColorKit.framework */,
-				2872A2D327CD0DEB00938C0A /* ColorKitTests.xctest */,
-				2872A2D527CD0DEB00938C0A /* ColorKitSampleApp.app */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		8A413B8420D2205F00A761EC = {
 			isa = PBXGroup;
 			children = (
-				2872A2E427D10B4900938C0A /* PatternModel.mlmodel */,
-				2872A2CA27CD0DEB00938C0A /* ColorKit copie.xcodeproj */,
+				8D8B174227D6031A005789FD /* PatternModel.mlmodel */,
 				8A8DE5C820D6DEA200914B67 /* models */,
 				8A413BA220D221D500A761EC /* VideoCapture */,
 				8A413B8F20D2205F00A761EC /* OOrion-Project-App */,
@@ -197,42 +161,12 @@
 			);
 			productRefGroup = 8A413B8E20D2205F00A761EC /* Products */;
 			projectDirPath = "";
-			projectReferences = (
-				{
-					ProductGroup = 2872A2CB27CD0DEB00938C0A /* Products */;
-					ProjectRef = 2872A2CA27CD0DEB00938C0A /* ColorKit copie.xcodeproj */;
-				},
-			);
 			projectRoot = "";
 			targets = (
 				8A413B8C20D2205F00A761EC /* OOrion-Project-App */,
 			);
 		};
 /* End PBXProject section */
-
-/* Begin PBXReferenceProxy section */
-		2872A2D127CD0DEB00938C0A /* ColorKit.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = ColorKit.framework;
-			remoteRef = 2872A2D027CD0DEB00938C0A /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		2872A2D327CD0DEB00938C0A /* ColorKitTests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = ColorKitTests.xctest;
-			remoteRef = 2872A2D227CD0DEB00938C0A /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		2872A2D527CD0DEB00938C0A /* ColorKitSampleApp.app */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.application;
-			path = ColorKitSampleApp.app;
-			remoteRef = 2872A2D427CD0DEB00938C0A /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		8A413B8B20D2205F00A761EC /* Resources */ = {
@@ -253,13 +187,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2872A2E527D10B4900938C0A /* PatternModel.mlmodel in Sources */,
 				8A413BA720D221D500A761EC /* VideoCapture.swift in Sources */,
 				8AEC912C24273FD70014E67B /* BoundingBoxView.swift in Sources */,
 				8A413B9320D2205F00A761EC /* ViewController.swift in Sources */,
 				8A413B9120D2205F00A761EC /* AppDelegate.swift in Sources */,
 				8A413BA820D221D500A761EC /* AVCaptureDevice+Extension.swift in Sources */,
 				8A413BA620D221D500A761EC /* VideoCameraType.swift in Sources */,
+				8D8B174327D6031A005789FD /* PatternModel.mlmodel in Sources */,
 				C2EE09D727C6879C00E2C0F9 /* RgbToHsv.swift in Sources */,
 				8A243AEA20D99188005947D6 /* ModelDescriptionViewController.swift in Sources */,
 				2872A2DA27D1062400938C0A /* PatternModeScript.swift in Sources */,
