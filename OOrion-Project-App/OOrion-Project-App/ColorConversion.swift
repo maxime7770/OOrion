@@ -14,7 +14,7 @@ func color_conversion (hsv : Array<CGFloat>) -> String {
         case 30...75:
             return "Gris"
         default:
-            return "Noir"
+            return "Blanc"
         }
     default:
         switch h {
@@ -38,7 +38,7 @@ func color_conversion (hsv : Array<CGFloat>) -> String {
                 case 30...75:
                     return "Gris"
                 default:
-                    return "Noir"
+                    return "Blanc"
                 }
             default:
                 switch v {
@@ -61,7 +61,7 @@ func color_conversion (hsv : Array<CGFloat>) -> String {
                 case 39...75:
                     return "Gris"
                 default:
-                    return "Noir"
+                    return "Blanc"
                 }
             default:
                 switch v {
@@ -149,3 +149,10 @@ func color_conversion (hsv : Array<CGFloat>) -> String {
         }
     }
 }
+
+
+
+
+
+
+

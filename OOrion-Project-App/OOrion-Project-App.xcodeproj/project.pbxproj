@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2872A2DA27D1062400938C0A /* PatternModeScript.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2872A2D927D1062400938C0A /* PatternModeScript.swift */; };
+		2872A2E527D10B4900938C0A /* PatternModel.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 2872A2E427D10B4900938C0A /* PatternModel.mlmodel */; };
 		8A243AEA20D99188005947D6 /* ModelDescriptionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A243AE920D99188005947D6 /* ModelDescriptionViewController.swift */; };
 		8A413B9120D2205F00A761EC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A413B9020D2205F00A761EC /* AppDelegate.swift */; };
 		8A413B9320D2205F00A761EC /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A413B9220D2205F00A761EC /* ViewController.swift */; };
@@ -50,6 +52,8 @@
 
 /* Begin PBXFileReference section */
 		2872A2CA27CD0DEB00938C0A /* ColorKit copie.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "ColorKit copie.xcodeproj"; path = "../../../../Library/Developer/Xcode/DerivedData/OOrion-Project-App-fauwjizgvagzxzamktkgzhlfsiez/SourcePackages/checkouts/ColorKit/ColorKit/ColorKit copie.xcodeproj"; sourceTree = "<group>"; };
+		2872A2D927D1062400938C0A /* PatternModeScript.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PatternModeScript.swift; sourceTree = "<group>"; };
+		2872A2E427D10B4900938C0A /* PatternModel.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = PatternModel.mlmodel; sourceTree = "<group>"; };
 		8A243AE920D99188005947D6 /* ModelDescriptionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelDescriptionViewController.swift; sourceTree = "<group>"; };
 		8A413B8D20D2205F00A761EC /* OOrion-Project-App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "OOrion-Project-App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8A413B9020D2205F00A761EC /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -93,6 +97,7 @@
 		8A413B8420D2205F00A761EC = {
 			isa = PBXGroup;
 			children = (
+				2872A2E427D10B4900938C0A /* PatternModel.mlmodel */,
 				2872A2CA27CD0DEB00938C0A /* ColorKit copie.xcodeproj */,
 				8A8DE5C820D6DEA200914B67 /* models */,
 				8A413BA220D221D500A761EC /* VideoCapture */,
@@ -120,6 +125,7 @@
 				8A413B9220D2205F00A761EC /* ViewController.swift */,
 				8A243AE920D99188005947D6 /* ModelDescriptionViewController.swift */,
 				8AEC912B24273FD70014E67B /* BoundingBoxView.swift */,
+				2872A2D927D1062400938C0A /* PatternModeScript.swift */,
 				C2EE09D627C6879C00E2C0F9 /* RgbToHsv.swift */,
 				C2EE09D827C68E0700E2C0F9 /* ColorConversion.swift */,
 			);
@@ -247,6 +253,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2872A2E527D10B4900938C0A /* PatternModel.mlmodel in Sources */,
 				8A413BA720D221D500A761EC /* VideoCapture.swift in Sources */,
 				8AEC912C24273FD70014E67B /* BoundingBoxView.swift in Sources */,
 				8A413B9320D2205F00A761EC /* ViewController.swift in Sources */,
@@ -255,6 +262,7 @@
 				8A413BA620D221D500A761EC /* VideoCameraType.swift in Sources */,
 				C2EE09D727C6879C00E2C0F9 /* RgbToHsv.swift in Sources */,
 				8A243AEA20D99188005947D6 /* ModelDescriptionViewController.swift in Sources */,
+				2872A2DA27D1062400938C0A /* PatternModeScript.swift in Sources */,
 				C2EE09D927C68E0700E2C0F9 /* ColorConversion.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
