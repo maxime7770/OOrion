@@ -35,6 +35,22 @@ extension UIImage {
 
         self.init(cgImage: cgImage)
     }
+    
+    
+    func mergedSideBySide() -> UIImage? {
+        let mergedWidth = self.size.width*2.0
+        let mergedHeight = self.size.height*2.0
+        let mergedSize = CGSize(width: mergedWidth, height: mergedHeight)
+        UIGraphicsBeginImageContext(mergedSize)
+        self.draw(in: CGRect(x: 0, y: 0, width: mergedWidth, height: mergedHeight))
+        self.draw(in: CGRect(x: 0, y: self.size.height, width: mergedWidth, height: mergedHeight))
+        self.draw(in: CGRect(x: self.size.width, y: 0, width: mergedWidth, height: mergedHeight))
+        self.draw(in: CGRect(x: self.size.width, y: self.size.height, width: mergedWidth, height: mergedHeight))
+
+        let mergedImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return mergedImage
+    }
 }
 
 extension UIImage {
@@ -74,6 +90,7 @@ class ViewController: UIViewController {
     
     private var myView: UIView?
     private var listPattern: [String] = []
+    private var listPatternFourFour: [String] = []
     public let xPos = 80
     
     override func viewDidLoad() {
@@ -295,37 +312,19 @@ class ViewController: UIViewController {
         let hsv1=rgbToHsv(red: r1, green: g1, blue:b1)
         let color1=color_conversion(hsv: [hsv1.h,hsv1.s,hsv1.v])
         
-        let PatternLabel = RunPatternModelPlus (ImageBuffer: cropImaUI)
+        let PatternLabel = RunPatternModel (ImageBuffer: cropImaUI)
+        let fourfourimage = cropImaUI.mergedSideBySide()
+        let PatternFourByFour = RunPatternModel (ImageBuffer:fourfourimage!)
+
         listPattern.append(PatternLabel)
+        listPatternFourFour.append(PatternFourByFour)
         if listPattern.count >= 10 {
-            var scores = [0, 0, 0, 0, 0]
-            let PatternNames = ["A carreaux", "A pois", "solid", "Rayé", "nothing"]
-            for patternName in listPattern {
-                switch patternName {
-                case "A carreaux":
-                    scores[0] = scores[0] + 1
-                case "A pois":
-                    scores[1] = scores[1] + 1
-                case "solid":
-                    scores[2] = scores[2] + 1
-                case "Rayé":
-                    scores[3] = scores[3] + 1
-                default:
-                    scores[4] = scores[4] + 1
-                }
+            var patternToPrint = getPattern(listNames:listPattern)
+            if patternToPrint == "nothing" {
+                patternToPrint = getPattern(listNames:listPatternFourFour)
             }
-            let highScore = scores.max()
-            if scores.firstIndex(of:highScore!) == scores.lastIndex(of:highScore!) {
-                let winningPatternIndex = scores.firstIndex(of:highScore!)
-                let winningPattern = PatternNames[winningPatternIndex!]
-                DispatchQueue.main.async {
-                    self.PatternLabel.text = winningPattern
-                }
-            }
-            else {
-                DispatchQueue.main.async {
-                    self.PatternLabel.text = "nothing"
-                }
+            DispatchQueue.main.async {
+                self.PatternLabel.text=patternToPrint
             }
             listPattern = []
         }
@@ -375,6 +374,35 @@ class ViewController: UIViewController {
          
         }
     }
+    
+    func getPattern(listNames: [String]) -> String {
+        var scores = [0, 0, 0, 0, 0]
+        let PatternNames = ["A carreaux", "A pois", "solid", "Rayé", "nothing"]
+        for patternName in listNames {
+            switch patternName {
+            case "A carreaux":
+                scores[0] = scores[0] + 1
+            case "A pois":
+                scores[1] = scores[1] + 1
+            case "solid":
+                scores[2] = scores[2] + 1
+            case "Rayé":
+                scores[3] = scores[3] + 1
+            default:
+                scores[4] = scores[4] + 1
+            }
+        }
+        let highScore = scores.max()
+        if scores.firstIndex(of:highScore!) == scores.lastIndex(of:highScore!) {
+            let winningPatternIndex = scores.firstIndex(of:highScore!)
+            let winningPattern = PatternNames[winningPatternIndex!]
+            return winningPattern
+        }
+        else {
+            return "nothing"
+        }
+    }
+    
     // MARK: - Actions
     
     @IBAction func Mode(_ sender: UIButton) {

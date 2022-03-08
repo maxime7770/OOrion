@@ -62,7 +62,6 @@ func RunPatternModelPlus (ImageBuffer : UIImage) -> String {
     else {
         return "nothing"
     }
-    return ""
 }
 
 func RunPatternModel (ImageBuffer : UIImage) -> String {
@@ -72,7 +71,7 @@ func RunPatternModel (ImageBuffer : UIImage) -> String {
     let RszdImageCVPB = RszdImage?.toCVPixelBuffer()
     
     
-    let test = PatternModelInput(input_75: RszdImageCVPB!)
+    let test = PatternModelInput(input_77: RszdImageCVPB!)
     guard let PatternModelOutput = try? model.prediction(input: test) else {
         print(CVPixelBufferGetWidth(RszdImageCVPB!))
         print(CVPixelBufferGetHeight(RszdImageCVPB!))
@@ -83,7 +82,7 @@ func RunPatternModel (ImageBuffer : UIImage) -> String {
     
     var label = ""
     var maxKey = -1
-    var maxConf = 0.5
+    var maxConf = 0.45
     
     for key in dict.keys {
         if dict[key] ?? 0 > maxConf {
@@ -151,8 +150,8 @@ extension UIImage {
             return nil
         }
     
-}
 
+}
 
 
 func resizeImage(image: UIImage, newWidth: CGFloat) -> UIImage? {
