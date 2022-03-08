@@ -84,7 +84,6 @@ class ViewController: UIViewController {
                 
         // get screen width.
         let screenWidth = screenSize.width
-                
         // get screen height.
         let screenHeight = screenSize.height
             
@@ -284,7 +283,7 @@ class ViewController: UIViewController {
     
     
         let ima=UIImage(pixelBuffer: imageBuffer)
-        let cropIma = Crop(sourceImage : ima! , length : rectH_CG, width : rectW_CG)
+        let cropIma = Crop(sourceImage : ima! , length : rectH_CG*2.25, width : rectW_CG*2.25)
         let cropImaUI = UIImage(cgImage: cropIma)
         let colors = try? cropImaUI.dominantColorFrequencies()
         //print(colors as Any)
@@ -296,7 +295,7 @@ class ViewController: UIViewController {
         let hsv1=rgbToHsv(red: r1, green: g1, blue:b1)
         let color1=color_conversion(hsv: [hsv1.h,hsv1.s,hsv1.v])
         
-        let PatternLabel = RunPatternModel (ImageBuffer: cropImaUI)
+        let PatternLabel = RunPatternModelPlus (ImageBuffer: cropImaUI)
         listPattern.append(PatternLabel)
         if listPattern.count >= 10 {
             var scores = [0, 0, 0, 0, 0]
