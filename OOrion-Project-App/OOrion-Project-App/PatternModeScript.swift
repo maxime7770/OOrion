@@ -29,10 +29,10 @@ func RunPatternModel (ImageBuffer : UIImage) -> String {
     
     var label = ""
     var maxKey = -1
-    var maxConf = 0.45
+    var maxConf = 0.0
     
     for key in dict.keys {
-        if dict[key] ?? 0 > maxConf {
+        if dict[key]! > maxConf && dict[key]! > ModelThres {
             maxConf = dict[key]!
             maxKey = Int(key)
      }
