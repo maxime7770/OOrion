@@ -293,91 +293,90 @@ class ViewController: UIViewController {
         let PatternLabel = RunPatternModel (ImageBuffer: cropImaUI)
         listPattern.append(PatternLabel)
         if listPattern.count >= 10 {
-            var scores = [0, 0, 0, 0, 0]
-            let PatternNames = ["A carreaux", "A pois", "solid", "Rayé", "nothing"]
-            for patternName in listPattern {
-                switch patternName {
-                case "A carreaux":
-                    scores[0] = scores[0] + 1
-                case "A pois":
-                    scores[1] = scores[1] + 1
-                case "solid":
-                    scores[2] = scores[2] + 1
-                case "Rayé":
-                    scores[3] = scores[3] + 1
-                default:
-                    scores[4] = scores[4] + 1
-                }
-            }
-            let highScore = scores.max()
-            if scores.firstIndex(of:highScore!) == scores.lastIndex(of:highScore!) {
-                let winningPatternIndex = scores.firstIndex(of:highScore!)
-                let winningPattern = PatternNames[winningPatternIndex!]
-                DispatchQueue.main.async {
-                    self.PatternLabel.text = winningPattern
-                }
-            }
-            else {
-                DispatchQueue.main.async {
-                    self.PatternLabel.text = "nothing"
-                }
-            }
+            let patternName = getPattern(listNames: listPattern)
             listPattern = []
+            let colorText = getColorText(dominant:colors!)
         
-        
-            let dominant1=colors?[0].color.rgba
-            let r1=dominant1!.red * 255
-            let g1=dominant1!.green * 255
-            let b1=dominant1!.blue * 255
-            let hsv1=rgbToHsv(red: r1, green: g1, blue:b1)
-            let color1=color_conversion(hsv: [hsv1.h,hsv1.s,hsv1.v])
-            
-            if ((colors?.count)! > 1) && (colors?[1].frequency)! >= 0.3 {
-                    let dominant2=colors?[1].color.rgba
-                    let r2=dominant2!.red * 255
-                    let g2=dominant2!.green * 255
-                    let b2=dominant2!.blue * 255
-                    let hsv2=rgbToHsv(red: r2, green: g2, blue: b2)
-                    let color2=color_conversion(hsv: [hsv2.h,hsv2.s,hsv2.v])
-                    
-                    let mainColor1 = color1.components(separatedBy: " ")[0]
-                    let mainColor2 = color2.components(separatedBy: " ")[0]
-                    if mainColor1 == mainColor2 && color1 != color2 {
-                        if (colors?.count)! > 2 && (colors?[2].frequency)! >= 0.2 {
-                                let dominant3=colors?[2].color.rgba
-                                let r3=dominant3!.red * 255
-                                let g3=dominant3!.green * 255
-                                let b3=dominant3!.blue * 255
-                                let hsv3=rgbToHsv(red: r3, green: g3, blue: b3)
-                                let color3=color_conversion(hsv: [hsv3.h, hsv3.s, hsv3.v])
-                                
-                                DispatchQueue.main.async {
-                                    self.bbView.isHidden = true
-                                    self.ColorLabel.isHidden = false
-                                    self.ColorLabel.text = color1 + " & " + color3
-                                }
-                        }
-                    }
-                    else {
-                        DispatchQueue.main.async {
-                            self.bbView.isHidden = true
-                            self.ColorLabel.isHidden = false
-                            self.ColorLabel.text=color1 + " & " + color2
-                        }
-                    }
+            DispatchQueue.main.async {
+                self.bbView.isHidden = true
+                self.ColorLabel.isHidden = false
+                self.PatternLabel.text = patternName
+                self.ColorLabel.text = colorText
             }
-            else {
-                
-                DispatchQueue.main.async {
-                    self.bbView.isHidden = true
-                    self.ColorLabel.isHidden = false
-                    self.PatternLabel.isHidden = false
-                    self.ColorLabel.text=color1
-                    }
-             
-                }
             }
         }
+    
+    func getPattern(listNames: [String]) -> String {
+        var scores = [0, 0, 0, 0, 0]
+        let PatternNames = ["A carreaux", "A pois", "solid", "Rayé", "nothing"]
+        for patternName in listNames {
+            switch patternName {
+            case "A carreaux":
+                scores[0] = scores[0] + 1
+            case "A pois":
+                scores[1] = scores[1] + 1
+            case "solid":
+                scores[2] = scores[2] + 1
+            case "Rayé":
+                scores[3] = scores[3] + 1
+            default:
+                scores[4] = scores[4] + 1
+            }
+        }
+        let highScore = scores.max()
+        if scores.firstIndex(of:highScore!) == scores.lastIndex(of:highScore!) {
+            let winningPatternIndex = scores.firstIndex(of:highScore!)
+            let winningPattern = PatternNames[winningPatternIndex!]
+            return winningPattern
+        }
+        else {
+            return "nothing"
+        }
+    }
+    
+    func getColorText(dominant:[ColorFrequency]) -> String {
+        let dominant1=dominant[0].color.rgba
+        let r1=dominant1.red * 255
+        let g1=dominant1.green * 255
+        let b1=dominant1.blue * 255
+        let hsv1=rgbToHsv(red: r1, green: g1, blue:b1)
+        let color1=color_conversion(hsv: [hsv1.h,hsv1.s,hsv1.v])
+        
+        if ((dominant.count) > 1) && (dominant[1].frequency) >= 0.3 {
+                let dominant2=dominant[1].color.rgba
+                let r2=dominant2.red * 255
+                let g2=dominant2.green * 255
+                let b2=dominant2.blue * 255
+                let hsv2=rgbToHsv(red: r2, green: g2, blue: b2)
+                let color2=color_conversion(hsv: [hsv2.h,hsv2.s,hsv2.v])
+                
+                let mainColor1 = color1.components(separatedBy: " ")[0]
+                let mainColor2 = color2.components(separatedBy: " ")[0]
+                if mainColor1 == mainColor2 && color1 != color2 {
+                    if (dominant.count) > 2 && (dominant[2].frequency) >= 0.2 {
+                            let dominant3=dominant[2].color.rgba
+                            let r3=dominant3.red * 255
+                            let g3=dominant3.green * 255
+                            let b3=dominant3.blue * 255
+                            let hsv3=rgbToHsv(red: r3, green: g3, blue: b3)
+                            let color3=color_conversion(hsv: [hsv3.h, hsv3.s, hsv3.v])
+                            
+                            return color1 + " & " + color3
+
+                    }
+                    else {
+                        return color1 + " & " + color2
+                    }
+                }
+                else {
+                    return color1 + " & " + color2
+                }
+        }
+        else {
+                return color1
+            }
+    }
+    
     // MARK: - Actions
     
     @IBAction func Mode(_ sender: UIButton) {
