@@ -12,6 +12,7 @@ import Vision
 import VideoToolbox
 import ColorKit
 
+
 extension UIColor {
     var rgba: (red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat) {
         var red: CGFloat = 0
@@ -55,7 +56,7 @@ class ViewController: UIViewController {
     private var videoCapture: VideoCapture!
     private let serialQueue = DispatchQueue(label: "com.shu223.coremlplayground.serialqueue")
     
-    private let videoSize = CGSize(width: 1280, height: 720)
+    private let videoSize = CGSize(width: videoSizeWidth, height: videoSizeHeight)
     private let preferredFps: Int32 = 2
     
     private var modelUrls: [URL]!
@@ -74,7 +75,6 @@ class ViewController: UIViewController {
     
     private var myView: UIView?
     private var listPattern: [String] = []
-    public let xPos = 80
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -156,8 +156,8 @@ class ViewController: UIViewController {
         guard let videoCapture = videoCapture else {return}
         videoCapture.startCapture()
         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1), execute: {
-            let brightnessLevel = videoCapture.brightcheck()
-            if brightnessLevel > 1000 {
+            let brightnessLevel = Double(videoCapture.brightcheck())
+            if brightnessLevel >= brightnessLevelTreshold {
                 let alertBr = UIAlertController(title: "Luminosité", message: "La luminosité est faible. Voulez vous activer la lampe torche.", preferredStyle: .alert)
                 alertBr.addAction(UIAlertAction(title: "Oui", style: .default, handler: {action in
                     videoCapture.toggleFlash()
@@ -342,7 +342,7 @@ class ViewController: UIViewController {
         let hsv1=rgbToHsv(red: r1, green: g1, blue:b1)
         let color1=color_conversion(hsv: [hsv1.h,hsv1.s,hsv1.v])
         
-        if ((dominant.count) > 1) && (dominant[1].frequency) >= 0.3 {
+        if ((dominant.count) > 1) && (dominant[1].frequency) >= Col2_frequ_threshold {
                 let dominant2=dominant[1].color.rgba
                 let r2=dominant2.red * 255
                 let g2=dominant2.green * 255
@@ -353,7 +353,7 @@ class ViewController: UIViewController {
                 let mainColor1 = color1.components(separatedBy: " ")[0]
                 let mainColor2 = color2.components(separatedBy: " ")[0]
                 if mainColor1 == mainColor2 {
-                    if (dominant.count) > 2 && (dominant[2].frequency) >= 0.2 {
+                    if (dominant.count) > 2 && (dominant[2].frequency) >= Col3_frequ_threshold {
                             let dominant3=dominant[2].color.rgba
                             let r3=dominant3.red * 255
                             let g3=dominant3.green * 255

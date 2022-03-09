@@ -14,7 +14,7 @@ func RunPatternModel (ImageBuffer : UIImage) -> String {
     let model = PatternModel()
     
 //    let GrayImage = ImageBuffer.noir
-    let RszdImage = resizeImage(image: ImageBuffer, newWidth: 128)
+    let RszdImage = resizeImage(image: ImageBuffer, newWidth: CGFloat(PatternImageSize))
     let RszdImageCVPB = RszdImage?.toCVPixelBuffer()
     
     
