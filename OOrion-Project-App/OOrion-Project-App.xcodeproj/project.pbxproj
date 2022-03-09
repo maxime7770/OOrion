@@ -19,6 +19,7 @@
 		8A413BA820D221D500A761EC /* AVCaptureDevice+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A413BA520D221D500A761EC /* AVCaptureDevice+Extension.swift */; };
 		8A8DE5C920D6DEA200914B67 /* models in Resources */ = {isa = PBXBuildFile; fileRef = 8A8DE5C820D6DEA200914B67 /* models */; };
 		8AEC912C24273FD70014E67B /* BoundingBoxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AEC912B24273FD70014E67B /* BoundingBoxView.swift */; };
+		8D69A4AB27D8AA5400627EA8 /* PatternModelBis.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 8D69A4AA27D8AA5400627EA8 /* PatternModelBis.mlmodel */; };
 		8D8B174327D6031A005789FD /* PatternModel.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 8D8B174227D6031A005789FD /* PatternModel.mlmodel */; };
 		C2EE09D227C66D1E00E2C0F9 /* SwiftCluster in Frameworks */ = {isa = PBXBuildFile; productRef = C2EE09D127C66D1E00E2C0F9 /* SwiftCluster */; };
 		C2EE09D527C673E400E2C0F9 /* ColorKit in Frameworks */ = {isa = PBXBuildFile; productRef = C2EE09D427C673E400E2C0F9 /* ColorKit */; };
@@ -41,6 +42,7 @@
 		8A413BA520D221D500A761EC /* AVCaptureDevice+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AVCaptureDevice+Extension.swift"; sourceTree = "<group>"; };
 		8A8DE5C820D6DEA200914B67 /* models */ = {isa = PBXFileReference; lastKnownFileType = folder; path = models; sourceTree = "<group>"; };
 		8AEC912B24273FD70014E67B /* BoundingBoxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoundingBoxView.swift; sourceTree = "<group>"; };
+		8D69A4AA27D8AA5400627EA8 /* PatternModelBis.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = PatternModelBis.mlmodel; sourceTree = "<group>"; };
 		8D8B174227D6031A005789FD /* PatternModel.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = PatternModel.mlmodel; sourceTree = "<group>"; };
 		C2EE09D627C6879C00E2C0F9 /* RgbToHsv.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RgbToHsv.swift; sourceTree = "<group>"; };
 		C2EE09D827C68E0700E2C0F9 /* ColorConversion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorConversion.swift; sourceTree = "<group>"; };
@@ -62,6 +64,7 @@
 		8A413B8420D2205F00A761EC = {
 			isa = PBXGroup;
 			children = (
+				8D69A4AA27D8AA5400627EA8 /* PatternModelBis.mlmodel */,
 				8D8B174227D6031A005789FD /* PatternModel.mlmodel */,
 				8A8DE5C820D6DEA200914B67 /* models */,
 				8A413BA220D221D500A761EC /* VideoCapture */,
@@ -187,6 +190,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8D69A4AB27D8AA5400627EA8 /* PatternModelBis.mlmodel in Sources */,
 				8A413BA720D221D500A761EC /* VideoCapture.swift in Sources */,
 				8AEC912C24273FD70014E67B /* BoundingBoxView.swift in Sources */,
 				8A413B9320D2205F00A761EC /* ViewController.swift in Sources */,

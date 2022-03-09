@@ -12,27 +12,34 @@ import UIKit
 
 func RunPatternModel (ImageBuffer : UIImage) -> String {
     let model = PatternModel()
-    
+    let modelBis = PatternModelBis()
 //    let GrayImage = ImageBuffer.noir
     let RszdImage = resizeImage(image: ImageBuffer, newWidth: 128)
     let RszdImageCVPB = RszdImage?.toCVPixelBuffer()
     
     
     let test = PatternModelInput(input_86: RszdImageCVPB!)
+    let testBis = PatternModelBisInput(input_77:RszdImageCVPB!)
     guard let PatternModelOutput = try? model.prediction(input: test) else {
+        print(CVPixelBufferGetWidth(RszdImageCVPB!))
+        print(CVPixelBufferGetHeight(RszdImageCVPB!))
+        fatalError ("Unexpected runtime error.")
+    }
+    guard let PatternModelBisOutput = try? modelBis.prediction(input: testBis) else {
         print(CVPixelBufferGetWidth(RszdImageCVPB!))
         print(CVPixelBufferGetHeight(RszdImageCVPB!))
         fatalError ("Unexpected runtime error.")
     }
     
     let dict = PatternModelOutput.Identity
+    let dictBis = PatternModelBisOutput.Identity
     
     var label = ""
     var maxKey = -1
-    var maxConf = 0.45
-    
+    var maxConf = 0.0
+    var thress = [0.75, 0.8, 0.8]
     for key in dict.keys {
-        if dict[key] ?? 0 > maxConf {
+        if dict[key]! + dictBis[key]! > maxConf && dict[key]! + dictBis[key]! > thress[Int(key)]{
             maxConf = dict[key]!
             maxKey = Int(key)
      }
