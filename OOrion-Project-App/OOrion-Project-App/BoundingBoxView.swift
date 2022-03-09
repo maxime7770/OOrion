@@ -14,7 +14,7 @@ class BoundingBoxView: UIView {
     private let strokeWidth: CGFloat = 2
     
     private var imageRect: CGRect = CGRect.zero
-    var observations: [VNRecognizedObjectObservation]!
+    var observations: [VNDetectedObjectObservation]!
     var imageBuffer: CVPixelBuffer?
     
     func updateSize(for imageSize: CGSize) {

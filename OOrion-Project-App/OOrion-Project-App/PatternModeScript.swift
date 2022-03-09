@@ -18,7 +18,7 @@ func RunPatternModel (ImageBuffer : UIImage) -> String {
     let RszdImageCVPB = RszdImage?.toCVPixelBuffer()
     
     
-    let test = PatternModelInput(input_86: RszdImageCVPB!)
+    let test = PatternModelInput(input_94: RszdImageCVPB!)
     guard let PatternModelOutput = try? model.prediction(input: test) else {
         print(CVPixelBufferGetWidth(RszdImageCVPB!))
         print(CVPixelBufferGetHeight(RszdImageCVPB!))
