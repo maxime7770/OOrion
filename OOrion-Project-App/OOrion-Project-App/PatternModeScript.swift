@@ -14,11 +14,11 @@ func RunPatternModel (ImageBuffer : UIImage) -> String {
     let model = PatternModel()
     
 //    let GrayImage = ImageBuffer.noir
-    let RszdImage = resizeImage(image: ImageBuffer, newWidth: 64)
+    let RszdImage = resizeImage(image: ImageBuffer, newWidth: 128)
     let RszdImageCVPB = RszdImage?.toCVPixelBuffer()
     
     
-    let test = PatternModelInput(input_22: RszdImageCVPB!)
+    let test = PatternModelInput(input_86: RszdImageCVPB!)
     guard let PatternModelOutput = try? model.prediction(input: test) else {
         print(CVPixelBufferGetWidth(RszdImageCVPB!))
         print(CVPixelBufferGetHeight(RszdImageCVPB!))
@@ -29,7 +29,7 @@ func RunPatternModel (ImageBuffer : UIImage) -> String {
     
     var label = ""
     var maxKey = -1
-    var maxConf = 0.5
+    var maxConf = 0.45
     
     for key in dict.keys {
         if dict[key] ?? 0 > maxConf {
