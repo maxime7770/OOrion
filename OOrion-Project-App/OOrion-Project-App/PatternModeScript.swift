@@ -14,7 +14,7 @@ func RunPatternModel (ImageBuffer : UIImage) -> String {
     let model = PatternModel()
     
 //    let GrayImage = ImageBuffer.noir
-    let RszdImage = resizeImage(image: ImageBuffer, newWidth: 128)
+    let RszdImage = resizeImage(image: ImageBuffer, newWidth: CGFloat(PatternImageSize))
     let RszdImageCVPB = RszdImage?.toCVPixelBuffer()
     
     
@@ -29,10 +29,10 @@ func RunPatternModel (ImageBuffer : UIImage) -> String {
     
     var label = ""
     var maxKey = -1
-    var maxConf = 0.45
+    var maxConf = 0.0
     
     for key in dict.keys {
-        if dict[key] ?? 0 > maxConf {
+        if dict[key]! > maxConf && dict[key]! > ModelThres {
             maxConf = dict[key]!
             maxKey = Int(key)
      }
