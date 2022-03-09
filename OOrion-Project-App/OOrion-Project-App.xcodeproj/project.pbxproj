@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		2872A2DA27D1062400938C0A /* PatternModeScript.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2872A2D927D1062400938C0A /* PatternModeScript.swift */; };
-		8A243AEA20D99188005947D6 /* ModelDescriptionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A243AE920D99188005947D6 /* ModelDescriptionViewController.swift */; };
 		8A413B9120D2205F00A761EC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A413B9020D2205F00A761EC /* AppDelegate.swift */; };
 		8A413B9320D2205F00A761EC /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A413B9220D2205F00A761EC /* ViewController.swift */; };
 		8A413B9620D2205F00A761EC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8A413B9420D2205F00A761EC /* Main.storyboard */; };
@@ -28,7 +27,6 @@
 
 /* Begin PBXFileReference section */
 		2872A2D927D1062400938C0A /* PatternModeScript.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PatternModeScript.swift; sourceTree = "<group>"; };
-		8A243AE920D99188005947D6 /* ModelDescriptionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelDescriptionViewController.swift; sourceTree = "<group>"; };
 		8A413B8D20D2205F00A761EC /* OOrion-Project-App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "OOrion-Project-App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8A413B9020D2205F00A761EC /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8A413B9220D2205F00A761EC /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -87,7 +85,6 @@
 				8A413B9420D2205F00A761EC /* Main.storyboard */,
 				8A413B9020D2205F00A761EC /* AppDelegate.swift */,
 				8A413B9220D2205F00A761EC /* ViewController.swift */,
-				8A243AE920D99188005947D6 /* ModelDescriptionViewController.swift */,
 				8AEC912B24273FD70014E67B /* BoundingBoxView.swift */,
 				2872A2D927D1062400938C0A /* PatternModeScript.swift */,
 				C2EE09D627C6879C00E2C0F9 /* RgbToHsv.swift */,
@@ -195,7 +192,6 @@
 				8A413BA620D221D500A761EC /* VideoCameraType.swift in Sources */,
 				8D8B174327D6031A005789FD /* PatternModel.mlmodel in Sources */,
 				C2EE09D727C6879C00E2C0F9 /* RgbToHsv.swift in Sources */,
-				8A243AEA20D99188005947D6 /* ModelDescriptionViewController.swift in Sources */,
 				2872A2DA27D1062400938C0A /* PatternModeScript.swift in Sources */,
 				C2EE09D927C68E0700E2C0F9 /* ColorConversion.swift in Sources */,
 			);

@@ -61,16 +61,12 @@ class ViewController: UIViewController {
     private var modelUrls: [URL]!
     private var selectedVNModel: VNCoreMLModel?
     private var selectedModel: MLModel?
-
-    private var cropAndScaleOption: VNImageCropAndScaleOption = .scaleFit
     
     @IBOutlet private weak var previewView: UIView!
     @IBOutlet weak var ColorLabel: UILabel!
     @IBOutlet weak var PatternLabel: UILabel!
-    @IBOutlet private weak var modelLabel: UILabel!
     @IBOutlet private weak var resultView: UIView!
     @IBOutlet private weak var bbView: BoundingBoxView!
-    @IBOutlet weak var cropAndScaleOptionSelector: UISegmentedControl!
     
     private var myView: UIView?
     private var listPattern: [String] = []
@@ -146,9 +142,6 @@ class ViewController: UIViewController {
         selectModel(url: modelUrls.first!)
         
         // scaleFill
-        cropAndScaleOptionSelector.selectedSegmentIndex = 2
-        updateCropAndScaleOption()
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -206,7 +199,6 @@ class ViewController: UIViewController {
         selectedModel = try! MLModel(contentsOf: url)
         do {
             selectedVNModel = try VNCoreMLModel(for: selectedModel!)
-            modelLabel.text = url.modelName
         }
         catch {
             fatalError("Could not create VNCoreMLModel instance from \(url). error: \(error).")
@@ -219,16 +211,14 @@ class ViewController: UIViewController {
         bbView.imageBuffer=imageBuffer
         let handler = VNImageRequestHandler(cvPixelBuffer: imageBuffer)
         let request = VNCoreMLRequest(model: model, completionHandler: { (request, error) in
-            if let results = request.results as? [VNClassificationObservation] {
-                self.processClassificationObservations(results)
-            } else if #available(iOS 12.0, *), let results = request.results as? [VNRecognizedObjectObservation] {
+            if #available(iOS 12.0, *), let results = request.results as? [VNRecognizedObjectObservation] {
                 self.processObjectDetectionObservations(results)
             }
         })
-        
+
         request.preferBackgroundProcessing = true
-        request.imageCropAndScaleOption = cropAndScaleOption
-        
+        request.imageCropAndScaleOption = .scaleFit
+
         do {
             try handler.perform([request])
         } catch {
@@ -248,28 +238,6 @@ class ViewController: UIViewController {
             self.ColorLabel.text = ""
             self.PatternLabel.text = ""
         }
-    }
-
-    private func processClassificationObservations(_ results: [VNClassificationObservation]) {
-        var others = ""
-        for i in 0...10 {
-            guard i < results.count else { break }
-            let result = results[i]
-            let confidence = String(format: "%.2f", result.confidence * 100)
-            if i==0 {
-            } else {
-                others += "\(result.identifier) \(confidence)\n"
-            }
-        }
-        DispatchQueue.main.async(execute: {
-            self.bbView.isHidden = true
-            self.resultView.isHidden = false
-        })
-    }
-
-    private func updateCropAndScaleOption() {
-        let selectedIndex = cropAndScaleOptionSelector.selectedSegmentIndex
-        cropAndScaleOption = VNImageCropAndScaleOption(rawValue: UInt(selectedIndex))!
     }
 
     private func getColorCenter(imageBuffer: CVPixelBuffer,sampleBuffer: CMSampleBuffer) {
@@ -425,10 +393,6 @@ class ViewController: UIViewController {
     @IBAction func modelBtnTapped(_ sender: UIButton) {
         showActionSheet()
     }
-    
-    @IBAction func cropAndScaleOptionChanged(_ sender: UISegmentedControl) {
-        updateCropAndScaleOption()
-    }
 }
 
 extension ViewController: UIPopoverPresentationControllerDelegate {
@@ -437,10 +401,6 @@ extension ViewController: UIPopoverPresentationControllerDelegate {
             let vc = segue.destination
             vc.modalPresentationStyle = UIModalPresentationStyle.popover
             vc.popoverPresentationController!.delegate = self
-        }
-        
-        if let modelDescriptionVC = segue.destination as? ModelDescriptionViewController, let model = selectedModel {
-            modelDescriptionVC.modelDescription = model.modelDescription
         }
     }
     
