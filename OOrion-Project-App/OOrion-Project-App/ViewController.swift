@@ -258,7 +258,7 @@ class ViewController: UIViewController {
         let colors = try? cropImaUI.dominantColorFrequencies()
         //print(colors as Any)
         
-        let PatternLabel = RunPatternModel (ImageBuffer: cropImaUI)
+        let PatternLabel = RunPatternModelPlus (ImageBuffer: cropImaUI)
         listPattern.append(PatternLabel)
         if listPattern.count >= 10 {
             let patternName = getPattern(listNames: listPattern)

@@ -10,6 +10,60 @@ import Foundation
 import CoreML
 import UIKit
 
+func RunPatternModelPlus (ImageBuffer : UIImage) -> String {
+    var ListPattern: [String] = []
+    var pattern = RunPatternModel(ImageBuffer: ImageBuffer)
+    ListPattern.append(pattern)
+    var newSize = ImageBuffer.size.width / 2
+    let CGImBuff = ImageBuffer.cgImage
+    var newX = Int.random(in: 0..<Int(newSize))
+    var newY = Int.random(in: 0..<Int(newSize))
+    var new_rect=CGRect(origin: CGPoint(x: newX, y: newY), size: CGSize(width: newSize, height: newSize))
+    var croppedCGImage = CGImBuff!.cropping(
+        to: new_rect)!
+    var im_crop=UIImage(cgImage: croppedCGImage)
+    pattern=RunPatternModel(ImageBuffer:im_crop)
+    ListPattern.append(pattern)
+    
+    newSize = ImageBuffer.size.width / 1.5
+    newX = Int.random(in: 0..<Int(ImageBuffer.size.width-newSize))
+    newY = Int.random(in: 0..<Int(ImageBuffer.size.width-newSize))
+    new_rect=CGRect(origin: CGPoint(x: newX, y: newY), size: CGSize(width: newSize, height: newSize))
+    croppedCGImage = CGImBuff!.cropping(
+        to: new_rect)!
+    im_crop=UIImage(cgImage: croppedCGImage)
+    pattern=RunPatternModel(ImageBuffer:im_crop)
+    ListPattern.append(pattern)
+    
+    var scores = [0, 0, 0, 0, 0]
+    let PatternNames = ["A carreaux", "A pois", "solid", "Rayé", "nothing"]
+    for patternName in ListPattern {
+        switch patternName {
+        case "A carreaux":
+            scores[0] = scores[0] + 1
+        case "A pois":
+            scores[1] = scores[1] + 1
+        case "solid":
+            scores[2] = scores[2] + 1
+        case "Rayé":
+            scores[3] = scores[3] + 1
+        default:
+            scores[4] = scores[4] + 1
+        }
+    }
+    let highScore = scores.max()
+    if scores.firstIndex(of:highScore!) == scores.lastIndex(of:highScore!) {
+        let winningPatternIndex = scores.firstIndex(of:highScore!)
+        let winningPattern = PatternNames[winningPatternIndex!]
+        return winningPattern
+    }
+    else {
+        return "nothing"
+    }
+}
+
+
+
 func RunPatternModel (ImageBuffer : UIImage) -> String {
     let model = PatternModel()
     
