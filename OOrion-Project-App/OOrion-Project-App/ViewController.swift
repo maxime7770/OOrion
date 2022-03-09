@@ -352,7 +352,7 @@ class ViewController: UIViewController {
                 
                 let mainColor1 = color1.components(separatedBy: " ")[0]
                 let mainColor2 = color2.components(separatedBy: " ")[0]
-                if mainColor1 == mainColor2 && color1 != color2 {
+                if mainColor1 == mainColor2 {
                     if (dominant.count) > 2 && (dominant[2].frequency) >= 0.2 {
                             let dominant3=dominant[2].color.rgba
                             let r3=dominant3.red * 255
@@ -365,7 +365,7 @@ class ViewController: UIViewController {
 
                     }
                     else {
-                        return color1 + " & " + color2
+                        return color1
                     }
                 }
                 else {
