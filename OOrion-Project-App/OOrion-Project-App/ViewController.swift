@@ -311,38 +311,43 @@ class ViewController: UIViewController {
         let color1=color_conversion(hsv: [hsv1.h,hsv1.s,hsv1.v])
         
         if ((dominant.count) > 1) && (dominant[1].frequency) >= Col2_frequ_threshold {
-                let dominant2=dominant[1].color.rgba
-                let r2=dominant2.red * 255
-                let g2=dominant2.green * 255
-                let b2=dominant2.blue * 255
-                let hsv2=rgbToHsv(red: r2, green: g2, blue: b2)
-                let color2=color_conversion(hsv: [hsv2.h,hsv2.s,hsv2.v])
-                
-                let mainColor1 = color1.components(separatedBy: " ")[0]
-                let mainColor2 = color2.components(separatedBy: " ")[0]
-                if mainColor1 == mainColor2 {
-                    if (dominant.count) > 2 && (dominant[2].frequency) >= Col3_frequ_threshold {
-                            let dominant3=dominant[2].color.rgba
-                            let r3=dominant3.red * 255
-                            let g3=dominant3.green * 255
-                            let b3=dominant3.blue * 255
-                            let hsv3=rgbToHsv(red: r3, green: g3, blue: b3)
-                            let color3=color_conversion(hsv: [hsv3.h, hsv3.s, hsv3.v])
-                            
-                            return color1 + " & " + color3
-
+            let dominant2=dominant[1].color.rgba
+            let r2=dominant2.red * 255
+            let g2=dominant2.green * 255
+            let b2=dominant2.blue * 255
+            let hsv2=rgbToHsv(red: r2, green: g2, blue: b2)
+            let color2=color_conversion(hsv: [hsv2.h,hsv2.s,hsv2.v])
+            
+            let mainColor1 = color1.components(separatedBy: " ")[0]
+            let mainColor2 = color2.components(separatedBy: " ")[0]
+            if mainColor1 == mainColor2 {
+                if (dominant.count) > 2 && (dominant[2].frequency) >= Col3_frequ_threshold {
+                    let dominant3=dominant[2].color.rgba
+                    let r3=dominant3.red * 255
+                    let g3=dominant3.green * 255
+                    let b3=dominant3.blue * 255
+                    let hsv3=rgbToHsv(red: r3, green: g3, blue: b3)
+                    let color3=color_conversion(hsv: [hsv3.h, hsv3.s, hsv3.v])
+                    
+                    let mainColor3 = color3.components(separatedBy: " ")[0]
+                    if mainColor1 == mainColor3 {
+                        return color1 + " & " + color3
                     }
                     else {
                         return color1
                     }
                 }
                 else {
-                    return color1 + " & " + color2
+                    return color1
                 }
+            }
+            else {
+                return color1 + " & " + color2
+            }
         }
         else {
-                return color1
-            }
+            return color1
+        }
     }
     
     // MARK: - Actions
