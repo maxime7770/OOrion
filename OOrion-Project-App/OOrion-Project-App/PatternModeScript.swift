@@ -18,10 +18,8 @@ func RunPatternModel (ImageBuffer : UIImage) -> String {
     let RszdImageCVPB = RszdImage?.toCVPixelBuffer()
     
     
-    let test = PatternModelInput(input_94: RszdImageCVPB!)
+    let test = PatternModelInput(input_6: RszdImageCVPB!)
     guard let PatternModelOutput = try? model.prediction(input: test) else {
-        print(CVPixelBufferGetWidth(RszdImageCVPB!))
-        print(CVPixelBufferGetHeight(RszdImageCVPB!))
         fatalError ("Unexpected runtime error.")
     }
     
@@ -32,7 +30,7 @@ func RunPatternModel (ImageBuffer : UIImage) -> String {
     var maxConf = 0.0
     
     for key in dict.keys {
-        if dict[key]! > maxConf && dict[key]! > ModelThres {
+        if dict[key]! > maxConf && dict[key]! > ModelThres[Int(key)] {
             maxConf = dict[key]!
             maxKey = Int(key)
      }

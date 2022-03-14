@@ -292,7 +292,7 @@ class ViewController: UIViewController {
             }
         }
         let highScore = scores.max()
-        if scores.firstIndex(of:highScore!) == scores.lastIndex(of:highScore!) {
+        if scores.firstIndex(of:highScore!) == scores.lastIndex(of:highScore!) && highScore! >= 0 {
             let winningPatternIndex = scores.firstIndex(of:highScore!)
             let winningPattern = PatternNames[winningPatternIndex!]
             return winningPattern
