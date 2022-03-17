@@ -120,6 +120,6 @@ func resizeImage(image: UIImage, newWidth: CGFloat) -> UIImage? {
     
     
     
-    
+
 
 

@@ -59,6 +59,12 @@
                                     <action selector="modelBtnTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Gjd-u4-cxV"/>
                                 </connections>
                             </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uI7-ia-Myx">
+                                <rect key="frame" x="166.5" y="183" width="42" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Lbl-mu-BWP" userLabel="PatternLabel">
                                 <rect key="frame" x="166.5" y="413" width="42" height="21"/>
                                 <constraints>
@@ -101,9 +107,11 @@
                             <constraint firstItem="jtW-Pg-o1J" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" constant="115" id="SDz-wV-oWS"/>
                             <constraint firstItem="jtW-Pg-o1J" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" constant="-250" id="aRi-Aa-VFy"/>
                             <constraint firstItem="f7u-wy-8RZ" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" constant="-115" id="hQj-O7-oRK"/>
+                            <constraint firstItem="uI7-ia-Myx" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="hvk-KD-8hO"/>
                             <constraint firstItem="Lbl-mu-BWP" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" constant="90" id="ixQ-5o-fB5"/>
                             <constraint firstAttribute="trailing" secondItem="kgo-Kf-x2U" secondAttribute="trailing" id="pes-M4-xkM"/>
                             <constraint firstItem="f7u-wy-8RZ" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" constant="-250" id="suQ-8O-4EG"/>
+                            <constraint firstItem="uI7-ia-Myx" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" constant="-140" id="thH-kW-CIr"/>
                             <constraint firstItem="kgo-Kf-x2U" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="uG9-70-YfO"/>
                             <constraint firstItem="Lbl-mu-BWP" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="xrX-4y-siH"/>
                             <constraint firstItem="Iaz-Jj-rH2" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="y4o-3f-kSC"/>
@@ -112,6 +120,7 @@
                     <connections>
                         <outlet property="ColorLabel" destination="Ktn-nx-8nH" id="8JT-VK-ny4"/>
                         <outlet property="PatternLabel" destination="Lbl-mu-BWP" id="70B-7Y-FBs"/>
+                        <outlet property="TextLabel" destination="uI7-ia-Myx" id="hf6-13-kNp"/>
                         <outlet property="bbView" destination="Fg1-tb-RXL" id="ACa-vU-Z1D"/>
                         <outlet property="previewView" destination="kgo-Kf-x2U" id="5Yj-Oy-mF0"/>
                         <outlet property="resultView" destination="Ktn-nx-8nH" id="hZW-vV-Fa8"/>
