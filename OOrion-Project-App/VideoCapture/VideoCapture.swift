@@ -98,9 +98,9 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
 
         // Asset Writer
         self.assetWriterManager = [[TTMAssetWriterManager alloc] initWithVideoDataOutput:videoDataOutput
-                                                                         audioDataOutput:audioDataOutput
-                                                                           preferredSize:preferredSize
-                                                                                mirrored:(cameraType == CameraTypeFront)];
+            audioDataOutput:audioDataOutput
+            preferredSize:preferredSize
+            mirrored:(cameraType == CameraTypeFront)];
          */
     }
     

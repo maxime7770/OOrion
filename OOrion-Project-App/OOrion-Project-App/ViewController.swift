@@ -13,6 +13,8 @@ import VideoToolbox
 import ColorKit
 
 
+
+
 extension UIColor {
     var rgba: (red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat) {
         var red: CGFloat = 0
@@ -64,13 +66,15 @@ class ViewController: UIViewController {
     private var selectedModel: MLModel?
     
     @IBOutlet private weak var previewView: UIView!
-    @IBOutlet weak var ColorLabel: UILabel!
-    @IBOutlet weak var PatternLabel: UILabel!
+    @IBOutlet weak var ColorLabel: UILabel?
+    @IBOutlet weak var TextLabel: UILabel!
+    @IBOutlet weak var PatternLabel: UILabel?
     @IBOutlet private weak var resultView: UIView!
     @IBOutlet private weak var bbView: BoundingBoxView!
     
     private var myView: UIView?
     private var listPattern: [String] = []
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -126,7 +130,8 @@ class ViewController: UIViewController {
             }
         }
         
-        ColorLabel.text = ""
+        TextLabel?.text = ""
+        ColorLabel!.text = ""
         myView!.isHidden = true
         bbView.isHidden = false
         
@@ -235,11 +240,84 @@ class ViewController: UIViewController {
             self.resultView.isHidden = true
             self.bbView.isHidden = false
             self.bbView.setNeedsDisplay()
-            self.ColorLabel.text = ""
-            self.PatternLabel.text = ""
+            self.ColorLabel?.text = ""
+            self.TextLabel?.text = ""
+            self.PatternLabel?.text = ""
         }
-    }
+    }    
+    
+    func handleDetectedText(request: VNRequest?, error: Error?) {
+        if let error = error {
+            print("ERROR: \(error)")
+            return
+        }
+        guard let results = request?.results as? [VNRecognizedTextObservation], results.count > 0 else {
+            print("No text found")
+            return
+        }
+        
+        let recognizedText: [String] = results.compactMap { (observation)  in
+            guard let topCandidate = observation.topCandidates(1).first else { return nil }
+//            print(observation)
+//            print(observation.topCandidates)
+//            print(observation.topCandidates(3))
+            //<VNRecognizedTextObservation: 0x280a0ef40> 45E275ED-0E72-4734-8866-DE5D448C7160 VNRecognizeTextRequestRevision2 confidence=0.500000 boundingBox=[0.203226, 0.535484, 0.693548, 0.0612903]
+//            print(observation.confidence)
+//            print(observation.topCandidates(3))
+//            print(topCandidate)
+            if observation.confidence == 1 {
+                var allWords = ""
+                let str = topCandidate.string
+                let strArr = str.components(separatedBy: " ")
+                
+                for word in strArr {
+                    print(word)
+                    let textChecker = UITextChecker()
+                    let misspelledRange =
+                        textChecker.rangeOfMisspelledWord(in: String(word),
+                                                          range: NSRange(0..<String(word).utf16.count),
+                                                          startingAt: 0,
+                                                          wrap: false,
+                                                          language: "en_EN")
 
+                    if misspelledRange.location != NSNotFound {
+                        let firstGuess = textChecker.guesses(forWordRange: misspelledRange,
+                                                             in: String(word),
+                                                             language: "en_EN")?.first
+                        
+                        let res = firstGuess ?? ""
+                        print(res)
+                        allWords.append(" " + res)
+                    }
+                    
+                    else {
+                        allWords.append(" " + String(word))
+                    }
+                }
+                
+                print(allWords)
+                DispatchQueue.main.async {
+                        self.bbView.isHidden = true
+                        //self.ColorLabel!.isHidden = false
+                        self.TextLabel?.isHidden = false
+                        //self.PatternLabel!.text = patternName
+                        //self.ColorLabel!.text = a
+                        self.TextLabel?.text = allWords
+                }
+
+                }
+            
+            print("-----")
+            return (topCandidate.string.trimmingCharacters(in: .whitespaces))
+        }
+                    
+    }
+                
+            
+        
+    
+    
+    
     private func getColorCenter(imageBuffer: CVPixelBuffer,sampleBuffer: CMSampleBuffer) {
         
         let screenSize: CGRect = UIScreen.main.bounds
@@ -250,13 +328,18 @@ class ViewController: UIViewController {
         let rectHeight = rectWidth
         let rectH_CG = CGFloat(rectHeight)
         let rectW_CG = CGFloat(rectWidth)
-    
-    
+        let rectH_TextCG = CGFloat(rectHeight + 150)
+        let rectW_TextCG = CGFloat(rectWidth + 150)
+        
+        
         let ima=UIImage(pixelBuffer: imageBuffer)
+        let imaCG = ima?.cgImage
         let cropIma = Crop(sourceImage : ima! , length : rectH_CG, width : rectW_CG)
+        let cropImaText = Crop(sourceImage : ima! , length : rectH_TextCG, width : rectW_TextCG)
         let cropImaUI = UIImage(cgImage: cropIma)
         let colors = try? cropImaUI.dominantColorFrequencies()
-        //print(colors as Any)
+        
+        
         
         let PatternLabel = RunPatternModel (ImageBuffer: cropImaUI)
         listPattern.append(PatternLabel)
@@ -264,14 +347,64 @@ class ViewController: UIViewController {
             let patternName = getPattern(listNames: listPattern)
             listPattern = []
             let colorText = getColorText(dominant:colors!)
-        
+            // handler
+            
+            let request = VNRecognizeTextRequest(completionHandler: self.handleDetectedText)
+            request.recognitionLevel = .fast
+            request.recognitionLanguages = ["en_GB", "fr_FR"]
+            
+            let requests = [request]
+            let imageRequestHandler = VNImageRequestHandler(cgImage: cropImaText, options: [:])
+            DispatchQueue.global(qos: .userInitiated).async {
+                do {
+                    try imageRequestHandler.perform(requests)
+                } catch let error {
+                    print("Error: \(error)")
+                }
+            }
+            
             DispatchQueue.main.async {
-                self.bbView.isHidden = true
-                self.ColorLabel.isHidden = false
-                self.PatternLabel.text = patternName
-                self.ColorLabel.text = colorText
+                    self.bbView.isHidden = true
+                    self.ColorLabel!.isHidden = false
+                    self.PatternLabel!.text = patternName
+                    self.ColorLabel!.text = colorText
+                
             }
-            }
+            
+            
+            
+            
+            
+            
+            
+            
+            // request
+//            let request = VNRecognizeTextRequest { request, error in
+//                guard let observations = request.results as? [VNRecognizedTextObservation],
+//                        error != nil else {
+//                        print("tuez moi pitié2")
+//                        return
+//                    }
+//            print("tuez moi pitié3")
+//
+//             //Merge les textes repérés par Vision
+//            let textRecognized = observations.compactMap({
+//                $0.topCandidates(1).first?.string
+//                    }).joined(separator: ",")
+//
+//            // Process request
+//            do {
+//                    try handler.perform([request])
+//
+//                }
+//            catch {
+//                    print(error)
+//                }
+//
+//
+//
+//
+//            }
         }
     
     func getPattern(listNames: [String]) -> String {
@@ -292,7 +425,7 @@ class ViewController: UIViewController {
             }
         }
         let highScore = scores.max()
-        if scores.firstIndex(of:highScore!) == scores.lastIndex(of:highScore!) && highScore! >= 0 {
+        if scores.firstIndex(of:highScore!) == scores.lastIndex(of:highScore!) {
             let winningPatternIndex = scores.firstIndex(of:highScore!)
             let winningPattern = PatternNames[winningPatternIndex!]
             return winningPattern
@@ -301,7 +434,7 @@ class ViewController: UIViewController {
             return "nothing"
         }
     }
-    
+
     func getColorText(dominant:[ColorFrequency]) -> String {
         let dominant1=dominant[0].color.rgba
         let r1=dominant1.red * 255
@@ -349,7 +482,7 @@ class ViewController: UIViewController {
             return color1
         }
     }
-    
+    }
     // MARK: - Actions
     
     @IBAction func Mode(_ sender: UIButton) {
@@ -360,8 +493,9 @@ class ViewController: UIViewController {
         let actionYolo = UIAlertAction(title: "Yolov5", style: .default) { (action) in
             self.myView!.isHidden = true
             self.bbView.isHidden = false
-            self.ColorLabel.text = ""
-            self.PatternLabel.text = ""
+            self.ColorLabel?.text = ""
+            self.TextLabel?.text = ""
+            self.PatternLabel?.text = ""
             let frameInterval = 1.0 / Double(self.preferredFps)
             self.videoCapture.imageBufferHandler = {[unowned self] (imageBuffer, timestamp, outputBuffer,sampleBuffer) in
                 let delay = CACurrentMediaTime() - timestamp.seconds
@@ -387,6 +521,7 @@ class ViewController: UIViewController {
                 
                 self.serialQueue.async {
                     self.getColorCenter(imageBuffer: imageBuffer,sampleBuffer: sampleBuffer)
+
                 }
             }
         }
@@ -399,6 +534,34 @@ class ViewController: UIViewController {
         showActionSheet()
     }
 }
+
+extension String {
+
+    var length: Int {
+        return count
+    }
+
+    subscript (i: Int) -> String {
+        return self[i ..< i + 1]
+    }
+
+    func substring(fromIndex: Int) -> String {
+        return self[min(fromIndex, length) ..< length]
+    }
+
+    func substring(toIndex: Int) -> String {
+        return self[0 ..< max(0, toIndex)]
+    }
+
+    subscript (r: Range<Int>) -> String {
+        let range = Range(uncheckedBounds: (lower: max(0, min(length, r.lowerBound)),
+                                            upper: min(length, max(0, r.upperBound))))
+        let start = index(startIndex, offsetBy: range.lowerBound)
+        let end = index(start, offsetBy: range.upperBound - range.lowerBound)
+        return String(self[start ..< end])
+    }
+}
+
 
 extension ViewController: UIPopoverPresentationControllerDelegate {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -447,3 +610,4 @@ func Crop(sourceImage : UIImage, length : CGFloat, width : CGFloat) -> CGImage {
     
     return croppedCGImage
 }
+
