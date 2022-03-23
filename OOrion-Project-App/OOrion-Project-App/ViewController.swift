@@ -25,18 +25,18 @@ extension UIColor {
     }
 }
 
-extension UIImage {
-    public convenience init?(pixelBuffer: CVPixelBuffer) {
-        var cgImage: CGImage?
-        VTCreateCGImageFromCVPixelBuffer(pixelBuffer, options: nil, imageOut: &cgImage)
-
-        guard let cgImage = cgImage else {
-            return nil
-        }
-
-        self.init(cgImage: cgImage)
-    }
-}
+//extension UIImage {
+//    public convenience init?(pixelBuffer: CVPixelBuffer) {
+//        var cgImage: CGImage?
+//        VTCreateCGImageFromCVPixelBuffer(pixelBuffer, options: nil, imageOut: &cgImage)
+//
+//        guard let cgImage = cgImage else {
+//            return nil
+//        }
+//
+//        self.init(cgImage: cgImage)
+//    }
+//}
 
 extension UIImage {
     func resizeImage(newWidth: CGFloat) -> UIImage {

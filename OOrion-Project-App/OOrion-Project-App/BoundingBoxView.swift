@@ -57,10 +57,13 @@ class BoundingBoxView: UIView {
             
                                      
             
-            let im_crop=UIImage(cgImage: croppedCGImage)
-            //UIImageWriteToSavedPhotosAlbum(im_crop, nil, nil, nil)
+            let im_crop1=UIImage(cgImage: croppedCGImage)
+            let im_crop = im_crop1.removeBackground(returnResult: RemoveBackroundResult.finalImage)
+                
+                
+            UIImageWriteToSavedPhotosAlbum(im_crop!, nil, nil, nil)
 
-            let colors_detected = try? im_crop.dominantColors(with: .fair, algorithm: .iterative)
+            let colors_detected = try? im_crop?.dominantColors(with: .fair, algorithm: .iterative)
             let dominant=colors_detected![0].rgba
             
             //print(colors_detected!)
