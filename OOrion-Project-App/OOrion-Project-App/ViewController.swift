@@ -156,7 +156,7 @@ class ViewController: UIViewController {
         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1), execute: {
             let brightnessLevel = Double(videoCapture.brightcheck())
             if brightnessLevel >= brightnessLevelTreshold {
-                let alertBr = UIAlertController(title: "Luminosité", message: "La luminosité est faible. Voulez vous activer la lampe torche.", preferredStyle: .alert)
+                let alertBr = UIAlertController(title: "Luminosité", message: "La luminosité est faible. Voulez vous activer la lampe torche ?", preferredStyle: .alert)
                 alertBr.addAction(UIAlertAction(title: "Oui", style: .default, handler: {action in
                     videoCapture.toggleFlash()
                 }))
@@ -251,67 +251,106 @@ class ViewController: UIViewController {
             print("ERROR: \(error)")
             return
         }
-        guard let results = request?.results as? [VNRecognizedTextObservation], results.count > 0 else {
+        guard let results = request?.results, results.count > 0 else {
             print("No text found")
             return
         }
         
-        let recognizedText: [String] = results.compactMap { (observation)  in
-            guard let topCandidate = observation.topCandidates(1).first else { return nil }
-//            print(observation)
-//            print(observation.topCandidates)
-//            print(observation.topCandidates(3))
-            //<VNRecognizedTextObservation: 0x280a0ef40> 45E275ED-0E72-4734-8866-DE5D448C7160 VNRecognizeTextRequestRevision2 confidence=0.500000 boundingBox=[0.203226, 0.535484, 0.693548, 0.0612903]
-//            print(observation.confidence)
-//            print(observation.topCandidates(3))
-//            print(topCandidate)
-            if observation.confidence == 1 {
-                var allWords = ""
-                let str = topCandidate.string
-                let strArr = str.components(separatedBy: " ")
-                
-                for word in strArr {
-                    print(word)
-                    let textChecker = UITextChecker()
-                    let misspelledRange =
-                        textChecker.rangeOfMisspelledWord(in: String(word),
-                                                          range: NSRange(0..<String(word).utf16.count),
-                                                          startingAt: 0,
-                                                          wrap: false,
-                                                          language: "en_EN")
+        var allWords = ""
+        var allLigns = [VNRecognizedText]()
+        for result in results {
+                    if var observation = result as? VNRecognizedTextObservation {
+                        for text in observation.topCandidates(1) {
+                            
+                            if text.confidence >= 0.7 {
+                                let str = text.string
+                                let strArr = str.components(separatedBy: " ")
+                                for word in strArr {
+                                    let textChecker = UITextChecker()
+                                    let misspelledRange =
+                                        textChecker.rangeOfMisspelledWord(in: String(word),
+                                                                          range: NSRange(0..<String(word).utf16.count),
+                                                                          startingAt: 0,
+                                                                          wrap: false,
+                                                                          language: "en_GB")
 
-                    if misspelledRange.location != NSNotFound {
-                        let firstGuess = textChecker.guesses(forWordRange: misspelledRange,
-                                                             in: String(word),
-                                                             language: "en_EN")?.first
-                        
-                        let res = firstGuess ?? ""
-                        print(res)
-                        allWords.append(" " + res)
-                    }
-                    
-                    else {
-                        allWords.append(" " + String(word))
-                    }
-                }
-                
-                print(allWords)
-                DispatchQueue.main.async {
-                        self.bbView.isHidden = true
-                        //self.ColorLabel!.isHidden = false
-                        self.TextLabel?.isHidden = false
-                        //self.PatternLabel!.text = patternName
-                        //self.ColorLabel!.text = a
-                        self.TextLabel?.text = allWords
-                }
+                                    if misspelledRange.location != NSNotFound {
+                                        let firstGuess = textChecker.guesses(forWordRange: misspelledRange,
+                                                                             in: String(word),
+                                                                             language: "en_GB")?.first
+                                        
+                                        let res = firstGuess ?? ""
+                                        var dico = [String: CGFloat]()
+                                        
+                                        allWords.append(" " + res)
+                                        allLigns.append(text)
+                                        }
 
+                                    else {
+                                        allWords.append(" " + String(word))
+                                      
+                                        }
+                                }
+                            allWords.append("\n")
+                        }
+                    }
+           
                 }
-            
-            print("-----")
-            return (topCandidate.string.trimmingCharacters(in: .whitespaces))
+        
+        print(allWords)
+        print("-----")
+        DispatchQueue.main.async {
+                            self.TextLabel.numberOfLines = 0
+                            self.bbView.isHidden = true
+                            //self.ColorLabel!.isHidden = false
+                            self.TextLabel?.isHidden = false
+                            //self.PatternLabel!.text = patternName
+                            //self.ColorLabel!.text = a
+                            self.TextLabel?.text = allWords
         }
-                    
+        
+            
+        }
     }
+//        for result in results {
+//                    if let observation = result as? VNRecognizedTextObservation {
+//                        for text in observation.topCandidates(1) {
+//                            if observation.confidence == 1 {
+//                                let str = text.string
+//                                let strArr = str.components(separatedBy: " ")
+//                                allWords.append(" " + String(str))
+                               
+////                                }
+//                            }
+//
+//                        }
+//
+//
+//                    }
+//            print(allWords)
+//            print("------")
+//            DispatchQueue.main.async {
+//                    self.bbView.isHidden = true
+//                    //self.ColorLabel!.isHidden = false
+//                    self.TextLabel?.isHidden = false
+//                    //self.PatternLabel!.text = patternName
+//                    //self.ColorLabel!.text = a
+//                    self.TextLabel?.text = allWords
+//                }
+//
+//        }
+//        }
+       
+        
+        
+        
+        
+        
+        
+        
+        
+            
+    
                 
             
         
@@ -336,6 +375,7 @@ class ViewController: UIViewController {
         let imaCG = ima?.cgImage
         let cropIma = Crop(sourceImage : ima! , length : rectH_CG, width : rectW_CG)
         let cropImaText = Crop(sourceImage : ima! , length : rectH_TextCG, width : rectW_TextCG)
+        //let cropImaTextUI = UIImage(cgImage: cropImaText)
         let cropImaUI = UIImage(cgImage: cropIma)
         let colors = try? cropImaUI.dominantColorFrequencies()
         
@@ -350,11 +390,13 @@ class ViewController: UIViewController {
             // handler
             
             let request = VNRecognizeTextRequest(completionHandler: self.handleDetectedText)
-            request.recognitionLevel = .fast
+            request.recognitionLevel = .accurate
             request.recognitionLanguages = ["en_GB", "fr_FR"]
             
+            //UIImageWriteToSavedPhotosAlbum(cropImaTextUI, nil, nil, nil)
+            
             let requests = [request]
-            let imageRequestHandler = VNImageRequestHandler(cgImage: cropImaText, options: [:])
+            let imageRequestHandler = VNImageRequestHandler(cgImage: cropImaText, orientation: .right, options: [:])
             DispatchQueue.global(qos: .userInitiated).async {
                 do {
                     try imageRequestHandler.perform(requests)
