@@ -39,7 +39,7 @@ extension UIImage {
         switch returnResult {
         case .finalImage:
             guard let resizedCIImage = CIImage(image: resizedImage),
-                  let compositedImage = resizedCIImage.composite(with: maskBlurImage) else { return nil }
+                  let compositedImage = resizedCIImage.composite(with: maskBlurImage) else { return nil };
             let finalImage = UIImage(ciImage: compositedImage)
                 .resized(to: CGSize(width: size.width, height: size.height))
             return finalImage
@@ -53,10 +53,10 @@ extension UIImage {
         }
     }
 
-    private func getDeepLabV3Model() -> DeepLabV3? {
+    private func getDeepLabV3Model() -> DeepLabV3FP16? {
         do {
             let config = MLModelConfiguration()
-            return try DeepLabV3(configuration: config)
+            return try DeepLabV3FP16(configuration: config)
         } catch {
             // log("Error loading model: \(error)")
             return nil

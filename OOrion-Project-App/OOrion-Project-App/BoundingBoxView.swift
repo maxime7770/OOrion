@@ -29,11 +29,10 @@ class BoundingBoxView: UIView {
 
         let context = UIGraphicsGetCurrentContext()!
         let im=UIImage(pixelBuffer: imageBuffer!)?.cgImage
-
-        let observations_copy=observations
+        let observations_copy=observations[..<min(observations.count, 3)]
         var color_detected = ""
-        for i in 0..<observations_copy!.count {
-            let observation = observations_copy![i]
+        for i in 0..<observations_copy.count {
+            let observation = observations_copy[i]
             
             let color = UIColor(hue: CGFloat(i) / CGFloat(observations.count), saturation: 1, brightness: 1, alpha: 1)
             let rect = drawBoundingBox(context: context, observation: observation, color: color)
@@ -59,12 +58,18 @@ class BoundingBoxView: UIView {
             
             let im_crop1=UIImage(cgImage: croppedCGImage)
             let im_crop = im_crop1.removeBackground(returnResult: RemoveBackroundResult.finalImage)
-                
-                
+            
+//            let colors_detected = try? im_crop?.dominantColors(with: .fair, algorithm: .iterative)
+//            let dominant=colors_detected![0].rgba
+//                print(type(of:dominant))
+            var dominant = (red: CGFloat(1), green:CGFloat(1), blue:CGFloat(1), alpha:CGFloat(1))
             UIImageWriteToSavedPhotosAlbum(im_crop!, nil, nil, nil)
-
             let colors_detected = try? im_crop?.dominantColors(with: .fair, algorithm: .iterative)
-            let dominant=colors_detected![0].rgba
+                if !(colors_detected!.isEmpty) {
+                    dominant=colors_detected![0].rgba }
+                else {let colors_detected = try? im_crop1.dominantColors(with: .fair, algorithm: .iterative)
+                    dominant=colors_detected![0].rgba
+                }
             
             //print(colors_detected!)
             //print(dominant)
