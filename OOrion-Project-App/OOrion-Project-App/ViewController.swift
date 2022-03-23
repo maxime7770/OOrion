@@ -74,7 +74,8 @@ class ViewController: UIViewController {
     
     private var myView: UIView?
     private var listPattern: [String] = []
-    
+    var allLignes = [Dictionary<String, Any>]()
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -257,105 +258,56 @@ class ViewController: UIViewController {
         }
         
         var allWords = ""
-        var allLigns = [VNRecognizedText]()
         for result in results {
-                    if var observation = result as? VNRecognizedTextObservation {
-                        for text in observation.topCandidates(1) {
-                            
-                            if text.confidence >= 0.7 {
-                                let str = text.string
-                                let strArr = str.components(separatedBy: " ")
-                                for word in strArr {
-                                    let textChecker = UITextChecker()
-                                    let misspelledRange =
-                                        textChecker.rangeOfMisspelledWord(in: String(word),
-                                                                          range: NSRange(0..<String(word).utf16.count),
-                                                                          startingAt: 0,
-                                                                          wrap: false,
-                                                                          language: "en_GB")
-
-                                    if misspelledRange.location != NSNotFound {
-                                        let firstGuess = textChecker.guesses(forWordRange: misspelledRange,
-                                                                             in: String(word),
-                                                                             language: "en_GB")?.first
-                                        
-                                        let res = firstGuess ?? ""
-                                        var dico = [String: CGFloat]()
-                                        
-                                        allWords.append(" " + res)
-                                        allLigns.append(text)
-                                        }
-
-                                    else {
-                                        allWords.append(" " + String(word))
-                                      
-                                        }
-                                }
-                            allWords.append("\n")
+            if let observation = result as? VNRecognizedTextObservation {
+                for text in observation.topCandidates(1) {
+                    if text.confidence >= 0.7 {
+                        let str = text.string
+                        let strArr = str.components(separatedBy: " ")
+                        for word in strArr {
+                            let textChecker = UITextChecker()
+                            let misspelledRange =
+                            textChecker.rangeOfMisspelledWord(in: String(word),
+                                                                range: NSRange(0..<String(word).utf16.count),
+                                                                startingAt: 0,
+                                                                wrap: false,
+                                                                language: "en_GB")
+                            if misspelledRange.location != NSNotFound {
+                                let firstGuess = textChecker.guesses(forWordRange: misspelledRange,
+                                                                        in: String(word),
+                                                                        language: "en_GB")?.first
+                                let res = firstGuess ?? ""
+                                allWords.append(" " + res)
+                            }
+                            else {
+                                allWords.append(" " + String(word))
+                            }
                         }
+                        var dict = Dictionary<String, Any>()
+                        dict["line"]=(allWords)
+                        let temp = try? text.boundingBox(for:text.string.startIndex..<text.string.endIndex)!.bottomLeft.y
+                        dict["ord"]=(temp)
+                        self.allLignes.append(dict)
                     }
-           
                 }
-        
-        print(allWords)
-        print("-----")
+            }
+        }
+    }
+    
+    private func displayText() {
+        let sortedResults = (self.allLignes as NSArray).sortedArray(using: [NSSortDescriptor(key: "ord", ascending: true)]) as! [[String:AnyObject]]
+        var allWords = ""
+        for oneLine in sortedResults {
+            allWords.append("\n" + (oneLine["line"] as! String))
+        }
         DispatchQueue.main.async {
                             self.TextLabel.numberOfLines = 0
                             self.bbView.isHidden = true
-                            //self.ColorLabel!.isHidden = false
                             self.TextLabel?.isHidden = false
-                            //self.PatternLabel!.text = patternName
-                            //self.ColorLabel!.text = a
                             self.TextLabel?.text = allWords
         }
-        
-            
-        }
+        self.allLignes = []
     }
-//        for result in results {
-//                    if let observation = result as? VNRecognizedTextObservation {
-//                        for text in observation.topCandidates(1) {
-//                            if observation.confidence == 1 {
-//                                let str = text.string
-//                                let strArr = str.components(separatedBy: " ")
-//                                allWords.append(" " + String(str))
-                               
-////                                }
-//                            }
-//
-//                        }
-//
-//
-//                    }
-//            print(allWords)
-//            print("------")
-//            DispatchQueue.main.async {
-//                    self.bbView.isHidden = true
-//                    //self.ColorLabel!.isHidden = false
-//                    self.TextLabel?.isHidden = false
-//                    //self.PatternLabel!.text = patternName
-//                    //self.ColorLabel!.text = a
-//                    self.TextLabel?.text = allWords
-//                }
-//
-//        }
-//        }
-       
-        
-        
-        
-        
-        
-        
-        
-        
-            
-    
-                
-            
-        
-    
-    
     
     private func getColorCenter(imageBuffer: CVPixelBuffer,sampleBuffer: CMSampleBuffer) {
         
@@ -372,7 +324,6 @@ class ViewController: UIViewController {
         
         
         let ima=UIImage(pixelBuffer: imageBuffer)
-        let imaCG = ima?.cgImage
         let cropIma = Crop(sourceImage : ima! , length : rectH_CG, width : rectW_CG)
         let cropImaText = Crop(sourceImage : ima! , length : rectH_TextCG, width : rectW_TextCG)
         //let cropImaTextUI = UIImage(cgImage: cropImaText)
@@ -404,7 +355,7 @@ class ViewController: UIViewController {
                     print("Error: \(error)")
                 }
             }
-            
+            self.displayText()
             DispatchQueue.main.async {
                     self.bbView.isHidden = true
                     self.ColorLabel!.isHidden = false
@@ -412,43 +363,10 @@ class ViewController: UIViewController {
                     self.ColorLabel!.text = colorText
                 
             }
-            
-            
-            
-            
-            
-            
-            
-            
-            // request
-//            let request = VNRecognizeTextRequest { request, error in
-//                guard let observations = request.results as? [VNRecognizedTextObservation],
-//                        error != nil else {
-//                        print("tuez moi pitié2")
-//                        return
-//                    }
-//            print("tuez moi pitié3")
-//
-//             //Merge les textes repérés par Vision
-//            let textRecognized = observations.compactMap({
-//                $0.topCandidates(1).first?.string
-//                    }).joined(separator: ",")
-//
-//            // Process request
-//            do {
-//                    try handler.perform([request])
-//
-//                }
-//            catch {
-//                    print(error)
-//                }
-//
-//
-//
-//
-//            }
         }
-    
+    }
+            
+            
     func getPattern(listNames: [String]) -> String {
         var scores = [0, 0, 0, 0, 0]
         let PatternNames = ["A carreaux", "A pois", "solid", "Rayé", "nothing"]
@@ -524,7 +442,7 @@ class ViewController: UIViewController {
             return color1
         }
     }
-    }
+    
     // MARK: - Actions
     
     @IBAction func Mode(_ sender: UIButton) {
