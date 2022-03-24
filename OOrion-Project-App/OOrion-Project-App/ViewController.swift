@@ -74,8 +74,9 @@ class ViewController: UIViewController {
     
     private var myView: UIView?
     private var listPattern: [String] = []
-    var allLignes = [Dictionary<String, Any>]()
-
+    var allLignes = Dictionary<String, Any>()
+    var prov = 0
+    var testalacon = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -271,23 +272,45 @@ class ViewController: UIViewController {
                                                                 range: NSRange(0..<String(word).utf16.count),
                                                                 startingAt: 0,
                                                                 wrap: false,
-                                                                language: "en_GB")
+                                                                language: "fr_FR")
                             if misspelledRange.location != NSNotFound {
                                 let firstGuess = textChecker.guesses(forWordRange: misspelledRange,
                                                                         in: String(word),
-                                                                        language: "en_GB")?.first
+                                                                        language: "fr_FR")?.first
                                 let res = firstGuess ?? ""
-                                allWords.append(" " + res)
+                                if allWords == "" {
+                                    allWords.append(res)
+                                }
+                                else {
+                                    allWords.append(" " + res)
+                                }
                             }
                             else {
-                                allWords.append(" " + String(word))
+                                if allWords == "" {
+                                    allWords.append(String(word))
+                                }
+                                else {
+                                    allWords.append(" " + String(word))
+                                }
                             }
                         }
-                        var dict = Dictionary<String, Any>()
-                        dict["line"]=(allWords)
-                        let temp = try? text.boundingBox(for:text.string.startIndex..<text.string.endIndex)!.bottomLeft.y
-                        dict["ord"]=(temp)
-                        self.allLignes.append(dict)
+                        if self.allLignes[allWords] == nil {
+                            var dict = Dictionary<String, Any>()
+                            dict["val"]=(allWords.count)
+                            let temp = try? text.boundingBox(for:text.string.startIndex..<text.string.endIndex)!.bottomLeft.y
+                            let temp2 = try? text.boundingBox(for:text.string.startIndex..<text.string.endIndex)!.topLeft.y
+                            dict["ord"]=(temp)
+                            dict["top"]=(temp2)
+                            self.allLignes[allWords] = dict
+                        }
+                        else {
+                            let dict = self.allLignes[allWords] as! Dictionary<String, Any>
+                            var dict2 = Dictionary<String, Any>()
+                            dict2["val"] = dict["val"] as! Int
+                            dict2["ord"] = dict["ord"]
+                            dict2["top"] = dict["top"]
+                            self.allLignes[allWords] = dict2
+                        }
                     }
                 }
             }
@@ -295,18 +318,64 @@ class ViewController: UIViewController {
     }
     
     private func displayText() {
-        let sortedResults = (self.allLignes as NSArray).sortedArray(using: [NSSortDescriptor(key: "ord", ascending: true)]) as! [[String:AnyObject]]
-        var allWords = ""
-        for oneLine in sortedResults {
-            allWords.append("\n" + (oneLine["line"] as! String))
+        var listLignes = [Dictionary<String, Any>()]
+        listLignes = []
+        for key in self.allLignes.keys {
+            if key.count > 1 {
+                var dict = Dictionary<String, Any>()
+                dict["line"] = key
+                dict["ord"] = (self.allLignes[key] as! Dictionary)["ord"]
+                dict["val"] = (self.allLignes[key] as! Dictionary)["val"]
+                dict["top"] = (self.allLignes[key] as! Dictionary)["top"]
+                listLignes.append(dict)
+            }
         }
-        DispatchQueue.main.async {
+        if listLignes.count > 0 {
+            let sortedLignes = (listLignes as NSArray).sortedArray(using: [NSSortDescriptor(key: "top", ascending: false)]) as! [[String:AnyObject]]
+            var BestListe = [Dictionary<String, Any>()]
+            BestListe = []
+            var tempDict = Dictionary<String, Any>()
+            var res = 0.0
+            for element in sortedLignes {
+                res = res + (element["top"] as! CGFloat) - (element["ord"] as! CGFloat)
+            }
+            res = res/Double((sortedLignes.count))
+            var top = sortedLignes[0]["top"] as! CGFloat
+            var bot = sortedLignes[0]["ord"] as! CGFloat
+            var val = (sortedLignes[0]["val"] as! Int)
+            tempDict = sortedLignes[0]
+            
+            for i in 1..<sortedLignes.count {
+                if (sortedLignes[i]["top"] as! CGFloat) < top-res {
+                    BestListe.append(tempDict)
+                    top = sortedLignes[i]["top"] as! CGFloat
+                    bot = sortedLignes[i]["ord"] as! CGFloat
+                    val = (sortedLignes[i]["val"] as! Int)
+                }
+                else {
+                    if (sortedLignes[i]["val"] as! Int) > val {
+                        tempDict = sortedLignes[i]
+                        val = sortedLignes[i]["val"] as! Int
+                    }
+                }
+            }
+            BestListe.append(tempDict)
+            
+            print(sortedLignes)
+            print("best")
+            print(BestListe)
+            var allWords = ""
+            for oneLine in BestListe {
+                allWords.append("\n" + (oneLine["line"] as! String))
+            }
+            DispatchQueue.main.async {
                             self.TextLabel.numberOfLines = 0
                             self.bbView.isHidden = true
                             self.TextLabel?.isHidden = false
                             self.TextLabel?.text = allWords
+            }
         }
-        self.allLignes = []
+        self.allLignes = [:]
     }
     
     private func getColorCenter(imageBuffer: CVPixelBuffer,sampleBuffer: CMSampleBuffer) {
@@ -328,34 +397,42 @@ class ViewController: UIViewController {
         let cropImaText = Crop(sourceImage : ima! , length : rectH_TextCG, width : rectW_TextCG)
         //let cropImaTextUI = UIImage(cgImage: cropImaText)
         let cropImaUI = UIImage(cgImage: cropIma)
-        let colors = try? cropImaUI.dominantColorFrequencies()
         
+        let request = VNRecognizeTextRequest(completionHandler: self.handleDetectedText)
+        request.recognitionLevel = .accurate
+        request.recognitionLanguages = ["fr_FR", "en_GB"]
         
+        //UIImageWriteToSavedPhotosAlbum(cropImaTextUI, nil, nil, nil)
+        
+        let requests = [request]
+        let imageRequestHandler = VNImageRequestHandler(cgImage: cropImaText, orientation: .right, options: [:])
+        DispatchQueue.global(qos: .userInitiated).async {
+            do {
+                try imageRequestHandler.perform(requests)
+            } catch let error {
+                print("Error: \(error)")
+            }
+        }
         
         let PatternLabel = RunPatternModel (ImageBuffer: cropImaUI)
         listPattern.append(PatternLabel)
+        
+        
         if listPattern.count >= 10 {
             let patternName = getPattern(listNames: listPattern)
             listPattern = []
+            let colors = try? cropImaUI.dominantColorFrequencies()
             let colorText = getColorText(dominant:colors!)
             // handler
             
-            let request = VNRecognizeTextRequest(completionHandler: self.handleDetectedText)
-            request.recognitionLevel = .accurate
-            request.recognitionLanguages = ["en_GB", "fr_FR"]
-            
-            //UIImageWriteToSavedPhotosAlbum(cropImaTextUI, nil, nil, nil)
-            
-            let requests = [request]
-            let imageRequestHandler = VNImageRequestHandler(cgImage: cropImaText, orientation: .right, options: [:])
-            DispatchQueue.global(qos: .userInitiated).async {
-                do {
-                    try imageRequestHandler.perform(requests)
-                } catch let error {
-                    print("Error: \(error)")
-                }
+            if prov>=3 {
+                self.displayText()
+                prov=0
             }
-            self.displayText()
+            else {
+                prov = prov + 1
+            }
+            
             DispatchQueue.main.async {
                     self.bbView.isHidden = true
                     self.ColorLabel!.isHidden = false
