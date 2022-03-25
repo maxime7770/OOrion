@@ -33,12 +33,14 @@ class BoundingBoxView: UIView {
         let context = UIGraphicsGetCurrentContext()!
         let im=UIImage(pixelBuffer: imageBuffer!)?.cgImage
 
-        let observations_copy=observations
+        let observations_copy=observations[..<min(observations.count, 3)]
+
         var color_detected = ""
         var textToDisplay = ""
+        
         if mode == 0 {
-        for i in 0..<observations_copy!.count {
-            let observation = observations_copy![i]
+        for i in 0..<observations_copy.count {
+            let observation = observations_copy[i]
             let color = UIColor(hue: CGFloat(i) / CGFloat(observations.count), saturation: 1, brightness: 1, alpha: 1)
             let rect = drawBoundingBox(context: context, observation: observation, color: color)
             
@@ -84,8 +86,8 @@ class BoundingBoxView: UIView {
         }
         }
         if mode == 1 {
-            if observations_copy!.count > 0 {
-                let observation = observations_copy![0]
+            if observations_copy.count > 0 {
+                let observation = observations_copy[0]
                 let color = UIColor(hue: CGFloat(0) / CGFloat(observations.count), saturation: 1, brightness: 1, alpha: 1)
                 let rect = drawBoundingBox(context: context, observation: observation, color: color)
                 

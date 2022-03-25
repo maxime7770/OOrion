@@ -116,9 +116,7 @@ class ViewController: UIViewController {
         // Add above UIView object as the main view's subview.
         self.view.addSubview(myView!)
         
-        
-        bbView.mode=1
-        
+                
         
         let spec = VideoSpec(fps: preferredFps, size: videoSize)
         let frameInterval = 1.0 / Double(preferredFps)
@@ -404,11 +402,13 @@ class ViewController: UIViewController {
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
         alert.addAction(cancelAction)
         
-        let actionYolo = UIAlertAction(title: "Yolov5", style: .default) { (action) in
+        let actionYoloMode0 = UIAlertAction(title: "Yolov5 Sans Texte", style: .default) { (action) in
             self.bbView.isHidden = false
             self.ColorLabel?.text = ""
             self.TextLabel?.text = ""
             self.PatternLabel?.text = ""
+            
+            self.bbView.mode=0
             
             self.myView!.isHidden = true
             
@@ -423,8 +423,32 @@ class ViewController: UIViewController {
                 }
             }
         }
-        alert.addAction(actionYolo)
+        alert.addAction(actionYoloMode0)
     
+        let actionYoloMode1 = UIAlertAction(title: "Yolov5 Avec Texte", style: .default) { (action) in
+            self.bbView.isHidden = false
+            self.ColorLabel?.text = ""
+            self.TextLabel?.text = ""
+            self.PatternLabel?.text = ""
+            
+            self.bbView.mode=1
+            
+            self.myView!.isHidden = true
+            
+            let frameInterval = 1.0 / Double(self.preferredFps)
+            self.videoCapture.imageBufferHandler = {[unowned self] (imageBuffer, timestamp, outputBuffer,sampleBuffer) in
+                let delay = CACurrentMediaTime() - timestamp.seconds
+                if delay > frameInterval {
+                    return
+                }
+                self.serialQueue.async {
+                    self.runModel(imageBuffer: imageBuffer,sampleBuffer: sampleBuffer)
+                }
+            }
+        }
+        alert.addAction(actionYoloMode1)
+    
+        
         let actionColor = UIAlertAction(title: "Color", style: .default) { (action) in
             self.bbView.isHidden = true
             self.YoloLabel.text = ""
