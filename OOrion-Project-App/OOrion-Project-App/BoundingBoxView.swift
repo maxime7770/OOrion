@@ -158,7 +158,7 @@ class BoundingBoxView: UIView {
         guard let firstLabel = observation.labels.first?.identifier else { return }
                 
         let label = UILabel(frame: .zero)
-        label.text = color_detected + " " + firstLabel
+        label.text = toFrench[firstLabel]! + " " + color_detected
         label.font = UIFont.boldSystemFont(ofSize: 13)
         label.textColor = UIColor.black
         label.backgroundColor = color
