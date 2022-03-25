@@ -33,7 +33,6 @@ class BoundingBoxView: UIView {
         var color_detected = ""
         for i in 0..<observations_copy.count {
             let observation = observations_copy[i]
-            
             let color = UIColor(hue: CGFloat(i) / CGFloat(observations.count), saturation: 1, brightness: 1, alpha: 1)
             let rect = drawBoundingBox(context: context, observation: observation, color: color)
             

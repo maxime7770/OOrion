@@ -259,16 +259,19 @@ class ViewController: UIViewController {
         //print(colors as Any)
         
         let PatternLabel = RunPatternModel (ImageBuffer: cropImaUI)
+        
+        DispatchQueue.main.async {
+            self.PatternLabel.text = PatternLabel}
         listPattern.append(PatternLabel)
         if listPattern.count >= 10 {
-            let patternName = getPattern(listNames: listPattern)
-            listPattern = []
+            //let patternName = getPattern(listNames: listPattern)
+            //listPattern = []
             let colorText = getColorText(dominant:colors!)
         
             DispatchQueue.main.async {
                 self.bbView.isHidden = true
                 self.ColorLabel.isHidden = false
-                self.PatternLabel.text = patternName
+                //self.PatternLabel.text = patternName
                 self.ColorLabel.text = colorText
             }
             }

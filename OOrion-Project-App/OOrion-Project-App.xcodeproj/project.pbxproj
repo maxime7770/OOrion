@@ -40,6 +40,8 @@
 		C21BC5BD27EA6B8C0077ABE5 /* CVPixelBuffer+Rotate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C21BC5AD27EA1A4D0077ABE5 /* CVPixelBuffer+Rotate.swift */; };
 		C21BC5BE27EA6B8E0077ABE5 /* CVPixelBuffer+Resize.swift in Sources */ = {isa = PBXBuildFile; fileRef = C21BC5AC27EA1A4D0077ABE5 /* CVPixelBuffer+Resize.swift */; };
 		C21BC5C027EB2A3B0077ABE5 /* DeepLabV3FP16.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = C21BC5BF27EB2A3B0077ABE5 /* DeepLabV3FP16.mlmodel */; };
+		C21BC5C227EB56030077ABE5 /* DeepLabV3Int8LUT.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = C21BC5C127EB56030077ABE5 /* DeepLabV3Int8LUT.mlmodel */; };
+		C21BC5D027ECAC680077ABE5 /* modeltest.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = C21BC5CF27ECAC680077ABE5 /* modeltest.mlmodel */; };
 		C2EE09D227C66D1E00E2C0F9 /* SwiftCluster in Frameworks */ = {isa = PBXBuildFile; productRef = C2EE09D127C66D1E00E2C0F9 /* SwiftCluster */; };
 		C2EE09D527C673E400E2C0F9 /* ColorKit in Frameworks */ = {isa = PBXBuildFile; productRef = C2EE09D427C673E400E2C0F9 /* ColorKit */; };
 		C2EE09D727C6879C00E2C0F9 /* RgbToHsv.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2EE09D627C6879C00E2C0F9 /* RgbToHsv.swift */; };
@@ -82,6 +84,8 @@
 		C21BC5AC27EA1A4D0077ABE5 /* CVPixelBuffer+Resize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CVPixelBuffer+Resize.swift"; sourceTree = "<group>"; };
 		C21BC5AD27EA1A4D0077ABE5 /* CVPixelBuffer+Rotate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CVPixelBuffer+Rotate.swift"; sourceTree = "<group>"; };
 		C21BC5BF27EB2A3B0077ABE5 /* DeepLabV3FP16.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; name = DeepLabV3FP16.mlmodel; path = ../../../../../Downloads/DeepLabV3FP16.mlmodel; sourceTree = "<group>"; };
+		C21BC5C127EB56030077ABE5 /* DeepLabV3Int8LUT.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; name = DeepLabV3Int8LUT.mlmodel; path = ../../../../../Downloads/DeepLabV3Int8LUT.mlmodel; sourceTree = "<group>"; };
+		C21BC5CF27ECAC680077ABE5 /* modeltest.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; name = modeltest.mlmodel; path = ../../../test/fashion/modeltest.mlmodel; sourceTree = "<group>"; };
 		C2EE09D627C6879C00E2C0F9 /* RgbToHsv.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RgbToHsv.swift; sourceTree = "<group>"; };
 		C2EE09D827C68E0700E2C0F9 /* ColorConversion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorConversion.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -103,7 +107,9 @@
 			isa = PBXGroup;
 			children = (
 				8D8B174227D6031A005789FD /* PatternModel.mlmodel */,
+				C21BC5CF27ECAC680077ABE5 /* modeltest.mlmodel */,
 				C21BC5BF27EB2A3B0077ABE5 /* DeepLabV3FP16.mlmodel */,
+				C21BC5C127EB56030077ABE5 /* DeepLabV3Int8LUT.mlmodel */,
 				C21BC59427EA085D0077ABE5 /* DeepLabV3.mlmodel */,
 				8A8DE5C820D6DEA200914B67 /* models */,
 				8A413BA220D221D500A761EC /* VideoCapture */,
@@ -282,9 +288,11 @@
 				C21BC5BE27EA6B8E0077ABE5 /* CVPixelBuffer+Resize.swift in Sources */,
 				C21BC5BC27EA6B8A0077ABE5 /* NonMaxSuppression.swift in Sources */,
 				C21BC5AE27EA68C30077ABE5 /* UIImage+CVPixelBuffer.swift in Sources */,
+				C21BC5D027ECAC680077ABE5 /* modeltest.mlmodel in Sources */,
 				C21BC59727EA09210077ABE5 /* RemoveBackground.swift in Sources */,
 				2872A2ED27D8F2FC00938C0A /* Constants.swift in Sources */,
 				C21BC5B027EA69440077ABE5 /* UIImage+Extensions.swift in Sources */,
+				C21BC5C227EB56030077ABE5 /* DeepLabV3Int8LUT.mlmodel in Sources */,
 				C21BC5B427EA6B7C0077ABE5 /* Math.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

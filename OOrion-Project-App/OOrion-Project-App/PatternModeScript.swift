@@ -11,14 +11,14 @@ import CoreML
 import UIKit
 
 func RunPatternModel (ImageBuffer : UIImage) -> String {
-    let model = PatternModel()
+    let model = modeltest()
     
 //    let GrayImage = ImageBuffer.noir
     let RszdImage = resizeImage(image: ImageBuffer, newWidth: CGFloat(PatternImageSize))
     let RszdImageCVPB = RszdImage?.toCVPixelBuffer()
     
     
-    let test = PatternModelInput(input_6: RszdImageCVPB!)
+    let test = modeltestInput(input_19: RszdImageCVPB!)
     guard let PatternModelOutput = try? model.prediction(input: test) else {
         fatalError ("Unexpected runtime error.")
     }
@@ -35,21 +35,7 @@ func RunPatternModel (ImageBuffer : UIImage) -> String {
             maxKey = Int(key)
      }
     }
-    
-    switch  maxKey {
-    case 2  :
-      label = "Rayé"
-    case 1:
-     label = "A pois"
-    case 0:
-     label = "A carreaux"
-    case 3:
-     label = "solid"
-    default:
-     label = " "
-    }
-
-    return label
+    return String(maxKey)
 }
 
 

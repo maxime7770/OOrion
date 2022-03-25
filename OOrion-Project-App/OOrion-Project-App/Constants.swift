@@ -20,4 +20,4 @@ public let Col3_frequ_threshold = 0.2
 
 public let PatternImageSize = 128
 
-public let ModelThres = [0.45, 0.45, 0.45]
+public let ModelThres = [0.53, 0.53, 0.53, 0.53, 0.53, 0.53, 0.53]

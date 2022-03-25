@@ -53,10 +53,10 @@ extension UIImage {
         }
     }
 
-    private func getDeepLabV3Model() -> DeepLabV3FP16? {
+    private func getDeepLabV3Model() -> DeepLabV3Int8LUT? {
         do {
             let config = MLModelConfiguration()
-            return try DeepLabV3FP16(configuration: config)
+            return try DeepLabV3Int8LUT(configuration: config)
         } catch {
             // log("Error loading model: \(error)")
             return nil
