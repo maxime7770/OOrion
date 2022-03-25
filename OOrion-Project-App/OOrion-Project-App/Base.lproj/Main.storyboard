@@ -69,7 +69,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gcZ-nX-8hY">
-                                <rect key="frame" x="166.5" y="243" width="42" height="21"/>
+                                <rect key="frame" x="166.5" y="233" width="42" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -122,19 +122,17 @@
                             <constraint firstItem="oft-wd-f3Y" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" constant="100" id="Arq-6P-zbg"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="jtW-Pg-o1J" secondAttribute="trailing" constant="8" id="BaH-tQ-KMl"/>
                             <constraint firstItem="Iaz-Jj-rH2" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" constant="-300" id="Cnb-Hm-vea"/>
-                            <constraint firstItem="gcZ-nX-8hY" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" constant="-80" id="E9W-Zb-439"/>
                             <constraint firstItem="kgo-Kf-x2U" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="IHb-4O-Kb3"/>
                             <constraint firstItem="hWp-Sb-Tza" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" constant="200" id="L6h-B1-CqT"/>
                             <constraint firstItem="Ktn-nx-8nH" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="NqS-os-4Gh"/>
                             <constraint firstAttribute="bottom" secondItem="kgo-Kf-x2U" secondAttribute="bottom" id="OJl-sf-759"/>
+                            <constraint firstItem="gcZ-nX-8hY" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" constant="-90" id="RG4-C8-Yot"/>
                             <constraint firstItem="jtW-Pg-o1J" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" constant="115" id="SDz-wV-oWS"/>
-                            <constraint firstItem="gcZ-nX-8hY" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" constant="-80" id="WGg-3e-WqO"/>
                             <constraint firstItem="jtW-Pg-o1J" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" constant="-250" id="aRi-Aa-VFy"/>
                             <constraint firstItem="f7u-wy-8RZ" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" constant="-115" id="hQj-O7-oRK"/>
                             <constraint firstItem="Lbl-mu-BWP" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" constant="90" id="ixQ-5o-fB5"/>
                             <constraint firstItem="9OY-gy-axG" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" constant="150" id="oM2-5O-8Bu"/>
                             <constraint firstAttribute="trailing" secondItem="kgo-Kf-x2U" secondAttribute="trailing" id="pes-M4-xkM"/>
-                            <constraint firstItem="gcZ-nX-8hY" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="rNn-vR-eGH"/>
                             <constraint firstItem="f7u-wy-8RZ" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" constant="-250" id="suQ-8O-4EG"/>
                             <constraint firstItem="kgo-Kf-x2U" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="uG9-70-YfO"/>
                             <constraint firstItem="gcZ-nX-8hY" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="xqn-dR-3uD"/>
