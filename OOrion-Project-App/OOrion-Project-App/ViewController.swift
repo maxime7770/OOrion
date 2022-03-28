@@ -13,6 +13,8 @@ import VideoToolbox
 import ColorKit
 
 
+
+
 extension UIColor {
     var rgba: (red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat) {
         var red: CGFloat = 0
@@ -64,13 +66,21 @@ class ViewController: UIViewController {
     private var selectedModel: MLModel?
     
     @IBOutlet private weak var previewView: UIView!
-    @IBOutlet weak var ColorLabel: UILabel!
-    @IBOutlet weak var PatternLabel: UILabel!
+    @IBOutlet weak var ColorLabel: UILabel?
+    @IBOutlet weak var TextLabel: UILabel!
+    @IBOutlet weak var PatternLabel: UILabel?
     @IBOutlet private weak var resultView: UIView!
     @IBOutlet private weak var bbView: BoundingBoxView!
     
+    
+    @IBOutlet weak var YoloLabel: UILabel!
+    @IBOutlet weak var YoloColor: UILabel!
+    @IBOutlet weak var YoloText: UILabel!
+    
+    
     private var myView: UIView?
     private var listPattern: [String] = []
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -106,9 +116,7 @@ class ViewController: UIViewController {
         // Add above UIView object as the main view's subview.
         self.view.addSubview(myView!)
         
-        
-        
-        
+                
         
         let spec = VideoSpec(fps: preferredFps, size: videoSize)
         let frameInterval = 1.0 / Double(preferredFps)
@@ -126,7 +134,9 @@ class ViewController: UIViewController {
             }
         }
         
-        ColorLabel.text = ""
+        PatternLabel!.text = ""
+        TextLabel?.text = ""
+        ColorLabel!.text = ""
         myView!.isHidden = true
         bbView.isHidden = false
         
@@ -232,14 +242,37 @@ class ViewController: UIViewController {
         bbView.observations = results
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
+            self.ColorLabel?.text = ""
+            self.TextLabel?.text = ""
+            self.PatternLabel?.text = ""
+            
             self.resultView.isHidden = true
+            
             self.bbView.isHidden = false
             self.bbView.setNeedsDisplay()
-            self.ColorLabel.text = ""
-            self.PatternLabel.text = ""
         }
-    }
-
+        if bbView.mode == 1 {
+            let toDisplay = bbView.getLabels()
+            DispatchQueue.main.async {
+                self.YoloLabel.text = "Label : " + toDisplay[0]
+                self.YoloColor.text = "Couleur : " + toDisplay[1]
+                self.YoloText.text = "Texte : " + toDisplay[2]
+            }
+        }
+        else {
+            DispatchQueue.main.async {
+                self.YoloLabel.text = ""
+                self.YoloColor.text = ""
+                self.YoloText.text = ""
+            }
+        }
+    }    
+    
+            
+        
+    
+    
+    
     private func getColorCenter(imageBuffer: CVPixelBuffer,sampleBuffer: CMSampleBuffer) {
         
         let screenSize: CGRect = UIScreen.main.bounds
@@ -250,27 +283,39 @@ class ViewController: UIViewController {
         let rectHeight = rectWidth
         let rectH_CG = CGFloat(rectHeight)
         let rectW_CG = CGFloat(rectWidth)
-    
-    
+        let rectH_TextCG = CGFloat(rectHeight + 150)
+        let rectW_TextCG = CGFloat(rectWidth + 150)
+        
+        
         let ima=UIImage(pixelBuffer: imageBuffer)
         let cropIma = Crop(sourceImage : ima! , length : rectH_CG, width : rectW_CG)
+        let cropImaText = Crop(sourceImage : ima! , length : rectH_TextCG, width : rectW_TextCG)
         let cropImaUI = UIImage(cgImage: cropIma)
-        let colors = try? cropImaUI.dominantColorFrequencies()
-        //print(colors as Any)
+        
+        
         
         let PatternLabel = RunPatternModel (ImageBuffer: cropImaUI)
         listPattern.append(PatternLabel)
         if listPattern.count >= 10 {
             let patternName = getPattern(listNames: listPattern)
             listPattern = []
+            let colors = try? cropImaUI.dominantColorFrequencies()
             let colorText = getColorText(dominant:colors!)
-        
+            
+            let detectedText = DetectText(imageToCheck: cropImaText)
+            
+            
             DispatchQueue.main.async {
                 self.bbView.isHidden = true
-                self.ColorLabel.isHidden = false
-                self.PatternLabel.text = patternName
-                self.ColorLabel.text = colorText
-            }
+                self.YoloLabel.text = ""
+                self.YoloColor.text = ""
+                self.YoloText.text = ""
+
+
+                self.ColorLabel!.isHidden = false
+                self.PatternLabel!.text = patternName
+                self.ColorLabel!.text = colorText
+                self.TextLabel!.text = detectedText
             }
         }
     
@@ -292,7 +337,7 @@ class ViewController: UIViewController {
             }
         }
         let highScore = scores.max()
-        if scores.firstIndex(of:highScore!) == scores.lastIndex(of:highScore!) && highScore! >= 0 {
+        if scores.firstIndex(of:highScore!) == scores.lastIndex(of:highScore!) {
             let winningPatternIndex = scores.firstIndex(of:highScore!)
             let winningPattern = PatternNames[winningPatternIndex!]
             return winningPattern
@@ -301,7 +346,7 @@ class ViewController: UIViewController {
             return "nothing"
         }
     }
-    
+
     func getColorText(dominant:[ColorFrequency]) -> String {
         let dominant1=dominant[0].color.rgba
         let r1=dominant1.red * 255
@@ -349,7 +394,7 @@ class ViewController: UIViewController {
             return color1
         }
     }
-    
+    }
     // MARK: - Actions
     
     @IBAction func Mode(_ sender: UIButton) {
@@ -357,11 +402,16 @@ class ViewController: UIViewController {
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
         alert.addAction(cancelAction)
         
-        let actionYolo = UIAlertAction(title: "Yolov5", style: .default) { (action) in
-            self.myView!.isHidden = true
+        let actionYoloMode0 = UIAlertAction(title: "Yolov5 Sans Texte", style: .default) { (action) in
             self.bbView.isHidden = false
-            self.ColorLabel.text = ""
-            self.PatternLabel.text = ""
+            self.ColorLabel?.text = ""
+            self.TextLabel?.text = ""
+            self.PatternLabel?.text = ""
+            
+            self.bbView.mode=0
+            
+            self.myView!.isHidden = true
+            
             let frameInterval = 1.0 / Double(self.preferredFps)
             self.videoCapture.imageBufferHandler = {[unowned self] (imageBuffer, timestamp, outputBuffer,sampleBuffer) in
                 let delay = CACurrentMediaTime() - timestamp.seconds
@@ -373,11 +423,39 @@ class ViewController: UIViewController {
                 }
             }
         }
-        alert.addAction(actionYolo)
+        alert.addAction(actionYoloMode0)
     
+        let actionYoloMode1 = UIAlertAction(title: "Yolov5 Avec Texte", style: .default) { (action) in
+            self.bbView.isHidden = false
+            self.ColorLabel?.text = ""
+            self.TextLabel?.text = ""
+            self.PatternLabel?.text = ""
+            
+            self.bbView.mode=1
+            
+            self.myView!.isHidden = true
+            
+            let frameInterval = 1.0 / Double(self.preferredFps)
+            self.videoCapture.imageBufferHandler = {[unowned self] (imageBuffer, timestamp, outputBuffer,sampleBuffer) in
+                let delay = CACurrentMediaTime() - timestamp.seconds
+                if delay > frameInterval {
+                    return
+                }
+                self.serialQueue.async {
+                    self.runModel(imageBuffer: imageBuffer,sampleBuffer: sampleBuffer)
+                }
+            }
+        }
+        alert.addAction(actionYoloMode1)
+    
+        
         let actionColor = UIAlertAction(title: "Color", style: .default) { (action) in
-            self.myView!.isHidden = false
             self.bbView.isHidden = true
+            self.YoloLabel.text = ""
+            self.YoloColor.text = ""
+            self.YoloText.text = ""
+
+            self.myView!.isHidden = false
             let frameInterval = 1.0 / Double(self.preferredFps)
             self.videoCapture.imageBufferHandler = {[unowned self] (imageBuffer, timestamp, outputBuffer,sampleBuffer) in
                 let delay = CACurrentMediaTime() - timestamp.seconds
@@ -387,6 +465,7 @@ class ViewController: UIViewController {
                 
                 self.serialQueue.async {
                     self.getColorCenter(imageBuffer: imageBuffer,sampleBuffer: sampleBuffer)
+
                 }
             }
         }
@@ -399,6 +478,34 @@ class ViewController: UIViewController {
         showActionSheet()
     }
 }
+
+extension String {
+
+    var length: Int {
+        return count
+    }
+
+    subscript (i: Int) -> String {
+        return self[i ..< i + 1]
+    }
+
+    func substring(fromIndex: Int) -> String {
+        return self[min(fromIndex, length) ..< length]
+    }
+
+    func substring(toIndex: Int) -> String {
+        return self[0 ..< max(0, toIndex)]
+    }
+
+    subscript (r: Range<Int>) -> String {
+        let range = Range(uncheckedBounds: (lower: max(0, min(length, r.lowerBound)),
+                                            upper: min(length, max(0, r.upperBound))))
+        let start = index(startIndex, offsetBy: range.lowerBound)
+        let end = index(start, offsetBy: range.upperBound - range.lowerBound)
+        return String(self[start ..< end])
+    }
+}
+
 
 extension ViewController: UIPopoverPresentationControllerDelegate {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -447,3 +554,4 @@ func Crop(sourceImage : UIImage, length : CGFloat, width : CGFloat) -> CGImage {
     
     return croppedCGImage
 }
+
