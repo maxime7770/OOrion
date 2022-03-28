@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2872A2DA27D1062400938C0A /* PatternModeScript.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2872A2D927D1062400938C0A /* PatternModeScript.swift */; };
+		2872A2DA27D1062400938C0A /* PatternDetection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2872A2D927D1062400938C0A /* PatternDetection.swift */; };
 		2872A2ED27D8F2FC00938C0A /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2872A2EC27D8F2FC00938C0A /* Constants.swift */; };
 		8A413B9120D2205F00A761EC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A413B9020D2205F00A761EC /* AppDelegate.swift */; };
 		8A413B9320D2205F00A761EC /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A413B9220D2205F00A761EC /* ViewController.swift */; };
@@ -28,7 +28,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		2872A2D927D1062400938C0A /* PatternModeScript.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PatternModeScript.swift; sourceTree = "<group>"; };
+		2872A2D927D1062400938C0A /* PatternDetection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PatternDetection.swift; sourceTree = "<group>"; };
 		2872A2EC27D8F2FC00938C0A /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		8A413B8D20D2205F00A761EC /* OOrion-Project-App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "OOrion-Project-App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8A413B9020D2205F00A761EC /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -90,7 +90,7 @@
 				8A413B9020D2205F00A761EC /* AppDelegate.swift */,
 				8A413B9220D2205F00A761EC /* ViewController.swift */,
 				8AEC912B24273FD70014E67B /* BoundingBoxView.swift */,
-				2872A2D927D1062400938C0A /* PatternModeScript.swift */,
+				2872A2D927D1062400938C0A /* PatternDetection.swift */,
 				C2EE09D627C6879C00E2C0F9 /* RgbToHsv.swift */,
 				C2EE09D827C68E0700E2C0F9 /* ColorConversion.swift */,
 				2872A2EC27D8F2FC00938C0A /* Constants.swift */,
@@ -198,7 +198,7 @@
 				8A413BA620D221D500A761EC /* VideoCameraType.swift in Sources */,
 				8D8B174327D6031A005789FD /* PatternModel.mlmodel in Sources */,
 				C2EE09D727C6879C00E2C0F9 /* RgbToHsv.swift in Sources */,
-				2872A2DA27D1062400938C0A /* PatternModeScript.swift in Sources */,
+				2872A2DA27D1062400938C0A /* PatternDetection.swift in Sources */,
 				C2EE09D927C68E0700E2C0F9 /* ColorConversion.swift in Sources */,
 				8D02222B27EDCA9F00E897EC /* TextDetection.swift in Sources */,
 				2872A2ED27D8F2FC00938C0A /* Constants.swift in Sources */,
