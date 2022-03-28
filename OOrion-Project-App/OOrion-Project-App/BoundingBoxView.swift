@@ -94,7 +94,8 @@ class BoundingBoxView: UIView {
                 //print(convertedRect)
                
                 let rect_complete=CGRect(origin: CGPoint(x: 0, y: 0), size: CGSize(width: 720, height: 1280))
-                                         
+                                    
+                //Color
                                          
                 let new_width = rect.width * 2.25
                 let new_height=rect.height * 2.25
@@ -102,33 +103,37 @@ class BoundingBoxView: UIView {
                 let new_y=rect.origin.y * 2.25 - 140
                 let new_rect=CGRect(origin: CGPoint(x: new_x, y: new_y), size: CGSize(width: new_width, height: new_height))
                 //print(new_rect)
-                
                 if new_rect.intersects(rect_complete)==true {
-                let inter_rect = new_rect.intersection(rect_complete)
-                let croppedCGImage = im!.cropping(
-                    to: inter_rect)!
-                
-                                         
-                textToDisplay = DetectText(imageToCheck: croppedCGImage)
-                let im_crop=UIImage(cgImage: croppedCGImage)
-                //UIImageWriteToSavedPhotosAlbum(im_crop, nil, nil, nil)
+                    let inter_rect = new_rect.intersection(rect_complete)
+                    let croppedCGImage = im!.cropping(
+                        to: inter_rect)!
+                    
+                    let im_crop=UIImage(cgImage: croppedCGImage)
+                    //UIImageWriteToSavedPhotosAlbum(im_crop, nil, nil, nil)
 
-                let colors_detected = try? im_crop.dominantColors(with: .fair, algorithm: .iterative)
-                let dominant=colors_detected![0].rgba
-                
-                //print(colors_detected!)
-                //print(dominant)
-                let r=dominant.red * 255
-                let g=dominant.green * 255
-                let b=dominant.blue * 255
-                //print((r,g,b))
-                let hsv=rgbToHsv(red: r, green: g, blue:b)
-                color_detected=color_conversion(hsv: [hsv.h,hsv.s,hsv.v])
-                    //print(color_detected)
-                }
+                    let colors_detected = try? im_crop.dominantColors(with: .fair, algorithm: .iterative)
+                    let dominant=colors_detected![0].rgba
+                    
+                    //print(colors_detected!)
+                    //print(dominant)
+                    let r=dominant.red * 255
+                    let g=dominant.green * 255
+                    let b=dominant.blue * 255
+                    //print((r,g,b))
+                    let hsv=rgbToHsv(red: r, green: g, blue:b)
+                    color_detected=color_conversion(hsv: [hsv.h,hsv.s,hsv.v])
+                        //print(color_detected)
+                    
+                    
+                    let text_rect = CGRect(origin: CGPoint(x: new_x-100, y: new_y-100), size: CGSize(width: new_width+200, height: new_height+200))
+                    let inter_text_rect = text_rect.intersection(rect_complete)
+                    let croppedTextImage = im!.cropping(to: inter_text_rect)
+                    textToDisplay = DetectText(imageToCheck: croppedTextImage!)
+                }   
                 let recognizedObjectObservation = observation as? VNRecognizedObjectObservation
                 guard let firstLabel = recognizedObjectObservation!.labels.first?.identifier else { return }
-                Label = firstLabel
+                
+                Label = toFrench[firstLabel]!
                 Color = color_detected
                 Text = textToDisplay
             }
