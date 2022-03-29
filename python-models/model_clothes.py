@@ -11,7 +11,7 @@ shape=(128, 128, 3)
 
 
 model=Sequential()
-model.add(Input(shape=shape))
+model.add(Input(shape=shape, name = 'input_6'))
 
 # First block 
 

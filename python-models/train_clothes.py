@@ -34,7 +34,7 @@ val_size = sum([len(os.listdir('dataset_clothes/validation/' + sub_folder)) for 
 
 batch_size_train = 32
 batch_size_val = 1
-epochs = 50
+epochs = 5
 
 
 # Build train and validation generators (to be passed into the model)

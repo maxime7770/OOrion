@@ -31,7 +31,7 @@ val_size = sum([len(os.listdir('dataset_train_val/val/' + sub_folder)) for sub_f
 
 batch_size_train = 8
 batch_size_val = 1
-epochs = 50
+epochs = 5
 
 # Build train and validation generators (to be passed into the model)
 
