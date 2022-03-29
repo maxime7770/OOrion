@@ -10,7 +10,6 @@ import UIKit
 import CoreML
 import Vision
 import VideoToolbox
-import ColorKit
 
 class ViewController: UIViewController {
 
@@ -227,11 +226,11 @@ class ViewController: UIViewController {
     
             
         
-    /// Displays the color and the pattern present on the input image
+    /// Displays the color, the pattern and the text present on the input image
     /// - imageBuffer: the CVPixelBuffer
     /// - Returns: nil
     
-    private func getColorCenter(imageBuffer: CVPixelBuffer) {
+    private func noObjectDetect(imageBuffer: CVPixelBuffer) {
         
         let screenSize: CGRect = UIScreen.main.bounds
         let screenWidth = screenSize.width
@@ -242,26 +241,41 @@ class ViewController: UIViewController {
         let rectHeight = rectWidth
         let rectH_CG = CGFloat(rectHeight)
         let rectW_CG = CGFloat(rectWidth)
-        let rectH_TextCG = CGFloat(rectHeight + 150)
-        let rectW_TextCG = CGFloat(rectWidth + 150)
+
         
         // The image is converted and cropped to the rectanle's size
         let ima=UIImage(pixelBuffer: imageBuffer)
         let cropIma = Crop(sourceImage : ima! , length : rectH_CG, width : rectW_CG)
-        let cropImaText = Crop(sourceImage : ima! , length : rectH_TextCG, width : rectW_TextCG)
         let cropImaUI = UIImage(cgImage: cropIma)
         
+        ///Save output of PatternModel
         RunPatternModel (ImageBuffer: cropImaUI)
+        
+        ///Refresh display one in ten frames
         self.imageCount = self.imageCount + 1
         if self.imageCount >= 10 {
-            let patternName = GetPattern()
+            ///get most frequent output of PatternModel for last 10 frames
+            let detectedPattern = GetPattern()
 
-            let colors = try? cropImaUI.dominantColorFrequencies()
-            let colorText = getColorText(dominant:colors!)
+            ///Get ColorText to Display
+            var detectedColor = ""
+            let detectedColorList = detectColor(image:cropImaUI)
+            if detectedColorList.count == 1 {
+                detectedColor = detectedColorList[0]
+            }
+            else if detectedColorList.count == 2 {
+                detectedColor = detectedColorList[0] + " & " + detectedColorList[1]
+            }
+            
+            
+            let rectH_TextCG = CGFloat(rectHeight + 150)
+            let rectW_TextCG = CGFloat(rectWidth + 150)
+            let cropImaText = Crop(sourceImage : ima! , length : rectH_TextCG, width : rectW_TextCG)
             let detectedText = DetectText(imageToCheck: cropImaText)
             
             
             DispatchQueue.main.async {
+                ///hides unneeded elements
                 self.bbView.isHidden = true
                 self.YoloLabel.text = ""
                 self.YoloColor.text = ""
@@ -269,69 +283,13 @@ class ViewController: UIViewController {
 
 
                 self.ColorLabel!.isHidden = false
-                self.PatternLabel!.text = patternName
-                self.ColorLabel!.text = colorText
+                self.PatternLabel!.text = detectedPattern
+                self.ColorLabel!.text = detectedColor
                 self.TextLabel!.text = detectedText
             }
         }
+    }
 
-    /// Analyzes the frequencies of each color in order to return the most present one(s)
-    /// - dominant : an array of ColorFrequency
-    /// - Returns: a String containing the colors names
-        
-    func getColorText(dominant:[ColorFrequency]) -> String {
-        let dominant1=dominant[0].color.rgba
-        let r1=dominant1.red * 255
-        let g1=dominant1.green * 255
-        let b1=dominant1.blue * 255
-        let hsv1=rgbToHsv(red: r1, green: g1, blue:b1)
-        let color1=color_conversion(hsv: [hsv1.h,hsv1.s,hsv1.v])
-        // If the second most present color is present enough, it is also returned
-        if ((dominant.count) > 1) && (dominant[1].frequency) >= Col2_frequ_threshold {
-            let dominant2=dominant[1].color.rgba
-            let r2=dominant2.red * 255
-            let g2=dominant2.green * 255
-            let b2=dominant2.blue * 255
-            let hsv2=rgbToHsv(red: r2, green: g2, blue: b2)
-            let color2=color_conversion(hsv: [hsv2.h,hsv2.s,hsv2.v])
-            
-            let mainColor1 = color1.components(separatedBy: " ")[0]
-            let mainColor2 = color2.components(separatedBy: " ")[0]
-            
-            // If the first and second most present color are similar
-            // (red and dark red for example), the third color is returned
-            // if it is present enough
-            
-            if mainColor1 == mainColor2 {
-                if (dominant.count) > 2 && (dominant[2].frequency) >= Col3_frequ_threshold {
-                    let dominant3=dominant[2].color.rgba
-                    let r3=dominant3.red * 255
-                    let g3=dominant3.green * 255
-                    let b3=dominant3.blue * 255
-                    let hsv3=rgbToHsv(red: r3, green: g3, blue: b3)
-                    let color3=color_conversion(hsv: [hsv3.h, hsv3.s, hsv3.v])
-                    
-                    let mainColor3 = color3.components(separatedBy: " ")[0]
-                    if mainColor1 == mainColor3 {
-                        return color1 + " & " + color3
-                    }
-                    else {
-                        return color1
-                    }
-                }
-                else {
-                    return color1
-                }
-            }
-            else {
-                return color1 + " & " + color2
-            }
-        }
-        else {
-            return color1
-        }
-    }
-    }
     // MARK: - Actions
     
     ///Change Mode button
@@ -402,7 +360,7 @@ class ViewController: UIViewController {
                 }
                 
                 self.serialQueue.async {
-                    self.getColorCenter(imageBuffer: imageBuffer)
+                    self.noObjectDetect(imageBuffer: imageBuffer)
 
                 }
             }
