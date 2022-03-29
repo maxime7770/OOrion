@@ -98,6 +98,10 @@ extension UIImage {
 }
 
 
+/// Resizes an image according to the input
+/// - image :  the UIImage to resize
+/// - newWidth : the width of the outpute UIImage. Its Height is computed in order to keep the ratio between Height and Width.
+/// - Returns: the resized UIImage (same type)
 
 func resizeImage(image: UIImage, newWidth: CGFloat) -> UIImage? {
 

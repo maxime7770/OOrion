@@ -8,6 +8,8 @@
 
 import Foundation
 
+/// All the constants used in the code, grouped here to simplify modifications and tests
+
 public let videoSizeWidth = 1280
 public let videoSizeHeight = 720
 
