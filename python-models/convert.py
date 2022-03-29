@@ -4,8 +4,8 @@ import coremltools as ct
 
 
 
-model = "model_pattern.h5"   # Name of the model to be converted ("model_pattern" or "model_clothes")
-file = ".h5"
+model = "model_pattern"   # Name of the model to be converted ("model_pattern" or "model_clothes")
+file = model + ".h5"
 new_model = tf.keras.models.load_model(file)
 
 if model == "model_pattern":
