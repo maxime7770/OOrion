@@ -93,6 +93,43 @@ This part explains the clothes recognition process: how to load the dataset, the
 
 # Swift Part
 
+## Folder Structure
+
+Here is a summary of the folder structure, only most important files are shown here.
+
+    ```
+    OOrion-Project-App
+    ├── OOrion-Project-App
+    │   ├── AppDelegate
+    │   ├── ViewController
+    │   ├── BoundingBoxView
+    │   └── Constants
+    ├── VideoCaptures
+    │   ├── VideoCapture
+    │   ├── VideoCameraType
+    │   └── AVCaptureDevice+Extension
+    ├── Detections
+    │   ├── ColorDetection
+    │   ├── PatternDetection
+    │   └── TextDetection
+    └── models
+    ```
+
+    - OOrion-Project-App subfolder contains main files needed to run the App
+    - VideoCapture folder contains scripts needed to operate camera and won't be detailed
+    - Detections folder contains most scripts relative to features we developped
+    - models folder contains the YoloV5 mlmodel we use in Yolo Mode
+
+## Changing models
+
+### Yolo Model
+
+To replace the Yolo model we use, you only need to remove the currently used mlmodel from the models folder and put in your own model in its place.
+
+### Pattern Model
+
+To replace the PatternModel (for example with one trained as described in the Python part), yo need to first rename the model "PatternModel.mlmodel" and move the mlmodel file to the root folder of the App.
+
 ## Scripts description
 
 This part explains how the code is organised and split between the different swift scripts. It also describes the contents of each script and the main functions defined.
