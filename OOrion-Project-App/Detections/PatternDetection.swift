@@ -108,7 +108,7 @@ func GetPattern() -> String {
         return winningPattern
     }
     else {
-        return "nothing"
+        return ""
     }
 }
 
