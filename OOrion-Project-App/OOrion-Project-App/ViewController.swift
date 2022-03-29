@@ -40,18 +40,6 @@ extension UIImage {
     }
 }
 
-extension UIImage {
-    func resizeImage(newWidth: CGFloat) -> UIImage {
-
-        let scale = newWidth / self.size.width
-        let newHeight = self.size.height * scale
-        UIGraphicsBeginImageContext(CGSize(width: newWidth, height: newHeight))
-        self.draw(in: CGRect(x: 0, y: 0, width: newWidth, height: newHeight))
-        let newImage = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-
-        return newImage!
-    } }
 
 class ViewController: UIViewController {
 
@@ -458,20 +446,6 @@ extension String {
     }
 }
 
-
-extension ViewController: UIPopoverPresentationControllerDelegate {
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "popover" {
-            let vc = segue.destination
-            vc.modalPresentationStyle = UIModalPresentationStyle.popover
-            vc.popoverPresentationController!.delegate = self
-        }
-    }
-    
-    func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
-        return .none
-    }
-}
 
 extension URL {
     var modelName: String {

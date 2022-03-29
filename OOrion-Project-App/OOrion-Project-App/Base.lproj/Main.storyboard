@@ -117,7 +117,6 @@
                         <outlet property="YoloText" destination="hWp-Sb-Tza" id="8bt-ha-D8g"/>
                         <outlet property="bbView" destination="Fg1-tb-RXL" id="ACa-vU-Z1D"/>
                         <outlet property="previewView" destination="kgo-Kf-x2U" id="5Yj-Oy-mF0"/>
-                        <outlet property="resultView" destination="Ktn-nx-8nH" id="hZW-vV-Fa8"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
