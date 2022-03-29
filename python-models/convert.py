@@ -17,4 +17,4 @@ classifier_config = ct.ClassifierConfig(class_labels)
 _input =ct.ImageType(scale = 1./255)
 mlmodel = ct.convert(new_model, inputs=[_input], classifier_config=classifier_config)
 
-mlmodel.save(model + "mlmodel")
+mlmodel.save(model + ".mlmodel")
