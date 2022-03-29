@@ -46,7 +46,7 @@ extension UIImage {
     }
 }
 
-var listPattern: [String] = []
+var listPattern: [Int] = []
 
 /// Runs the model named PatternModel, found at the root of the app folder, and adds to ListPatterns the pattern name if the confidence is above the threshold
 ///
@@ -66,7 +66,6 @@ func RunPatternModel (ImageBuffer : UIImage) {
     
     let dict = PatternModelOutput.Identity
     
-    var label = ""
     var maxKey = -1
     var maxConf = 0.0
     
@@ -77,20 +76,8 @@ func RunPatternModel (ImageBuffer : UIImage) {
             maxKey = Int(key)
         }
     }
-    
-    ///Links this key to a string
-    switch  maxKey {
-    case 2  :
-        label = "Rayé"
-    case 1:
-        label = "A pois"
-    case 0:
-        label = "A carreaux"
-    default:
-        label = " "
-    }
 
-    listPattern.append(label)
+    listPattern.append(maxKey)
 }
 
 /// Returns the most frequent pattern in ListPattern
@@ -99,15 +86,15 @@ func RunPatternModel (ImageBuffer : UIImage) {
 /// - Returns:a String containing the pattern name
 func GetPattern() -> String {
     var scores = [0, 0, 0, 0, 0]
-    let patternNames = ["A carreaux", "A pois", "Rayé", "nothing"]
+    let patternNames = ["Motif : à carreaux", "Motif : à pois", "Motif : rayé", ""]
     ///Count number of occurence per String
     for patternName in listPattern {
         switch patternName {
-        case "A carreaux":
+        case 0:
             scores[0] = scores[0] + 1
-        case "A pois":
+        case 1:
             scores[1] = scores[1] + 1
-        case "Rayé":
+        case 2:
             scores[2] = scores[2] + 1
         default:
             scores[3] = scores[3] + 1
