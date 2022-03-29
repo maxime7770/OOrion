@@ -95,8 +95,7 @@ This part explains the clothes recognition process: how to load the dataset, the
 
 ## Folder Structure
 
-Here is a summary of the folder structure, only most important files are shown here.
-
+- Here is a summary of the folder structure, only most important files are shown here.
     ```
     OOrion-Project-App
     ├── OOrion-Project-App
