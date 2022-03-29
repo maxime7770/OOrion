@@ -12,75 +12,39 @@ import Vision
 import VideoToolbox
 import ColorKit
 
-
-
-
-extension UIColor {
-    var rgba: (red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat) {
-        var red: CGFloat = 0
-        var green: CGFloat = 0
-        var blue: CGFloat = 0
-        var alpha: CGFloat = 0
-        getRed(&red, green: &green, blue: &blue, alpha: &alpha)
-
-        return (red, green, blue, alpha)
-    }
-}
-
-extension UIImage {
-    public convenience init?(pixelBuffer: CVPixelBuffer) {
-        var cgImage: CGImage?
-        VTCreateCGImageFromCVPixelBuffer(pixelBuffer, options: nil, imageOut: &cgImage)
-
-        guard let cgImage = cgImage else {
-            return nil
-        }
-
-        self.init(cgImage: cgImage)
-    }
-}
-
-extension UIImage {
-    func resizeImage(newWidth: CGFloat) -> UIImage {
-
-        let scale = newWidth / self.size.width
-        let newHeight = self.size.height * scale
-        UIGraphicsBeginImageContext(CGSize(width: newWidth, height: newHeight))
-        self.draw(in: CGRect(x: 0, y: 0, width: newWidth, height: newHeight))
-        let newImage = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-
-        return newImage!
-    } }
-
 class ViewController: UIViewController {
 
+    ///Specs to initialize ViedeoCapture Object
     private var videoCapture: VideoCapture!
     private let serialQueue = DispatchQueue(label: "com.shu223.coremlplayground.serialqueue")
     
     private let videoSize = CGSize(width: videoSizeWidth, height: videoSizeHeight)
     private let preferredFps: Int32 = 2
     
-    private var modelUrls: [URL]!
+    ///Variables used to save the model used
     private var selectedVNModel: VNCoreMLModel?
     private var selectedModel: MLModel?
     
+    ///Variable used to count the number of image since last refresh,
+    var imageCount: Int = 0
+    
+    ///All Views
     @IBOutlet private weak var previewView: UIView!
+    
+    ///For Color Mode
+    private var squareView: UIView?
     @IBOutlet weak var ColorLabel: UILabel?
     @IBOutlet weak var TextLabel: UILabel!
     @IBOutlet weak var PatternLabel: UILabel?
-    @IBOutlet private weak var resultView: UIView!
+    
+    ///For Yolo Mode
     @IBOutlet private weak var bbView: BoundingBoxView!
-    
-    
+    ///Specifically for YoloWithText Mode
     @IBOutlet weak var YoloLabel: UILabel!
     @IBOutlet weak var YoloColor: UILabel!
     @IBOutlet weak var YoloText: UILabel!
     
-    
-    private var myView: UIView?
-    var imageCount: Int = 0
-    
+    ///Function will run when ViewController is Loaded, initializes VideoCapture object and Model
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -106,14 +70,14 @@ class ViewController: UIViewController {
         let rectFrame: CGRect = CGRect(x:CGFloat(xPos), y:CGFloat(yPos), width:CGFloat(rectWidth), height:CGFloat(rectHeight))
                 
         // Create a UIView object which use above CGRect object.
-        myView = UIView(frame: rectFrame)
+        squareView = UIView(frame: rectFrame)
                 
         // Set UIView background color.
-        myView!.layer.borderWidth = 2
-        myView!.layer.borderColor = UIColor.white.cgColor
+        squareView!.layer.borderWidth = 2
+        squareView!.layer.borderColor = UIColor.white.cgColor
             
         // Add above UIView object as the main view's subview.
-        self.view.addSubview(myView!)
+        self.view.addSubview(squareView!)
         
                 
         
@@ -133,14 +97,20 @@ class ViewController: UIViewController {
             }
         }
         
+        ///Hide and siplay what's needed to initialize in Yolov5 without text
+        
         PatternLabel!.text = ""
         TextLabel?.text = ""
         ColorLabel!.text = ""
-        myView!.isHidden = true
+        squareView!.isHidden = true
+        
         bbView.isHidden = false
+        
+        ///Initialize Model
         
         let modelPaths = Bundle.main.paths(forResourcesOfType: "mlmodel", inDirectory: "models")
         
+        var modelUrls: [URL]!
         modelUrls = []
         for modelPath in modelPaths {
             let url = URL(fileURLWithPath: modelPath)
@@ -148,15 +118,22 @@ class ViewController: UIViewController {
             modelUrls.append(compiledUrl)
         }
         
-        selectModel(url: modelUrls.first!)
-        
-        // scaleFill
+        selectedModel = try! MLModel(contentsOf: modelUrls.first!)
+        do {
+            selectedVNModel = try VNCoreMLModel(for: selectedModel!)
+        }
+        catch {
+            fatalError("Could not create VNCoreMLModel instance from \(modelUrls.first!). error: \(error).")
+        }
     }
     
+    ///Function launched when ViewController will appears, starts VideoCapture, and checks brighness
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         guard let videoCapture = videoCapture else {return}
         videoCapture.startCapture()
+        
+        ///Checks brightness after a slight delay to give time for the View to appear
         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1), execute: {
             let brightnessLevel = Double(videoCapture.brightcheck())
             if brightnessLevel >= brightnessLevelTreshold {
@@ -190,31 +167,9 @@ class ViewController: UIViewController {
     
     // MARK: - Private
     
-    private func showActionSheet() {
-        let alert = UIAlertController(title: "Models", message: "Choose a model", preferredStyle: .actionSheet)
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
-        alert.addAction(cancelAction)
-        
-        for modelUrl in modelUrls {
-            let action = UIAlertAction(title: modelUrl.modelName, style: .default) { (action) in
-                self.selectModel(url: modelUrl)
-            }
-            alert.addAction(action)
-        }
-        present(alert, animated: true, completion: nil)
-    }
-    
-    private func selectModel(url: URL) {
-        selectedModel = try! MLModel(contentsOf: url)
-        do {
-            selectedVNModel = try VNCoreMLModel(for: selectedModel!)
-        }
-        catch {
-            fatalError("Could not create VNCoreMLModel instance from \(url). error: \(error).")
-        }
-    }
-    
-    
+    ///Run Selected Model:
+    ///
+    /// - imageBuffer  : a CVPixelBuffer on which model will be run
     private func runModel(imageBuffer: CVPixelBuffer) {
         guard let model = selectedVNModel else { return }
         bbView.imageBuffer=imageBuffer
@@ -235,21 +190,24 @@ class ViewController: UIViewController {
         }
     }
     
-    
+    ///Displays the request results
+    ///
+    /// - results : Array of VNRecognizedObjectObservation corresponding to outputs of yolov5 model
     @available(iOS 12.0, *)
     private func processObjectDetectionObservations(_ results: [VNRecognizedObjectObservation]) {
         bbView.observations = results
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
+            ///Hides unnecessary labels
             self.ColorLabel?.text = ""
             self.TextLabel?.text = ""
             self.PatternLabel?.text = ""
             
-            self.resultView.isHidden = true
-            
+            ///Makes sure that bbView is displayed, needed because asynchronous check of datas on images, so sometimes, mode will be changed, but next results will be displayed after the mode has been changed, and thus unhide/hide wrong elements
             self.bbView.isHidden = false
             self.bbView.setNeedsDisplay()
         }
+        ///Hides or display labels whether text mode is enabled (1) or not (0)
         if bbView.mode == 1 {
             let toDisplay = bbView.getLabels()
             DispatchQueue.main.async {
@@ -376,6 +334,7 @@ class ViewController: UIViewController {
     }
     // MARK: - Actions
     
+    ///Change Mode button
     @IBAction func Mode(_ sender: UIButton) {
         let alert = UIAlertController(title: "Mode", message: "Choose a mode", preferredStyle: .actionSheet)
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
@@ -389,7 +348,7 @@ class ViewController: UIViewController {
             
             self.bbView.mode=0
             
-            self.myView!.isHidden = true
+            self.squareView!.isHidden = true
             
             let frameInterval = 1.0 / Double(self.preferredFps)
             self.videoCapture.imageBufferHandler = {[unowned self] (imageBuffer, timestamp, outputBuffer) in
@@ -412,7 +371,7 @@ class ViewController: UIViewController {
             
             self.bbView.mode=1
             
-            self.myView!.isHidden = true
+            self.squareView!.isHidden = true
             
             let frameInterval = 1.0 / Double(self.preferredFps)
             self.videoCapture.imageBufferHandler = {[unowned self] (imageBuffer, timestamp, outputBuffer) in
@@ -434,7 +393,7 @@ class ViewController: UIViewController {
             self.YoloColor.text = ""
             self.YoloText.text = ""
 
-            self.myView!.isHidden = false
+            self.squareView!.isHidden = false
             let frameInterval = 1.0 / Double(self.preferredFps)
             self.videoCapture.imageBufferHandler = {[unowned self] (imageBuffer, timestamp, outputBuffer) in
                 let delay = CACurrentMediaTime() - timestamp.seconds
@@ -453,9 +412,6 @@ class ViewController: UIViewController {
         present(alert, animated: true, completion: nil)
     }
     
-    @IBAction func modelBtnTapped(_ sender: UIButton) {
-        showActionSheet()
-    }
 }
 
 extension String {
@@ -485,20 +441,6 @@ extension String {
     }
 }
 
-
-extension ViewController: UIPopoverPresentationControllerDelegate {
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "popover" {
-            let vc = segue.destination
-            vc.modalPresentationStyle = UIModalPresentationStyle.popover
-            vc.popoverPresentationController!.delegate = self
-        }
-    }
-    
-    func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
-        return .none
-    }
-}
 
 extension URL {
     var modelName: String {
@@ -538,3 +480,27 @@ func Crop(sourceImage : UIImage, length : CGFloat, width : CGFloat) -> CGImage {
     return croppedCGImage
 }
 
+extension UIColor {
+    var rgba: (red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat) {
+        var red: CGFloat = 0
+        var green: CGFloat = 0
+        var blue: CGFloat = 0
+        var alpha: CGFloat = 0
+        getRed(&red, green: &green, blue: &blue, alpha: &alpha)
+
+        return (red, green, blue, alpha)
+    }
+}
+
+extension UIImage {
+    public convenience init?(pixelBuffer: CVPixelBuffer) {
+        var cgImage: CGImage?
+        VTCreateCGImageFromCVPixelBuffer(pixelBuffer, options: nil, imageOut: &cgImage)
+
+        guard let cgImage = cgImage else {
+            return nil
+        }
+
+        self.init(cgImage: cgImage)
+    }
+}
