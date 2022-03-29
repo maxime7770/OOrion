@@ -21,10 +21,9 @@
 		8AEC912C24273FD70014E67B /* BoundingBoxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AEC912B24273FD70014E67B /* BoundingBoxView.swift */; };
 		8D02222B27EDCA9F00E897EC /* TextDetection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D02222A27EDCA9F00E897EC /* TextDetection.swift */; };
 		8D8B174327D6031A005789FD /* PatternModel.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 8D8B174227D6031A005789FD /* PatternModel.mlmodel */; };
+		8DCFD23F27F30991007B018E /* ColorDetection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DCFD23E27F30991007B018E /* ColorDetection.swift */; };
 		C2EE09D227C66D1E00E2C0F9 /* SwiftCluster in Frameworks */ = {isa = PBXBuildFile; productRef = C2EE09D127C66D1E00E2C0F9 /* SwiftCluster */; };
 		C2EE09D527C673E400E2C0F9 /* ColorKit in Frameworks */ = {isa = PBXBuildFile; productRef = C2EE09D427C673E400E2C0F9 /* ColorKit */; };
-		C2EE09D727C6879C00E2C0F9 /* RgbToHsv.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2EE09D627C6879C00E2C0F9 /* RgbToHsv.swift */; };
-		C2EE09D927C68E0700E2C0F9 /* ColorConversion.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2EE09D827C68E0700E2C0F9 /* ColorConversion.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -44,8 +43,7 @@
 		8AEC912B24273FD70014E67B /* BoundingBoxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoundingBoxView.swift; sourceTree = "<group>"; };
 		8D02222A27EDCA9F00E897EC /* TextDetection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextDetection.swift; sourceTree = "<group>"; };
 		8D8B174227D6031A005789FD /* PatternModel.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = PatternModel.mlmodel; sourceTree = "<group>"; };
-		C2EE09D627C6879C00E2C0F9 /* RgbToHsv.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RgbToHsv.swift; sourceTree = "<group>"; };
-		C2EE09D827C68E0700E2C0F9 /* ColorConversion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorConversion.swift; sourceTree = "<group>"; };
+		8DCFD23E27F30991007B018E /* ColorDetection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorDetection.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,6 +62,7 @@
 		8A413B8420D2205F00A761EC = {
 			isa = PBXGroup;
 			children = (
+				8DCFD24027F30E51007B018E /* Detections */,
 				8D8B174227D6031A005789FD /* PatternModel.mlmodel */,
 				8A8DE5C820D6DEA200914B67 /* models */,
 				8A413BA220D221D500A761EC /* VideoCapture */,
@@ -90,11 +89,7 @@
 				8A413B9020D2205F00A761EC /* AppDelegate.swift */,
 				8A413B9220D2205F00A761EC /* ViewController.swift */,
 				8AEC912B24273FD70014E67B /* BoundingBoxView.swift */,
-				2872A2D927D1062400938C0A /* PatternDetection.swift */,
-				C2EE09D627C6879C00E2C0F9 /* RgbToHsv.swift */,
-				C2EE09D827C68E0700E2C0F9 /* ColorConversion.swift */,
 				2872A2EC27D8F2FC00938C0A /* Constants.swift */,
-				8D02222A27EDCA9F00E897EC /* TextDetection.swift */,
 			);
 			path = "OOrion-Project-App";
 			sourceTree = "<group>";
@@ -107,6 +102,16 @@
 				8A413BA520D221D500A761EC /* AVCaptureDevice+Extension.swift */,
 			);
 			path = VideoCapture;
+			sourceTree = "<group>";
+		};
+		8DCFD24027F30E51007B018E /* Detections */ = {
+			isa = PBXGroup;
+			children = (
+				8D02222A27EDCA9F00E897EC /* TextDetection.swift */,
+				8DCFD23E27F30991007B018E /* ColorDetection.swift */,
+				2872A2D927D1062400938C0A /* PatternDetection.swift */,
+			);
+			path = Detections;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -197,9 +202,8 @@
 				8A413BA820D221D500A761EC /* AVCaptureDevice+Extension.swift in Sources */,
 				8A413BA620D221D500A761EC /* VideoCameraType.swift in Sources */,
 				8D8B174327D6031A005789FD /* PatternModel.mlmodel in Sources */,
-				C2EE09D727C6879C00E2C0F9 /* RgbToHsv.swift in Sources */,
+				8DCFD23F27F30991007B018E /* ColorDetection.swift in Sources */,
 				2872A2DA27D1062400938C0A /* PatternDetection.swift in Sources */,
-				C2EE09D927C68E0700E2C0F9 /* ColorConversion.swift in Sources */,
 				8D02222B27EDCA9F00E897EC /* TextDetection.swift in Sources */,
 				2872A2ED27D8F2FC00938C0A /* Constants.swift in Sources */,
 			);
