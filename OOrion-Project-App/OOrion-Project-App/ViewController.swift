@@ -79,8 +79,7 @@ class ViewController: UIViewController {
     
     
     private var myView: UIView?
-    private var listPattern: [String] = []
-    
+    var imageCount: Int = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -294,17 +293,13 @@ class ViewController: UIViewController {
         let cropImaText = Crop(sourceImage : ima! , length : rectH_TextCG, width : rectW_TextCG)
         let cropImaUI = UIImage(cgImage: cropIma)
         
-        
-        // The Pattern Model is run
-        let PatternLabel = RunPatternModel (ImageBuffer: cropImaUI)
-        listPattern.append(PatternLabel)
-        // The display is updated every 10 frames to avoid flashing
-        if listPattern.count >= 10 {
-            let patternName = getPattern(listNames: listPattern)
-            listPattern = []
+        RunPatternModel (ImageBuffer: cropImaUI)
+        self.imageCount = self.imageCount + 1
+        if self.imageCount >= 10 {
+            let patternName = GetPattern()
+
             let colors = try? cropImaUI.dominantColorFrequencies()
             let colorText = getColorText(dominant:colors!)
-            
             let detectedText = DetectText(imageToCheck: cropImaText)
             
             
@@ -321,39 +316,6 @@ class ViewController: UIViewController {
                 self.TextLabel!.text = detectedText
             }
         }
-    
-    /// Analyzes the frequencies of each color in order to return the most present one(s)
-    /// - dominant : an array of ColorFrequency
-    /// - Returns: a String containing the colors names
-        
-        
-    func getPattern(listNames: [String]) -> String {
-        var scores = [0, 0, 0, 0, 0]
-        let PatternNames = ["A carreaux", "A pois", "solid", "Rayé", "nothing"]
-        for patternName in listNames {
-            switch patternName {
-            case "A carreaux":
-                scores[0] = scores[0] + 1
-            case "A pois":
-                scores[1] = scores[1] + 1
-            case "solid":
-                scores[2] = scores[2] + 1
-            case "Rayé":
-                scores[3] = scores[3] + 1
-            default:
-                scores[4] = scores[4] + 1
-            }
-        }
-        let highScore = scores.max()
-        if scores.firstIndex(of:highScore!) == scores.lastIndex(of:highScore!) {
-            let winningPatternIndex = scores.firstIndex(of:highScore!)
-            let winningPattern = PatternNames[winningPatternIndex!]
-            return winningPattern
-        }
-        else {
-            return "nothing"
-        }
-    }
 
     /// Analyzes the frequencies of each color in order to return the most present one(s)
     /// - dominant : an array of ColorFrequency
