@@ -21,12 +21,11 @@ func handleDetectedText(request: VNRequest?, error: Error?) {
         return
     }
     guard let results = request?.results as? [VNRecognizedTextObservation], results.count > 0 else {
-        print("No text found")
         textDetected = ""
         return
     }
     
-    let recognizedText: [String] = results.compactMap { (observation)  in
+    let _: [String] = results.compactMap { (observation)  in
         guard let topCandidate = observation.topCandidates(1).first else { return nil }
         if observation.confidence == 1 {
             var allWords = ""
@@ -35,7 +34,6 @@ func handleDetectedText(request: VNRequest?, error: Error?) {
             // Every word will go through a text check in
             // order to correct it if it was spelled wrong
             for word in strArr {
-                print(word)
                 let textChecker = UITextChecker()
                 let misspelledRange =
                     textChecker.rangeOfMisspelledWord(in: String(word),
@@ -50,7 +48,6 @@ func handleDetectedText(request: VNRequest?, error: Error?) {
                                                          language: "fr_FR")?.first
                     
                     let res = firstGuess ?? ""
-                    print(res)
                     allWords.append(" " + res)
                 }
                 
