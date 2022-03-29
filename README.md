@@ -16,8 +16,8 @@ This part explains the patterns detection process: how to load the dataset, the 
 - Here is the folder structure initially:
     ```
     dataset_pattern
-    └── striped_init
-    └── checkered_init
+    ├── striped_init
+    ├── checkered_init
     └── dotted_init
     ```
 
@@ -27,12 +27,12 @@ This part explains the patterns detection process: how to load the dataset, the 
     ```
     dataset_train_val
     ├── train
-    │   └── striped_init
-    │   └── checkered_init
+    │   ├──striped_init
+    │   ├── checkered_init
     │   └── dotted_init
     └── val
-        └── striped_init
-        └── checkered_init
+        ├── striped_init
+        ├── checkered_init
         └── dotted_init
     ```
 
@@ -59,21 +59,21 @@ This part explains the patterns detection process: how to load the dataset, the 
 - Here is the folder structure:
     ```
     dataset_pattern
-    └── train
-        └── outwear
-        └── shorts
-        └── t-shirt
-        └── pants
-        └── dress
-        └── longsleeve
-        └── skirt
+    ├── train
+    │   ├── outwear
+    │   ├── shorts
+    │   ├── t-shirt
+    │   ├── pants
+    │   ├── dress
+    │   ├── longsleeve
+    │   └── skirt
     └── validation
-        └── outwear
-        └── shorts
-        └── t-shirt
-        └── pants
-        └── dress
-        └── longsleeve
+        ├── outwear
+        ├── shorts
+        ├── t-shirt
+        ├── pants
+        ├── dress
+        ├── longsleeve
         └── skirt
     ```
 - It is already split so there is no need to use `create_train_val.py`
