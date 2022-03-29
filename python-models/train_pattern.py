@@ -23,8 +23,8 @@ test_datagen = ImageDataGenerator(rescale = 1./255)
 
 # Get the number of train and validation examples
 
-train_size = sum([len(os.listdir('dataset_train_val/train' + sub_folder)) for sub_folder in os.listdir('dataset_train_val/train') if sub_folder != '.DS_Store'])
-val_size = sum([len(os.listdir('dataset_train_val/val' + sub_folder)) for sub_folder in os.listdir('dataset_train_val/val') if sub_folder != '.DS_Store'])
+train_size = sum([len(os.listdir('dataset_train_val/train/' + sub_folder)) for sub_folder in os.listdir('dataset_train_val/train') if sub_folder != '.DS_Store'])
+val_size = sum([len(os.listdir('dataset_train_val/val/' + sub_folder)) for sub_folder in os.listdir('dataset_train_val/val') if sub_folder != '.DS_Store'])
 
 
 # Define batch_size for train and validation sets, and the number of epochs

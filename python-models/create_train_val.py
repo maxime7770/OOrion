@@ -11,4 +11,4 @@
 
 import splitfolders
 
-splitfolders.ratio('dataset', output='dataset_train_val', seed=1337, ratio=(.8, 0.2)) 
+splitfolders.ratio('dataset_pattern', output='dataset_train_val', seed=1337, ratio=(.8, 0.2)) 
