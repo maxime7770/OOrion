@@ -70,6 +70,7 @@ func RunPatternModel (ImageBuffer : UIImage) {
     var maxKey = -1
     var maxConf = 0.0
     
+    ///Gets key corresponding to max score
     for key in dict.keys {
         if dict[key]! > maxConf && dict[key]! > ModelThres[Int(key)] {
             maxConf = dict[key]!
@@ -77,6 +78,7 @@ func RunPatternModel (ImageBuffer : UIImage) {
         }
     }
     
+    ///Links this key to a string
     switch  maxKey {
     case 2  :
         label = "Rayé"
@@ -98,6 +100,7 @@ func RunPatternModel (ImageBuffer : UIImage) {
 func GetPattern() -> String {
     var scores = [0, 0, 0, 0, 0]
     let patternNames = ["A carreaux", "A pois", "Rayé", "nothing"]
+    ///Count number of occurence per String
     for patternName in listPattern {
         switch patternName {
         case "A carreaux":
