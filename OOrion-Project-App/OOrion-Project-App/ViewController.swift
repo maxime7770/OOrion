@@ -69,7 +69,6 @@ class ViewController: UIViewController {
     @IBOutlet weak var ColorLabel: UILabel?
     @IBOutlet weak var TextLabel: UILabel!
     @IBOutlet weak var PatternLabel: UILabel?
-    @IBOutlet private weak var resultView: UIView!
     @IBOutlet private weak var bbView: BoundingBoxView!
     
     
@@ -148,9 +147,13 @@ class ViewController: UIViewController {
             modelUrls.append(compiledUrl)
         }
         
-        selectModel(url: modelUrls.first!)
-        
-        // scaleFill
+        selectedModel = try! MLModel(contentsOf: modelUrls.first!)
+        do {
+            selectedVNModel = try VNCoreMLModel(for: selectedModel!)
+        }
+        catch {
+            fatalError("Could not create VNCoreMLModel instance from \(modelUrls.first!). error: \(error).")
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -190,31 +193,6 @@ class ViewController: UIViewController {
     
     // MARK: - Private
     
-    private func showActionSheet() {
-        let alert = UIAlertController(title: "Models", message: "Choose a model", preferredStyle: .actionSheet)
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
-        alert.addAction(cancelAction)
-        
-        for modelUrl in modelUrls {
-            let action = UIAlertAction(title: modelUrl.modelName, style: .default) { (action) in
-                self.selectModel(url: modelUrl)
-            }
-            alert.addAction(action)
-        }
-        present(alert, animated: true, completion: nil)
-    }
-    
-    private func selectModel(url: URL) {
-        selectedModel = try! MLModel(contentsOf: url)
-        do {
-            selectedVNModel = try VNCoreMLModel(for: selectedModel!)
-        }
-        catch {
-            fatalError("Could not create VNCoreMLModel instance from \(url). error: \(error).")
-        }
-    }
-    
-    
     private func runModel(imageBuffer: CVPixelBuffer) {
         guard let model = selectedVNModel else { return }
         bbView.imageBuffer=imageBuffer
@@ -244,9 +222,7 @@ class ViewController: UIViewController {
             self.ColorLabel?.text = ""
             self.TextLabel?.text = ""
             self.PatternLabel?.text = ""
-            
-            self.resultView.isHidden = true
-            
+                        
             self.bbView.isHidden = false
             self.bbView.setNeedsDisplay()
         }
@@ -453,9 +429,6 @@ class ViewController: UIViewController {
         present(alert, animated: true, completion: nil)
     }
     
-    @IBAction func modelBtnTapped(_ sender: UIButton) {
-        showActionSheet()
-    }
 }
 
 extension String {
