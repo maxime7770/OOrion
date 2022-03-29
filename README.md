@@ -27,7 +27,7 @@ This part explains the patterns detection process: how to load the dataset, the 
     ```
     dataset_train_val
     ├── train
-    │   ├──striped_init
+    │   ├── striped_init
     │   ├── checkered_init
     │   └── dotted_init
     └── val
@@ -50,7 +50,7 @@ This part explains the patterns detection process: how to load the dataset, the 
 
 ## Clothes Recognition
 
-This part explains the patterns detection process: how to load the dataset, the model and train the model.
+This part explains the clothes recognition process: how to load the dataset, the model and train the model.
 
 ### Load Data
 
