@@ -14,110 +14,128 @@ class BoundingBoxView: UIView {
     private let strokeWidth: CGFloat = 2
     
     private var imageRect: CGRect = CGRect.zero
+    
+    ///Store observations and image observed
     var observations: [VNDetectedObjectObservation]!
     var imageBuffer: CVPixelBuffer?
+    
+    ///Stores mode, default mode 0, Yolo Without Tex
     var mode: Int = 0
     
     func updateSize(for imageSize: CGSize) {
         imageRect = AVMakeRect(aspectRatio: imageSize, insideRect: self.bounds)
     }
     
+    ///Labels for moe 1 (with text)
     var Label: String = ""
     var Text: String = ""
     var Color: String = ""
     
+    
+    ///Draw bounding boxes (1 or 3 depending on mode (1 or 0 respectively)
     override func draw(_ rect: CGRect) {
         guard observations != nil && observations.count > 0 else { return }
         subviews.forEach({ $0.removeFromSuperview() })
 
         let context = UIGraphicsGetCurrentContext()!
         let im=UIImage(pixelBuffer: imageBuffer!)?.cgImage
+        
+        ///Limit to a maximum of 3
+        let observationsCopy=observations[..<min(observations.count, 3)]
 
-        let observations_copy=observations[..<min(observations.count, 3)]
-
-        var color_detected = ""
+        var colorDetected = ""
         var textToDisplay = ""
         
+        ///Without text mode
         if mode == 0 {
-            for i in 0..<observations_copy.count {
-                let observation = observations_copy[i]
+            for i in 0..<observationsCopy.count {
+                let observation = observationsCopy[i]
                 let color = UIColor(hue: CGFloat(i) / CGFloat(observations.count), saturation: 1, brightness: 1, alpha: 1)
                 let rect = drawBoundingBox(context: context, observation: observation, color: color)
                        
-                let rect_complete=CGRect(origin: CGPoint(x: 0, y: 0), size: CGSize(width: 720, height: 1280))
+                let rectComplete=CGRect(origin: CGPoint(x: 0, y: 0), size: CGSize(width: 720, height: 1280))
                 
-                let new_width = rect.width * 2.25
-                let new_height=rect.height * 2.25
-                let new_x=rect.origin.x * 2.25
-                let new_y=rect.origin.y * 2.25 - 140
-                let new_rect=CGRect(origin: CGPoint(x: new_x, y: new_y), size: CGSize(width: new_width, height: new_height))
+                ///Resize for color detection x2.25 to convert from User Interface units to pixels
+                let newWidth = rect.width * 2.25
+                let newHeight=rect.height * 2.25
+                let newX=rect.origin.x * 2.25
+                let newY=rect.origin.y * 2.25 - 140
+                let newRect=CGRect(origin: CGPoint(x: newX, y: newY), size: CGSize(width: newWidth, height: newHeight))
             
-                if new_rect.intersects(rect_complete)==true {
-                    let inter_rect = new_rect.intersection(rect_complete)
+                ///Checks if rectangle is inside screen.
+                if newRect.intersects(rectComplete)==true {
+                    let interRect = newRect.intersection(rectComplete)
                     let croppedCGImage = im!.cropping(
-                        to: inter_rect)!
+                        to: interRect)!
             
-                    let im_crop=UIImage(cgImage: croppedCGImage)
+                    let imCrop=UIImage(cgImage: croppedCGImage)
             
-                    let colorsDetectedList = detectColor(image:im_crop)
-                    color_detected = colorsDetectedList[0]
+                    let colorsDetectedList = detectColor(image:imCrop)
+                    colorDetected = colorsDetectedList[0]
                 }
-            
+                
+                ///Adds label
                 if #available(iOS 12.0, *), let recognizedObjectObservation = observation as? VNRecognizedObjectObservation {
-                    addLabel(on: rect, observation: recognizedObjectObservation, color: color, color_detected: color_detected)
+                    addLabel(on: rect, observation: recognizedObjectObservation, color: color, color_detected: colorDetected)
                 }
             }
         }
+        ///Mode 1 with text
         if mode == 1 {
-            if observations_copy.count > 0 {
-                let observation = observations_copy[0]
+            if observationsCopy.count > 0 {
+                ///Get only first observation
+                let observation = observationsCopy[0]
                 let color = UIColor(hue: CGFloat(0) / CGFloat(observations.count), saturation: 1, brightness: 1, alpha: 1)
                 let rect = drawBoundingBox(context: context, observation: observation, color: color)
                 
-                //print(convertedRect)
                
-                let rect_complete=CGRect(origin: CGPoint(x: 0, y: 0), size: CGSize(width: 720, height: 1280))
+                let rectComplete=CGRect(origin: CGPoint(x: 0, y: 0), size: CGSize(width: 720, height: 1280))
                                     
                 //Color
-                                         
-                let new_width = rect.width * 2.25
-                let new_height=rect.height * 2.25
-                let new_x=rect.origin.x * 2.25
-                let new_y=rect.origin.y * 2.25 - 140
-                let new_rect=CGRect(origin: CGPoint(x: new_x, y: new_y), size: CGSize(width: new_width, height: new_height))
-                //print(new_rect)
-                if new_rect.intersects(rect_complete)==true {
-                    let inter_rect = new_rect.intersection(rect_complete)
+                ///Get Color Rectangle
+                let colorWidth = rect.width * 2.25
+                let colorHeight=rect.height * 2.25
+                let colorX=rect.origin.x * 2.25
+                let colorY=rect.origin.y * 2.25 - 140
+                let colorRect=CGRect(origin: CGPoint(x: colorX, y: colorY), size: CGSize(width: colorWidth, height: colorHeight))
+
+                if colorRect.intersects(rectComplete)==true {
+                    let interColorRect = colorRect.intersection(rectComplete)
                     let croppedCGImage = im!.cropping(
-                        to: inter_rect)!
+                        to: interColorRect)!
                     
-                    let im_crop=UIImage(cgImage: croppedCGImage)
-                    //UIImageWriteToSavedPhotosAlbum(im_crop, nil, nil, nil)
+                    let imCrop=UIImage(cgImage: croppedCGImage)
                     
-                    let colorsDetectedList = detectColor(image:im_crop)
-                    color_detected = colorsDetectedList[0]
+                    let colorsDetectedList = detectColor(image:imCrop)
+                    colorDetected = colorsDetectedList[0]
                     
-                    
-                    let text_rect = CGRect(origin: CGPoint(x: new_x-100, y: new_y-100), size: CGSize(width: new_width+200, height: new_height+200))
-                    let inter_text_rect = text_rect.intersection(rect_complete)
-                    let croppedTextImage = im!.cropping(to: inter_text_rect)
+                    ///Text rectangle, slightly bigger than color rectangle, because text detection focuses on middle of rectangle given, to counter this effect, we give a bigger rectangle
+                    let textRect = CGRect(origin: CGPoint(x: colorX-100, y: colorY-100), size: CGSize(width: colorWidth+200, height: colorHeight+200))
+                    let interTextRect = textRect.intersection(rectComplete)
+                    let croppedTextImage = im!.cropping(to: interTextRect)
                     textToDisplay = DetectText(imageToCheck: croppedTextImage!)
                 }   
                 let recognizedObjectObservation = observation as? VNRecognizedObjectObservation
                 guard let firstLabel = recognizedObjectObservation!.labels.first?.identifier else { return }
                 
                 Label = toFrench[firstLabel]!
-                Color = color_detected
+                Color = colorDetected
                 Text = textToDisplay
             }
 
         }
     }
     
+    ///Get Labels Color and Text for observation in mode 1 with text
+    /// - returns : Array of String with label, color and text in this order
     public func getLabels() -> [String] {
         return [Label,Color,Text]
     }
-            
+    
+    ///Returns the rectangle of BoundingBox
+    ///context : CGContext in which to draw the box
+    ///observation : Observation which box we want to draw
+    ///color : Color of box to draw
     private func drawBoundingBox(context: CGContext, observation: VNDetectedObjectObservation, color: UIColor) -> CGRect {
         let convertedRect = VNImageRectForNormalizedRect(observation.boundingBox, Int(imageRect.width), Int(imageRect.height))
         let x = convertedRect.minX + imageRect.minX
@@ -130,7 +148,13 @@ class BoundingBoxView: UIView {
         
         return rect
     }
-
+    
+    
+    ///Adds label above box drawn
+    ///rect : Rectangle of the box
+    ///observation : observation which is drawn
+    ///color : color in which box is drawn
+    ///color_detected : color detected for the object
     @available(iOS 12.0, *)
     private func addLabel(on rect: CGRect, observation: VNRecognizedObjectObservation, color: UIColor, color_detected: String) {
         guard let firstLabel = observation.labels.first?.identifier else { return }
