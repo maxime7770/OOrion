@@ -123,13 +123,13 @@ class ViewController: UIViewController {
         videoCapture = VideoCapture(cameraType: .back,
                                     preferredSpec: spec,
                                     previewContainer: previewView.layer)
-        videoCapture.imageBufferHandler = {[unowned self] (imageBuffer, timestamp, outputBuffer,sampleBuffer) in
+        videoCapture.imageBufferHandler = {[unowned self] (imageBuffer, timestamp, outputBuffer) in
             let delay = CACurrentMediaTime() - timestamp.seconds
             if delay > frameInterval {
                 return
             }
             self.serialQueue.async {
-                self.runModel(imageBuffer: imageBuffer,sampleBuffer: sampleBuffer)
+                self.runModel(imageBuffer: imageBuffer)
             }
         }
         
@@ -215,7 +215,7 @@ class ViewController: UIViewController {
     }
     
     
-    private func runModel(imageBuffer: CVPixelBuffer,sampleBuffer: CMSampleBuffer) {
+    private func runModel(imageBuffer: CVPixelBuffer) {
         guard let model = selectedVNModel else { return }
         bbView.imageBuffer=imageBuffer
         let handler = VNImageRequestHandler(cvPixelBuffer: imageBuffer)
@@ -269,14 +269,16 @@ class ViewController: UIViewController {
     
             
         
+    /// Displays the color and the pattern present on the input image
+    /// - imageBuffer: the CVPixelBuffer
+    /// - Returns: nil
     
-    
-    
-    private func getColorCenter(imageBuffer: CVPixelBuffer,sampleBuffer: CMSampleBuffer) {
+    private func getColorCenter(imageBuffer: CVPixelBuffer) {
         
         let screenSize: CGRect = UIScreen.main.bounds
         let screenWidth = screenSize.width
-    
+        
+        // The rectangle of observation is created
         let rectWidth = Int(screenWidth) - 2 * xPos
         // the rectangle height.
         let rectHeight = rectWidth
@@ -285,7 +287,7 @@ class ViewController: UIViewController {
         let rectH_TextCG = CGFloat(rectHeight + 150)
         let rectW_TextCG = CGFloat(rectWidth + 150)
         
-        
+        // The image is converted and cropped to the rectanle's size
         let ima=UIImage(pixelBuffer: imageBuffer)
         let cropIma = Crop(sourceImage : ima! , length : rectH_CG, width : rectW_CG)
         let cropImaText = Crop(sourceImage : ima! , length : rectH_TextCG, width : rectW_TextCG)
@@ -315,6 +317,10 @@ class ViewController: UIViewController {
             }
         }
 
+    /// Analyzes the frequencies of each color in order to return the most present one(s)
+    /// - dominant : an array of ColorFrequency
+    /// - Returns: a String containing the colors names
+        
     func getColorText(dominant:[ColorFrequency]) -> String {
         let dominant1=dominant[0].color.rgba
         let r1=dominant1.red * 255
@@ -322,7 +328,7 @@ class ViewController: UIViewController {
         let b1=dominant1.blue * 255
         let hsv1=rgbToHsv(red: r1, green: g1, blue:b1)
         let color1=color_conversion(hsv: [hsv1.h,hsv1.s,hsv1.v])
-        
+        // If the second most present color is present enough, it is also returned
         if ((dominant.count) > 1) && (dominant[1].frequency) >= Col2_frequ_threshold {
             let dominant2=dominant[1].color.rgba
             let r2=dominant2.red * 255
@@ -333,6 +339,11 @@ class ViewController: UIViewController {
             
             let mainColor1 = color1.components(separatedBy: " ")[0]
             let mainColor2 = color2.components(separatedBy: " ")[0]
+            
+            // If the first and second most present color are similar
+            // (red and dark red for example), the third color is returned
+            // if it is present enough
+            
             if mainColor1 == mainColor2 {
                 if (dominant.count) > 2 && (dominant[2].frequency) >= Col3_frequ_threshold {
                     let dominant3=dominant[2].color.rgba
@@ -381,13 +392,13 @@ class ViewController: UIViewController {
             self.myView!.isHidden = true
             
             let frameInterval = 1.0 / Double(self.preferredFps)
-            self.videoCapture.imageBufferHandler = {[unowned self] (imageBuffer, timestamp, outputBuffer,sampleBuffer) in
+            self.videoCapture.imageBufferHandler = {[unowned self] (imageBuffer, timestamp, outputBuffer) in
                 let delay = CACurrentMediaTime() - timestamp.seconds
                 if delay > frameInterval {
                     return
                 }
                 self.serialQueue.async {
-                    self.runModel(imageBuffer: imageBuffer,sampleBuffer: sampleBuffer)
+                    self.runModel(imageBuffer: imageBuffer)
                 }
             }
         }
@@ -404,13 +415,13 @@ class ViewController: UIViewController {
             self.myView!.isHidden = true
             
             let frameInterval = 1.0 / Double(self.preferredFps)
-            self.videoCapture.imageBufferHandler = {[unowned self] (imageBuffer, timestamp, outputBuffer,sampleBuffer) in
+            self.videoCapture.imageBufferHandler = {[unowned self] (imageBuffer, timestamp, outputBuffer) in
                 let delay = CACurrentMediaTime() - timestamp.seconds
                 if delay > frameInterval {
                     return
                 }
                 self.serialQueue.async {
-                    self.runModel(imageBuffer: imageBuffer,sampleBuffer: sampleBuffer)
+                    self.runModel(imageBuffer: imageBuffer)
                 }
             }
         }
@@ -425,14 +436,14 @@ class ViewController: UIViewController {
 
             self.myView!.isHidden = false
             let frameInterval = 1.0 / Double(self.preferredFps)
-            self.videoCapture.imageBufferHandler = {[unowned self] (imageBuffer, timestamp, outputBuffer,sampleBuffer) in
+            self.videoCapture.imageBufferHandler = {[unowned self] (imageBuffer, timestamp, outputBuffer) in
                 let delay = CACurrentMediaTime() - timestamp.seconds
                 if delay > frameInterval {
                     return
                 }
                 
                 self.serialQueue.async {
-                    self.getColorCenter(imageBuffer: imageBuffer,sampleBuffer: sampleBuffer)
+                    self.getColorCenter(imageBuffer: imageBuffer)
 
                 }
             }
@@ -496,11 +507,15 @@ extension URL {
 }
 
 
-func Crop(sourceImage : UIImage, length : CGFloat, width : CGFloat) -> CGImage {
-    // The shortest side
+/// Center crops a rectangle shape from an image
+/// - sourceImage : original UIImage to be cropped
+/// - length and width : CGFloats indicating the length and the width of the rectangular final image
+/// - Returns: the cropped CGImage
 
-    // Determines the x,y coordinate of a centered
-    // sideLength by sideLength square
+func Crop(sourceImage : UIImage, length : CGFloat, width : CGFloat) -> CGImage {
+    /// the position of the center of the rectangle is determined by
+    /// xOffset and yOffset, which are computed in order to have a centered rectangle
+    
     let sourceSize = sourceImage.size
     let xOffset = (sourceSize.width - width) / 2.0
     let yOffset = (sourceSize.height - length) / 2.0

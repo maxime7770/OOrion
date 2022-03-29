@@ -1,11 +1,16 @@
 import Foundation
 import CoreGraphics
 
+/// Converts a color from the HSV format to its name in french
+/// - hsv : an array of 3 CGFloats containing the HSV code of the color
+/// - Returns: a String containing the color's name in french
+
 func color_conversion (hsv : Array<CGFloat>) -> String {
     let h = hsv[0]
     let s = hsv[1] * 100
     let v = hsv[2] * 100
-    
+    // If s is too low, the color can only be Black, Grey and White
+    // It depends on the v component
     switch s {
     case 0...10:
         switch v {
@@ -16,6 +21,7 @@ func color_conversion (hsv : Array<CGFloat>) -> String {
         default:
             return "Blanc"
         }
+    // The color depends on h, but its brightness depends on h
     default:
         switch h {
         case 0...18:

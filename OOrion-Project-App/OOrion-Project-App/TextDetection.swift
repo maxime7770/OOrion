@@ -12,6 +12,9 @@ import UIKit
 
 var textDetected = ""
 
+/// The handler function of the text detectoni function (it means it's called by that function)
+/// - Returns: the text detected by the handler
+
 func handleDetectedText(request: VNRequest?, error: Error?) {
     if let error = error {
         print("ERROR: \(error)")
@@ -29,7 +32,8 @@ func handleDetectedText(request: VNRequest?, error: Error?) {
             var allWords = ""
             let str = topCandidate.string
             let strArr = str.components(separatedBy: " ")
-            
+            // Every word will go through a text check in
+            // order to correct it if it was spelled wrong
             for word in strArr {
                 print(word)
                 let textChecker = UITextChecker()
@@ -54,17 +58,21 @@ func handleDetectedText(request: VNRequest?, error: Error?) {
                     allWords.append(" " + String(word))
                 }
             }
-            
+            // Contains the concatenation of all the corrected words
             textDetected = allWords
 
         }
         
-        return (topCandidate.string.trimmingCharacters(in: .whitespaces))
+        return (textDetected)
     }
 }
 
+/// Detects the text on an image
+/// - imageToCheck: the CGImage to check
+/// - Returns: a String containing the text detected
+
 func DetectText(imageToCheck: CGImage) ->  String {
-    // handler
+    
     
     let request = VNRecognizeTextRequest(completionHandler: handleDetectedText)
     request.recognitionLevel = .fast

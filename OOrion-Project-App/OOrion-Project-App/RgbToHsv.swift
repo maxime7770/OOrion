@@ -9,6 +9,10 @@
 import Foundation
 import CoreGraphics
 
+/// Converts a color from the RGB format to the HSV Format
+/// - Input: a tuple of 3 CGFloats corresponding to the 3 components of the RGB format
+/// - Returns : a tuple of 3 CGFloats corresponding to the 3 components of the HSV format
+
 func rgbToHsv(red:CGFloat, green:CGFloat, blue:CGFloat) -> (h:CGFloat, s:CGFloat, v:CGFloat){
         let r:CGFloat = red/255
         let g:CGFloat = green/255
