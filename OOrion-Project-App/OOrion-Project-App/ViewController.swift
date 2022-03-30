@@ -106,23 +106,12 @@ class ViewController: UIViewController {
         
         ///Initialize Model
         
-        let modelPaths = Bundle.main.paths(forResourcesOfType: "mlmodel", inDirectory: "models")
-        
-        var modelUrls: [URL]!
-        modelUrls = []
-        for modelPath in modelPaths {
-            if modelPath.hasSuffix("yolov5.mlmodel") {
-                let url = URL(fileURLWithPath: modelPath)
-                let compiledUrl = try! MLModel.compileModel(at: url)
-                modelUrls.append(compiledUrl)
-            }
-        }
-        
+        let model = yolov5()
         do {
-            selectedVNModel = try VNCoreMLModel(for: (try! MLModel(contentsOf: modelUrls.first!)))
+            selectedVNModel = try VNCoreMLModel(for: model.model)
         }
         catch {
-            fatalError("Could not create VNCoreMLModel instance from \(modelUrls.first!). error: \(error).")
+            fatalError("Could not create VNCoreMLModel instance from. error: \(error).")
         }
     }
     

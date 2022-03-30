@@ -17,11 +17,11 @@
 		8A413BA620D221D500A761EC /* VideoCameraType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A413BA320D221D500A761EC /* VideoCameraType.swift */; };
 		8A413BA720D221D500A761EC /* VideoCapture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A413BA420D221D500A761EC /* VideoCapture.swift */; };
 		8A413BA820D221D500A761EC /* AVCaptureDevice+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A413BA520D221D500A761EC /* AVCaptureDevice+Extension.swift */; };
-		8A8DE5C920D6DEA200914B67 /* models in Resources */ = {isa = PBXBuildFile; fileRef = 8A8DE5C820D6DEA200914B67 /* models */; };
 		8AEC912C24273FD70014E67B /* BoundingBoxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AEC912B24273FD70014E67B /* BoundingBoxView.swift */; };
 		8D02222B27EDCA9F00E897EC /* TextDetection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D02222A27EDCA9F00E897EC /* TextDetection.swift */; };
 		8D7855A027F47D8B00DB239D /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D78559F27F47D8B00DB239D /* Extensions.swift */; };
-		8D8B174327D6031A005789FD /* PatternModel.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 8D8B174227D6031A005789FD /* PatternModel.mlmodel */; };
+		8D84BAF727F4898C0001F545 /* PatternModel.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 8D84BAF627F4898C0001F545 /* PatternModel.mlmodel */; };
+		8D84BAFB27F489DB0001F545 /* yolov5.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 8D84BAFA27F489DB0001F545 /* yolov5.mlmodel */; };
 		8DCFD23F27F30991007B018E /* ColorDetection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DCFD23E27F30991007B018E /* ColorDetection.swift */; };
 		C2EE09D227C66D1E00E2C0F9 /* SwiftCluster in Frameworks */ = {isa = PBXBuildFile; productRef = C2EE09D127C66D1E00E2C0F9 /* SwiftCluster */; };
 		C2EE09D527C673E400E2C0F9 /* ColorKit in Frameworks */ = {isa = PBXBuildFile; productRef = C2EE09D427C673E400E2C0F9 /* ColorKit */; };
@@ -40,11 +40,11 @@
 		8A413BA320D221D500A761EC /* VideoCameraType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoCameraType.swift; sourceTree = "<group>"; };
 		8A413BA420D221D500A761EC /* VideoCapture.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoCapture.swift; sourceTree = "<group>"; };
 		8A413BA520D221D500A761EC /* AVCaptureDevice+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AVCaptureDevice+Extension.swift"; sourceTree = "<group>"; };
-		8A8DE5C820D6DEA200914B67 /* models */ = {isa = PBXFileReference; lastKnownFileType = folder; path = models; sourceTree = "<group>"; };
 		8AEC912B24273FD70014E67B /* BoundingBoxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoundingBoxView.swift; sourceTree = "<group>"; };
 		8D02222A27EDCA9F00E897EC /* TextDetection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextDetection.swift; sourceTree = "<group>"; };
 		8D78559F27F47D8B00DB239D /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
-		8D8B174227D6031A005789FD /* PatternModel.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = PatternModel.mlmodel; sourceTree = "<group>"; };
+		8D84BAF627F4898C0001F545 /* PatternModel.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = PatternModel.mlmodel; sourceTree = "<group>"; };
+		8D84BAFA27F489DB0001F545 /* yolov5.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = yolov5.mlmodel; sourceTree = "<group>"; };
 		8DCFD23E27F30991007B018E /* ColorDetection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorDetection.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -64,9 +64,8 @@
 		8A413B8420D2205F00A761EC = {
 			isa = PBXGroup;
 			children = (
+				8D84BAF527F4895F0001F545 /* models */,
 				8DCFD24027F30E51007B018E /* Detections */,
-				8D8B174227D6031A005789FD /* PatternModel.mlmodel */,
-				8A8DE5C820D6DEA200914B67 /* models */,
 				8A413BA220D221D500A761EC /* VideoCapture */,
 				8A413B8F20D2205F00A761EC /* OOrion-Project-App */,
 				8A413B8E20D2205F00A761EC /* Products */,
@@ -105,6 +104,15 @@
 				8A413BA520D221D500A761EC /* AVCaptureDevice+Extension.swift */,
 			);
 			path = VideoCapture;
+			sourceTree = "<group>";
+		};
+		8D84BAF527F4895F0001F545 /* models */ = {
+			isa = PBXGroup;
+			children = (
+				8D84BAFA27F489DB0001F545 /* yolov5.mlmodel */,
+				8D84BAF627F4898C0001F545 /* PatternModel.mlmodel */,
+			);
+			path = models;
 			sourceTree = "<group>";
 		};
 		8DCFD24027F30E51007B018E /* Detections */ = {
@@ -186,7 +194,6 @@
 			files = (
 				8A413B9B20D2206100A761EC /* LaunchScreen.storyboard in Resources */,
 				8A413B9820D2206100A761EC /* Assets.xcassets in Resources */,
-				8A8DE5C920D6DEA200914B67 /* models in Resources */,
 				8A413B9620D2205F00A761EC /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -204,12 +211,13 @@
 				8A413B9120D2205F00A761EC /* AppDelegate.swift in Sources */,
 				8A413BA820D221D500A761EC /* AVCaptureDevice+Extension.swift in Sources */,
 				8A413BA620D221D500A761EC /* VideoCameraType.swift in Sources */,
-				8D8B174327D6031A005789FD /* PatternModel.mlmodel in Sources */,
 				8D7855A027F47D8B00DB239D /* Extensions.swift in Sources */,
 				8DCFD23F27F30991007B018E /* ColorDetection.swift in Sources */,
 				2872A2DA27D1062400938C0A /* PatternDetection.swift in Sources */,
 				8D02222B27EDCA9F00E897EC /* TextDetection.swift in Sources */,
+				8D84BAFB27F489DB0001F545 /* yolov5.mlmodel in Sources */,
 				2872A2ED27D8F2FC00938C0A /* Constants.swift in Sources */,
+				8D84BAF727F4898C0001F545 /* PatternModel.mlmodel in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
