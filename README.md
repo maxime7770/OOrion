@@ -209,7 +209,7 @@ The `TextDetection.swift` script describes all the function linked to the text d
 
 - The `DetectText.swift` function calls the following function (the handler) back in order to return the text present on the image. It generates a request from the image for the handler and displays on screen the String that it returns.
 
-- The `handleDetectedTex` function returns the text detected from the request. It is first recognized on the screen using the Vision framework, then each of the words goes through a word correction in order to try only to return words from the english / french dictionary. If a word does not appear in the dictionary and is far from any known words, it is still displayed as it is.
+- The `handleDetectedText` function returns the text detected from the request. It is first recognized on the screen using the Vision framework, then each of the words goes through a word correction in order to try only to return words from the english / french dictionary. If a word does not appear in the dictionary and is far from any known words, it is still displayed as it is.
 
 
 
