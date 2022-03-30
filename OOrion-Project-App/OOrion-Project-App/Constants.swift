@@ -51,7 +51,7 @@ public let toFrench = [
     "giraffe": "Girafe",
     "backpack": "Sac à dos",
     "umbrella": "Parapluie",
-    "handbag": "Sac à mainn",
+    "handbag": "Sac à main",
     "tie": "Cravate",
     "suitcase": "Valise",
     "frisbee": "Frisbee",
