@@ -207,15 +207,15 @@ class ViewController: UIViewController {
             self.bbView.setNeedsDisplay()
         }
         ///Hides or display labels whether text mode is enabled (1) or not (0)
-        if bbView.mode == 1 {
+        switch bbView.mode {
+        case .WithText:
             let toDisplay = bbView.getLabels()
             DispatchQueue.main.async {
                 self.YoloLabel.text = "Label : " + toDisplay[0]
                 self.YoloColor.text = "Couleur : " + toDisplay[1]
                 self.YoloText.text = "Texte : " + toDisplay[2]
             }
-        }
-        else {
+        case .WithoutText:
             DispatchQueue.main.async {
                 self.YoloLabel.text = ""
                 self.YoloColor.text = ""
@@ -305,7 +305,7 @@ class ViewController: UIViewController {
             self.TextLabel?.text = ""
             self.PatternLabel?.text = ""
             
-            self.bbView.mode=0
+            self.bbView.mode = .WithoutText
             
             self.squareView!.isHidden = true
             
@@ -329,7 +329,7 @@ class ViewController: UIViewController {
             self.TextLabel?.text = ""
             self.PatternLabel?.text = ""
             
-            self.bbView.mode=1
+            self.bbView.mode = .WithText
             
             self.squareView!.isHidden = true
             
