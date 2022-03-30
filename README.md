@@ -4,6 +4,12 @@
 # Python Part
 
 
+## Requirements
+
+The needed packages are listed in the `requirements.txt` file. Use the following command line to install them:
+```python
+pip install requirements.txt
+```
 
 ## Patterns Detection
 
@@ -135,59 +141,59 @@ This part explains how the code is organised and split between the different swi
 
 ### View Controller
 
-The View Controller can be considered as the main script of the code. It defines the main classes used in our program and the different extensions of the preexisting ones. It also features the code linked to the display, the capture and the treatment of the image camera on screen and the selection and use of the different models. Lastly, it also calls functions back from other scripts in order to use the different functionalities of the program, such as the color, the text and the pattern detection.
+The View Controller can be considered as the main script of the code. It defines the main classes used in our program and the different extensions of the pre-existing ones. It also features the code linked to the display, the capture and the treatment of the image camera on screen and the selection and use of the different models. Lastly, it also calls functions back from other scripts in order to use the different functionalities of the program, such as the color, the text and the pattern detection.
 
-- The main class of the script is defined at first and is called "ViewController". It contains the main functino concerning the camera display, the model initialization, the brightness check and finally the display of all the Yolo Labels.
+- The main class of the script is defined at first and is called `ViewController`. It contains the main functino concerning the camera display, the model initialization, the brightness check and finally the display of all the Yolo Labels.
 
-- The function "noObjectDetect" calls all the functions back in order to display the pattern, color and text detected in the mode with no object detection. It also instantiates the square of detection in the middle of the screen, which correspounds to the area of the image which is treated by the program.
+- The function `noObjectDetect` calls all the functions back in order to display the pattern, color and text detected in the mode with no object detection. It also instantiates the square of detection in the middle of the screen, which correspounds to the area of the image which is treated by the program.
 
-- The last function contained in the main class is the "Mode" function. It creates the Change Mode button and cleans the screen everytime the user changes mode. 
+- The last function contained in the main class is the `Mode` function. It creates the Change Mode button and cleans the screen everytime the user changes mode. 
 
 - It contains extensions for the "String", "URL", "UIColor" and "UIImage" classes.
 
-- The last function is the "Crop" function. It crops the image on screen in order to return only the square in the middle.
+- The last function is the `Crop` function. It crops the image on screen in order to return only the square in the middle.
 
 ### BoundingBox View
 
-The "BoundingBox View" script is responsible for drawing boundingBox of object detected with YoloV5.
+The `BoundingBoxView.swift` script is responsible for drawing boundingBox of object detected with YoloV5.
 
-- The function draw() is responsible for drawing the bounding boxes and is called when observation is updated.
+- The function `draw` is responsible for drawing the bounding boxes and is called when observation is updated.
     - It is composed of two parts :
         - Mode 0 : For Yolo Without Text Mode : Displays 3 bounding boxes with color of objects
         - Mode 1 : For Yolo With Text : Displays 1 bounding box and updates "Label", "Color" and "Text"
 
-- The getLabels() function : responsible for returning labels, only used for Yolo With Text Mode
+- The `getLabels` function : responsible for returning labels, only used for Yolo With Text Mode
 
 - The last two functions are responsible for helping drawing the bounding box, by respectively generating the rectangle corresponding and adding the label to the bounding box
 
 ### Constants
 
-The "Constants" scripts defines all the main constants used in the code. They were all grouped here in order to simplify tests and modifications. They are linked to the square size, thresholds for brightness, second and third color detection, and for the model detection. It also feature a french translation of the Yolo labels.
+The `Constants.swift` scripts defines all the main constants used in the code. They were all grouped here in order to simplify tests and modifications. They are linked to the square size, thresholds for brightness, second and third color detection, and for the model detection. It also feature a french translation of the Yolo labels.
 
 ### ColorDetection
 
-The "ColorDetection" script describes all the function linked to the color detection feature. 
+The `ColorDetection.swift` script describes all the function linked to the color detection feature. 
 
 - The first two functions defined work together. "detectColor" returns an array of String of color names to display by calling the "getColorText" function. The last returns the most present color(s), based on the color frequencies object generated by the first function.
 
-- In order to do this, the "getColorText" calls two other functions back. The "rgbToHsv" converts the color from the RGB format to the HSV format, and the "colorConversion" function translates the HSV code to the french name of the closer color.
+- In order to do this, the `getColorText` calls two other functions back. The `rgbToHsv.swift` converts the color from the RGB format to the HSV format, and the "colorConversion" function translates the HSV code to the french name of the closer color.
 
 ### PatternDetection
 
-The "PatternDetection" script describes all the functions linked to pattern detection featue.
+The `PatternDetection.swift` script describes all the functions linked to pattern detection featue.
 
 - The Extension at the beginning of the script is used to convert UIImage to CVPixelBuffer, which is the type used as input for CoreML models
 - The first function defined out of this extension runs the model and adds the key of the pattern found to listPatterns
-- The next function, getPattern() gives the most frequent pattern name of listPattern, we use this to improve results of PatternModel, by refreshing pattern every 10 images with the most frequent pattern from the last 10 frames
+- The next function, `getPattern` gives the most frequent pattern name of listPattern, we use this to improve results of PatternModel, by refreshing pattern every 10 images with the most frequent pattern from the last 10 frames
 - The last function is a function we use to resize the image before giving it to the model
 
 ### TextDetection
 
-The "TextDetection" script describes all the function linked to the text detection feature. 
+The `TextDetection.swift` script describes all the function linked to the text detection feature. 
 
-- The "DetectText" function calls the following function (the handler) back in order to return the text present on the image. It generates a request from the image for the handler and displays on screen the String that it returns.
+- The `DetectText.swift` function calls the following function (the handler) back in order to return the text present on the image. It generates a request from the image for the handler and displays on screen the String that it returns.
 
-- The "handleDetectedText" function returns the text detected from the request. It is first recognized on the screen using the Vision framework, then each of the words goes through a word correction in order to try only to return words from the english / french dictionary. If a word does not appear in the dictionary and is far from any known words, it is still displayed as it is.
+- The `handleDetectedTex` function returns the text detected from the request. It is first recognized on the screen using the Vision framework, then each of the words goes through a word correction in order to try only to return words from the english / french dictionary. If a word does not appear in the dictionary and is far from any known words, it is still displayed as it is.
 
 
 
