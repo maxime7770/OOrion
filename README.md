@@ -61,7 +61,9 @@ This part explains the clothes recognition process: how to load the dataset, the
 ### Load Data
 
 - Download data from this link: https://drive.google.com/file/d/1LCJO-QWwG0783i6vQ2BUWX8pZKFM6qOT/view?usp=sharing
+
 - Put the `dataset_clothes` folder in the `python-models` folder in the repository
+
 - Here is the folder structure:
     ```
     dataset_pattern
