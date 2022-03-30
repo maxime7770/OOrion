@@ -37,15 +37,6 @@ extension String {
 }
 
 
-extension URL {
-    var modelName: String {
-        return lastPathComponent.replacingOccurrences(of: ".mlmodelc", with: "")
-    }
-}
-
-
-
-
 extension UIColor {
     var rgba: (red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat) {
         var red: CGFloat = 0
