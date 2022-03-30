@@ -42,6 +42,10 @@ class ViewController: UIViewController {
     @IBOutlet weak var YoloColor: UILabel!
     @IBOutlet weak var YoloText: UILabel!
     
+    let ColorDetect: ColorDetector = ColorDetector()
+    let PatternDetect: PatternDetector = PatternDetector()
+    let TextDetect: TextDetector = TextDetector()
+    
     ///Function will run when ViewController is Loaded, initializes VideoCapture object and Model
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -233,17 +237,17 @@ class ViewController: UIViewController {
         let cropImaUI = UIImage(cgImage: (ima!.Crop(length : rectDimCG, width : rectDimCG)))
         
         ///Save output of PatternModel
-        RunPatternModel (ImageBuffer: cropImaUI)
+        self.PatternDetect.RunPatternModel (ImageBuffer: cropImaUI)
         
         ///Refresh display one in ten frames
         self.imageCount = self.imageCount + 1
         if self.imageCount >= 10 {
             ///get most frequent output of PatternModel for last 10 frames
-            let detectedPattern = GetPattern()
+            let detectedPattern = self.PatternDetect.GetPattern()
 
             ///Get ColorText to Display
             var detectedColor = ""
-            let detectedColorList = detectColor(image:cropImaUI)
+            let detectedColorList = self.ColorDetect.detectColor(image:cropImaUI)
             if detectedColorList.count == 1 {
                 detectedColor = detectedColorList[0]
             }
@@ -254,7 +258,7 @@ class ViewController: UIViewController {
             
             let rectDimTextCG = CGFloat(rectDim + 150)
             let cropImaText = ima!.Crop(length : rectDimTextCG, width : rectDimTextCG)
-            let detectedText = DetectText(imageToCheck: cropImaText)
+            let detectedText = self.TextDetect.DetectText(imageToCheck: cropImaText)
             
             
             DispatchQueue.main.async {
