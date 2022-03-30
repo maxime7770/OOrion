@@ -3,5 +3,5 @@ keras==2.8.0
 matplotlib==3.2.1
 numpy==1.21.2
 opencv_python==4.5.5.62
-scikit_learn==1.0.2
+split-folders==0.5.1
 tensorflow==2.8.0
