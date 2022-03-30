@@ -111,9 +111,11 @@ class ViewController: UIViewController {
         var modelUrls: [URL]!
         modelUrls = []
         for modelPath in modelPaths {
-            let url = URL(fileURLWithPath: modelPath)
-            let compiledUrl = try! MLModel.compileModel(at: url)
-            modelUrls.append(compiledUrl)
+            if modelPath.hasSuffix("yolov5.mlmodel") {
+                let url = URL(fileURLWithPath: modelPath)
+                let compiledUrl = try! MLModel.compileModel(at: url)
+                modelUrls.append(compiledUrl)
+            }
         }
         
         do {
@@ -239,7 +241,7 @@ class ViewController: UIViewController {
         
         // The image is converted and cropped to the rectanle's size
         let ima=UIImage(pixelBuffer: imageBuffer)
-        let cropImaUI = UIImage(cgImage: (Crop(sourceImage : ima! , length : rectDimCG, width : rectDimCG)))
+        let cropImaUI = UIImage(cgImage: (ima!.Crop(length : rectDimCG, width : rectDimCG)))
         
         ///Save output of PatternModel
         RunPatternModel (ImageBuffer: cropImaUI)
@@ -262,7 +264,7 @@ class ViewController: UIViewController {
             
             
             let rectDimTextCG = CGFloat(rectDim + 150)
-            let cropImaText = Crop(sourceImage : ima! , length : rectDimTextCG, width : rectDimTextCG)
+            let cropImaText = ima!.Crop(length : rectDimTextCG, width : rectDimTextCG)
             let detectedText = DetectText(imageToCheck: cropImaText)
             
             
@@ -366,93 +368,3 @@ class ViewController: UIViewController {
     
 }
 
-extension String {
-
-    var length: Int {
-        return count
-    }
-
-    subscript (i: Int) -> String {
-        return self[i ..< i + 1]
-    }
-
-    func substring(fromIndex: Int) -> String {
-        return self[min(fromIndex, length) ..< length]
-    }
-
-    func substring(toIndex: Int) -> String {
-        return self[0 ..< max(0, toIndex)]
-    }
-
-    subscript (r: Range<Int>) -> String {
-        let range = Range(uncheckedBounds: (lower: max(0, min(length, r.lowerBound)),
-                                            upper: min(length, max(0, r.upperBound))))
-        let start = index(startIndex, offsetBy: range.lowerBound)
-        let end = index(start, offsetBy: range.upperBound - range.lowerBound)
-        return String(self[start ..< end])
-    }
-}
-
-
-extension URL {
-    var modelName: String {
-        return lastPathComponent.replacingOccurrences(of: ".mlmodelc", with: "")
-    }
-}
-
-
-/// Center crops a rectangle shape from an image
-/// - sourceImage : original UIImage to be cropped
-/// - length and width : CGFloats indicating the length and the width of the rectangular final image
-/// - Returns: the cropped CGImage
-
-func Crop(sourceImage : UIImage, length : CGFloat, width : CGFloat) -> CGImage {
-    /// the position of the center of the rectangle is determined by
-    /// xOffset and yOffset, which are computed in order to have a centered rectangle
-    
-    let sourceSize = sourceImage.size
-    let xOffset = (sourceSize.width - width) / 2.0
-    let yOffset = (sourceSize.height - length) / 2.0
-
-    // The cropRect is the rect of the image to keep,
-    // in this case centered
-    let cropRect = CGRect(
-        x: xOffset,
-        y: yOffset,
-        width: width,
-        height: length
-    ).integral
-
-    // Center crop the image
-    let sourceCGImage = sourceImage.cgImage!
-    let croppedCGImage = sourceCGImage.cropping(
-        to: cropRect
-    )!
-    
-    return croppedCGImage
-}
-
-extension UIColor {
-    var rgba: (red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat) {
-        var red: CGFloat = 0
-        var green: CGFloat = 0
-        var blue: CGFloat = 0
-        var alpha: CGFloat = 0
-        getRed(&red, green: &green, blue: &blue, alpha: &alpha)
-
-        return (red, green, blue, alpha)
-    }
-}
-
-extension UIImage {
-    public convenience init?(pixelBuffer: CVPixelBuffer) {
-        var cgImage: CGImage?
-        VTCreateCGImageFromCVPixelBuffer(pixelBuffer, options: nil, imageOut: &cgImage)
-
-        guard let cgImage = cgImage else {
-            return nil
-        }
-
-        self.init(cgImage: cgImage)
-    }
-}
