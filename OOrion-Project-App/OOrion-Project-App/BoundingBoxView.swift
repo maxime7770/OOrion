@@ -26,6 +26,9 @@ class BoundingBoxView: UIView {
     }
     var mode = YoloMode.WithoutText
     
+    let ColorDetect: ColorDetector = ColorDetector()
+    let TextDetect: TextDetector = TextDetector()
+
     func updateSize(for imageSize: CGSize) {
         imageRect = AVMakeRect(aspectRatio: imageSize, insideRect: self.bounds)
     }
@@ -75,7 +78,7 @@ class BoundingBoxView: UIView {
             
                     let imCrop=UIImage(cgImage: croppedCGImage)
             
-                    let colorsDetectedList = detectColor(image:imCrop)
+                    let colorsDetectedList = self.ColorDetect.detectColor(image:imCrop)
                     colorDetected = colorsDetectedList[0]
                 }
                 
@@ -110,14 +113,14 @@ class BoundingBoxView: UIView {
                     
                     let imCrop=UIImage(cgImage: croppedCGImage)
                     
-                    let colorsDetectedList = detectColor(image:imCrop)
+                    let colorsDetectedList = self.ColorDetect.detectColor(image:imCrop)
                     colorDetected = colorsDetectedList[0]
                     
                     ///Text rectangle, slightly bigger than color rectangle, because text detection focuses on middle of rectangle given, to counter this effect, we give a bigger rectangle
                     let textRect = CGRect(origin: CGPoint(x: colorX-100, y: colorY-100), size: CGSize(width: colorWidth+200, height: colorHeight+200))
                     let interTextRect = textRect.intersection(rectComplete)
                     let croppedTextImage = im!.cropping(to: interTextRect)
-                    textToDisplay = DetectText(imageToCheck: croppedTextImage!)
+                    textToDisplay = self.TextDetect.DetectText(imageToCheck: croppedTextImage!)
                 }   
                 let recognizedObjectObservation = observation as? VNRecognizedObjectObservation
                 guard let firstLabel = recognizedObjectObservation!.labels.first?.identifier else { return }
