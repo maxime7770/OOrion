@@ -131,11 +131,11 @@ This part explains the clothes recognition process: how to load the dataset, the
 
 ### Yolo Model
 
-To replace the Yolo model we use, you only need to remove the currently used mlmodel from the models folder and put in your own model in its place.
+To replace the Yolo model we use, you need to rename your model `yolov5.mlmodel` and copy it to the `models` folder.
 
 ### Pattern Model
 
-To replace the PatternModel (for example with one trained as described in the Python part), yo need to first rename the model "PatternModel.mlmodel" and move the mlmodel file to the root folder of the App.
+To replace the PatternModel (for example with one trained as described in the Python part), yo need to first rename the model `PatternModel.mlmodel` and move the mlmodel file to the `models` folder.
 
 ## App Usage
 
