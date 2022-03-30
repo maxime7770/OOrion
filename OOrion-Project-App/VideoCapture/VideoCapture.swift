@@ -104,6 +104,7 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
          */
     }
     
+    ///Start the CaptureSession
     func startCapture() {
         print("\(self.classForCoder)/" + #function)
         if captureSession.isRunning {
@@ -113,6 +114,7 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
         captureSession.startRunning()
     }
     
+    ///Stops the capture session
     func stopCapture() {
         print("\(self.classForCoder)/" + #function)
         if !captureSession.isRunning {
@@ -151,11 +153,13 @@ class VideoCapture: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCa
     }
     
     
+    ///Returns brightness
     func brightcheck() -> Float {
         let brightnessLevel = videoDevice.iso
         return brightnessLevel
     }
     
+    ///Activates Flashlight if off
     func toggleFlash() {
         if (videoDevice.hasTorch) {
             do {
