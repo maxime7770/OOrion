@@ -22,7 +22,6 @@ class ViewController: UIViewController {
     
     ///Variables used to save the model used
     private var selectedVNModel: VNCoreMLModel?
-    private var selectedModel: MLModel?
     
     ///Variable used to count the number of image since last refresh,
     var imageCount: Int = 0
@@ -107,22 +106,12 @@ class ViewController: UIViewController {
         
         ///Initialize Model
         
-        let modelPaths = Bundle.main.paths(forResourcesOfType: "mlmodel", inDirectory: "models")
-        
-        var modelUrls: [URL]!
-        modelUrls = []
-        for modelPath in modelPaths {
-            let url = URL(fileURLWithPath: modelPath)
-            let compiledUrl = try! MLModel.compileModel(at: url)
-            modelUrls.append(compiledUrl)
-        }
-        
-        selectedModel = try! MLModel(contentsOf: modelUrls.first!)
+        let model = yolov5()
         do {
-            selectedVNModel = try VNCoreMLModel(for: selectedModel!)
+            selectedVNModel = try VNCoreMLModel(for: model.model)
         }
         catch {
-            fatalError("Could not create VNCoreMLModel instance from \(modelUrls.first!). error: \(error).")
+            fatalError("Could not create VNCoreMLModel instance from. error: \(error).")
         }
     }
     
@@ -207,15 +196,15 @@ class ViewController: UIViewController {
             self.bbView.setNeedsDisplay()
         }
         ///Hides or display labels whether text mode is enabled (1) or not (0)
-        if bbView.mode == 1 {
+        switch bbView.mode {
+        case .WithText:
             let toDisplay = bbView.getLabels()
             DispatchQueue.main.async {
                 self.YoloLabel.text = "Label : " + toDisplay[0]
                 self.YoloColor.text = "Couleur : " + toDisplay[1]
                 self.YoloText.text = "Texte : " + toDisplay[2]
             }
-        }
-        else {
+        case .WithoutText:
             DispatchQueue.main.async {
                 self.YoloLabel.text = ""
                 self.YoloColor.text = ""
@@ -233,20 +222,15 @@ class ViewController: UIViewController {
     private func noObjectDetect(imageBuffer: CVPixelBuffer) {
         
         let screenSize: CGRect = UIScreen.main.bounds
-        let screenWidth = screenSize.width
         
         // The rectangle of observation is created
-        let rectWidth = Int(screenWidth) - 2 * xPos
-        // the rectangle height.
-        let rectHeight = rectWidth
-        let rectH_CG = CGFloat(rectHeight)
-        let rectW_CG = CGFloat(rectWidth)
+        let rectDim = Int(screenSize.width) - 2 * xPos
+        let rectDimCG = CGFloat(rectDim)
 
         
         // The image is converted and cropped to the rectanle's size
         let ima=UIImage(pixelBuffer: imageBuffer)
-        let cropIma = Crop(sourceImage : ima! , length : rectH_CG, width : rectW_CG)
-        let cropImaUI = UIImage(cgImage: cropIma)
+        let cropImaUI = UIImage(cgImage: (ima!.Crop(length : rectDimCG, width : rectDimCG)))
         
         ///Save output of PatternModel
         RunPatternModel (ImageBuffer: cropImaUI)
@@ -268,9 +252,8 @@ class ViewController: UIViewController {
             }
             
             
-            let rectH_TextCG = CGFloat(rectHeight + 150)
-            let rectW_TextCG = CGFloat(rectWidth + 150)
-            let cropImaText = Crop(sourceImage : ima! , length : rectH_TextCG, width : rectW_TextCG)
+            let rectDimTextCG = CGFloat(rectDim + 150)
+            let cropImaText = ima!.Crop(length : rectDimTextCG, width : rectDimTextCG)
             let detectedText = DetectText(imageToCheck: cropImaText)
             
             
@@ -305,7 +288,7 @@ class ViewController: UIViewController {
             self.TextLabel?.text = ""
             self.PatternLabel?.text = ""
             
-            self.bbView.mode=0
+            self.bbView.mode = .WithoutText
             
             self.squareView!.isHidden = true
             
@@ -329,7 +312,7 @@ class ViewController: UIViewController {
             self.TextLabel?.text = ""
             self.PatternLabel?.text = ""
             
-            self.bbView.mode=1
+            self.bbView.mode = .WithText
             
             self.squareView!.isHidden = true
             
@@ -374,93 +357,3 @@ class ViewController: UIViewController {
     
 }
 
-extension String {
-
-    var length: Int {
-        return count
-    }
-
-    subscript (i: Int) -> String {
-        return self[i ..< i + 1]
-    }
-
-    func substring(fromIndex: Int) -> String {
-        return self[min(fromIndex, length) ..< length]
-    }
-
-    func substring(toIndex: Int) -> String {
-        return self[0 ..< max(0, toIndex)]
-    }
-
-    subscript (r: Range<Int>) -> String {
-        let range = Range(uncheckedBounds: (lower: max(0, min(length, r.lowerBound)),
-                                            upper: min(length, max(0, r.upperBound))))
-        let start = index(startIndex, offsetBy: range.lowerBound)
-        let end = index(start, offsetBy: range.upperBound - range.lowerBound)
-        return String(self[start ..< end])
-    }
-}
-
-
-extension URL {
-    var modelName: String {
-        return lastPathComponent.replacingOccurrences(of: ".mlmodelc", with: "")
-    }
-}
-
-
-/// Center crops a rectangle shape from an image
-/// - sourceImage : original UIImage to be cropped
-/// - length and width : CGFloats indicating the length and the width of the rectangular final image
-/// - Returns: the cropped CGImage
-
-func Crop(sourceImage : UIImage, length : CGFloat, width : CGFloat) -> CGImage {
-    /// the position of the center of the rectangle is determined by
-    /// xOffset and yOffset, which are computed in order to have a centered rectangle
-    
-    let sourceSize = sourceImage.size
-    let xOffset = (sourceSize.width - width) / 2.0
-    let yOffset = (sourceSize.height - length) / 2.0
-
-    // The cropRect is the rect of the image to keep,
-    // in this case centered
-    let cropRect = CGRect(
-        x: xOffset,
-        y: yOffset,
-        width: width,
-        height: length
-    ).integral
-
-    // Center crop the image
-    let sourceCGImage = sourceImage.cgImage!
-    let croppedCGImage = sourceCGImage.cropping(
-        to: cropRect
-    )!
-    
-    return croppedCGImage
-}
-
-extension UIColor {
-    var rgba: (red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat) {
-        var red: CGFloat = 0
-        var green: CGFloat = 0
-        var blue: CGFloat = 0
-        var alpha: CGFloat = 0
-        getRed(&red, green: &green, blue: &blue, alpha: &alpha)
-
-        return (red, green, blue, alpha)
-    }
-}
-
-extension UIImage {
-    public convenience init?(pixelBuffer: CVPixelBuffer) {
-        var cgImage: CGImage?
-        VTCreateCGImageFromCVPixelBuffer(pixelBuffer, options: nil, imageOut: &cgImage)
-
-        guard let cgImage = cgImage else {
-            return nil
-        }
-
-        self.init(cgImage: cgImage)
-    }
-}

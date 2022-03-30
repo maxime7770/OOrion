@@ -19,8 +19,12 @@ class BoundingBoxView: UIView {
     var observations: [VNDetectedObjectObservation]!
     var imageBuffer: CVPixelBuffer?
     
-    ///Stores mode, default mode 0, Yolo Without Tex
-    var mode: Int = 0
+    ///Stores mode, default mode WithoutText
+    enum YoloMode {
+        case WithText
+        case WithoutText
+    }
+    var mode = YoloMode.WithoutText
     
     func updateSize(for imageSize: CGSize) {
         imageRect = AVMakeRect(aspectRatio: imageSize, insideRect: self.bounds)
@@ -47,7 +51,8 @@ class BoundingBoxView: UIView {
         var textToDisplay = ""
         
         ///Without text mode
-        if mode == 0 {
+        switch mode {
+        case .WithoutText:
             for i in 0..<observationsCopy.count {
                 let observation = observationsCopy[i]
                 let color = UIColor(hue: CGFloat(i) / CGFloat(observations.count), saturation: 1, brightness: 1, alpha: 1)
@@ -79,9 +84,8 @@ class BoundingBoxView: UIView {
                     addLabel(on: rect, observation: recognizedObjectObservation, color: color, color_detected: colorDetected)
                 }
             }
-        }
-        ///Mode 1 with text
-        if mode == 1 {
+        ///Mode  with text
+        case .WithText:
             if observationsCopy.count > 0 {
                 ///Get only first observation
                 let observation = observationsCopy[0]
