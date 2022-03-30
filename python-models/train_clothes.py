@@ -4,7 +4,6 @@ from tensorflow.keras.utils import to_categorical
 from keras.preprocessing.image import ImageDataGenerator
 from keras.layers import Conv2D,Dense,MaxPooling2D,Input,Flatten,Dropout
 from keras.models import Sequential
-from sklearn.model_selection import train_test_split
 import numpy as np
 import cv2
 import os
