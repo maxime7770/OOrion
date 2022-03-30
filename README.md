@@ -135,6 +135,22 @@ To replace the Yolo model we use, you only need to remove the currently used mlm
 
 To replace the PatternModel (for example with one trained as described in the Python part), yo need to first rename the model "PatternModel.mlmodel" and move the mlmodel file to the root folder of the App.
 
+## App Usage
+
+The App consists of three modes, to change from one to another, just tap on the "Mode" button in the top left corner of the screen.
+
+### Yolo Without Text Mode
+
+This is the Mode in which the App starts. It recognizes objects thanks to YoloV5, and displays bounding boxes for the 3 objects for which it has the most confidence. It also displays the colors of the objects in question.
+
+### Yolo With Text Mode
+
+This mode uses Yolo to get the bounding box of the object with the most confidence. It then gets the object color and checks if text is on the object.
+
+### No Object Mode
+
+This mode doesn't detect objects, it displays a square in the middle of the screen, and checks for color, pattern and text in the image inside of this square.
+
 ## Scripts description
 
 This part explains how the code is organised and split between the different swift scripts. It also describes the contents of each script and the main functions defined.
