@@ -200,8 +200,7 @@ The `ColorDetection.swift` script describes the class ColorDetector containing a
 
 The `PatternDetection.swift` script describes the class PatternDetector containing all the functions linked to pattern detection featue.
 
-- The Extension at the beginning of the script is used to convert UIImage to CVPixelBuffer, which is the type used as input for CoreML models
-- The first function defined out of this extension runs the model and adds the key of the pattern found to listPatterns
+- The first function defined runs the model and adds the key of the pattern found to listPatterns
 - The next function, `getPattern` gives the most frequent pattern name of listPattern, we use this to improve results of PatternModel, by refreshing pattern every 10 images with the most frequent pattern from the last 10 frames
 - The last function is a function we use to resize the image before giving it to the model
 
