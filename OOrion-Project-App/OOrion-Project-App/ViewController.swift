@@ -298,6 +298,7 @@ class ViewController: UIViewController {
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
         alert.addAction(cancelAction)
         
+        ///Action corresponding to Yolo without text
         let actionYoloMode0 = UIAlertAction(title: "Yolov5 Sans Texte", style: .default) { (action) in
             self.bbView.isHidden = false
             self.ColorLabel?.text = ""
@@ -320,7 +321,8 @@ class ViewController: UIViewController {
             }
         }
         alert.addAction(actionYoloMode0)
-    
+        
+        ///Action corresponding to Yolo With Text
         let actionYoloMode1 = UIAlertAction(title: "Yolov5 Avec Texte", style: .default) { (action) in
             self.bbView.isHidden = false
             self.ColorLabel?.text = ""
@@ -343,9 +345,9 @@ class ViewController: UIViewController {
             }
         }
         alert.addAction(actionYoloMode1)
-    
         
-        let actionColor = UIAlertAction(title: "Color", style: .default) { (action) in
+        ///Action corresponding to No Object Mode
+        let actionNoObject = UIAlertAction(title: "No Object", style: .default) { (action) in
             self.bbView.isHidden = true
             self.YoloLabel.text = ""
             self.YoloColor.text = ""
@@ -365,7 +367,7 @@ class ViewController: UIViewController {
                 }
             }
         }
-        alert.addAction(actionColor)
+        alert.addAction(actionNoObject)
         
         present(alert, animated: true, completion: nil)
     }
