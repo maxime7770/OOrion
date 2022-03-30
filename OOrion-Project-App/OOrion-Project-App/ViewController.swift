@@ -22,7 +22,6 @@ class ViewController: UIViewController {
     
     ///Variables used to save the model used
     private var selectedVNModel: VNCoreMLModel?
-    private var selectedModel: MLModel?
     
     ///Variable used to count the number of image since last refresh,
     var imageCount: Int = 0
@@ -117,9 +116,8 @@ class ViewController: UIViewController {
             modelUrls.append(compiledUrl)
         }
         
-        selectedModel = try! MLModel(contentsOf: modelUrls.first!)
         do {
-            selectedVNModel = try VNCoreMLModel(for: selectedModel!)
+            selectedVNModel = try VNCoreMLModel(for: (try! MLModel(contentsOf: modelUrls.first!)))
         }
         catch {
             fatalError("Could not create VNCoreMLModel instance from \(modelUrls.first!). error: \(error).")
@@ -233,20 +231,15 @@ class ViewController: UIViewController {
     private func noObjectDetect(imageBuffer: CVPixelBuffer) {
         
         let screenSize: CGRect = UIScreen.main.bounds
-        let screenWidth = screenSize.width
         
         // The rectangle of observation is created
-        let rectWidth = Int(screenWidth) - 2 * xPos
-        // the rectangle height.
-        let rectHeight = rectWidth
-        let rectH_CG = CGFloat(rectHeight)
-        let rectW_CG = CGFloat(rectWidth)
+        let rectDim = Int(screenSize.width) - 2 * xPos
+        let rectDimCG = CGFloat(rectDim)
 
         
         // The image is converted and cropped to the rectanle's size
         let ima=UIImage(pixelBuffer: imageBuffer)
-        let cropIma = Crop(sourceImage : ima! , length : rectH_CG, width : rectW_CG)
-        let cropImaUI = UIImage(cgImage: cropIma)
+        let cropImaUI = UIImage(cgImage: (Crop(sourceImage : ima! , length : rectDimCG, width : rectDimCG)))
         
         ///Save output of PatternModel
         RunPatternModel (ImageBuffer: cropImaUI)
@@ -268,9 +261,8 @@ class ViewController: UIViewController {
             }
             
             
-            let rectH_TextCG = CGFloat(rectHeight + 150)
-            let rectW_TextCG = CGFloat(rectWidth + 150)
-            let cropImaText = Crop(sourceImage : ima! , length : rectH_TextCG, width : rectW_TextCG)
+            let rectDimTextCG = CGFloat(rectDim + 150)
+            let cropImaText = Crop(sourceImage : ima! , length : rectDimTextCG, width : rectDimTextCG)
             let detectedText = DetectText(imageToCheck: cropImaText)
             
             
